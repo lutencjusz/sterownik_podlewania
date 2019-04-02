@@ -1,0 +1,7 @@
+adc,crypto,encoder,file,gdbstub,gpio,http,net,node,ow,rtcfifo,rtcmem,rtctime,sjson,sntp,tmr,uart,websocket,wifi,tls
+dodatkowe opcje:
+- LFS options (for master & dev branches)
+- ssl = true
+
+
+do usuniecia: wifi_monitor

@@ -22,18 +22,18 @@ Planuję rozwinąć panel Grafana wpółdziałający z InfluxDB, w celu wykonani
 
 ## Moduły sterownika
 Sternik składa się z następujących modułów:
-•	init.lua - mikro moduł startujący, proces bootowania
-•	bootowanie.lua - moduł bootowania oraz utrzymania sterownika
-•	_init.lua - moduł uruchamiający pozostałe moduły
-•	httpServer.lua - biblioteka do mini servera HTTP stworzona przez @yulincoder i @wangzexi https://github.com/wangzexi/NodeMCU-HTTP-Server
-•	InfluxDB.lua - moduł zapisujący dane ze sterownika w bazie czasu rzeczywistego.
-•	kalendarz.lua - moduł obsługujący daty i czasy oraz ich porównywania
-•	logika.lua - moduł zwierający logikę sterownika
-•	parametyZewnętrzne.lua - moduł pobierający dane pogodowe z serwisu airly.eu.
-•	pliki.lua - moduł obsługujący pliki zewnętrzne podczas pracy modułu (JSON)
-•	ServerWWW.lua - moduł obsługujący RESTFul API sterownika
-•	Vc.lua - moduł inicjujący i pobierający napięcie zasilania sterownika
-•	WiFi.lua - moduł podłączający sterownik do lokalnej sieci WiFi
-•	wyslijMejl.lua - moduł wykonujący sekwencję wysyłania poczty do serwera pocztowego.
+- init.lua - mikro moduł startujący, proces bootowania
+-	bootowanie.lua - moduł bootowania oraz utrzymania sterownika
+-	_init.lua - moduł uruchamiający pozostałe moduły
+-	httpServer.lua - biblioteka do mini servera HTTP stworzona przez @yulincoder i @wangzexi https://github.com/wangzexi/NodeMCU-HTTP-Server
+-	InfluxDB.lua - moduł zapisujący dane ze sterownika w bazie czasu rzeczywistego.
+-	kalendarz.lua - moduł obsługujący daty i czasy oraz ich porównywania
+-	logika.lua - moduł zwierający logikę sterownika
+-	parametyZewnętrzne.lua - moduł pobierający dane pogodowe z serwisu airly.eu.
+-	pliki.lua - moduł obsługujący pliki zewnętrzne podczas pracy modułu (JSON)
+-	ServerWWW.lua - moduł obsługujący RESTFul API sterownika
+-	Vc.lua - moduł inicjujący i pobierający napięcie zasilania sterownika
+-	WiFi.lua - moduł podłączający sterownik do lokalnej sieci WiFi
+-	wyslijMejl.lua - moduł wykonujący sekwencję wysyłania poczty do serwera pocztowego.
 
 

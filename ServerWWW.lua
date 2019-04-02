@@ -70,21 +70,21 @@ function uruchomPompki(res)
         end    
         -- tA = sjson.decode("[" .. tAlert .. "]")
     end
-    if zaIleUruchomicPompkiKalendarz() - ileCzasuDoWyslaniaMejla < 0 then
+    if czyMiesciSiePrzedzialeCzasowym () then
         ob = ustawienieAlertowLogiki (ob) 
         if debugowanie then
             print ("        Parametry logiki w uruchomPompki(res):")
             print (ob.naglowek, ob.opis, ob.status, ob.prior, ob.klucz)
         end
-        if s then
+        if ob.status then
             dodajAktualneDaneDoPliku("log.json")
             czyWyslanoMejl = false -- zerowanie przypomnienia mejlowego z modułu logika
-            if n ~= "" then
+            if ob.naglowek ~= "" then
                 print ("        zapis do pliku logu i alarmu z uruchomieniem pompek i wyslaniem mejla...")
                 local subject = "Sterownik podlewania uruchomił pompki"
-                local body = ob.opis
+                local body = "Wlasnie podlalem kwiatki. Uzupelnij wode..."
                 send_email(subject,body)
-                if tA ~= nil and k == tA[#tA].klucz then
+                if tA ~= nil and ob.klucz == tA[#tA].klucz then
                     zapiszAlarmyDoPliku(3, "taki sam", "", "alert.json", ob.klucz)
                 else
                     zapiszAlarmyDoPliku(3, ob.naglowek, ob.opis, "alert.json", ob.klucz)
@@ -94,7 +94,7 @@ function uruchomPompki(res)
             end
         else
             print ("        zapis do pliku alarmu bez uruchomienia pompek...")
-            if tA ~= nil and k == tA[#tA].klucz then   
+            if tA ~= nil and ob.klucz == tA[#tA].klucz then   
                 zapiszAlarmyDoPliku(ob.prior, "taki sam", "", "alert.json", ob.klucz)
             else
                 zapiszAlarmyDoPliku(ob.prior, ob.naglowek, ob.opis, "alert.json", ob.klucz)

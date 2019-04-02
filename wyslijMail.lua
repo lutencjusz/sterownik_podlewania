@@ -28,7 +28,7 @@ local EMAIL_PASSWORD = crypto.decrypt("AES-ECB", key, encoder.fromHex(u.emailPas
     print(response)  
  end  
 
- function do_next()  -- do prowadzenia dialogu z serwerem
+ function do_next_mail()  -- do prowadzenia dialogu z serwerem
        if(count == 0)then  
          count = count+1  
          local IP_ADDRESS = wifi.sta.getip()  
@@ -62,7 +62,7 @@ local EMAIL_PASSWORD = crypto.decrypt("AES-ECB", key, encoder.fromHex(u.emailPas
          smtp_socket:send(message.."\r\n.\r\n")  
        elseif(count==8) then  
          count = count+1  
-          tmr.stop(5)  
+          tmr.stop(4)  
           smtp_socket:send("QUIT\r\n")  
        else  
          smtp_socket:close()
@@ -74,18 +74,20 @@ local EMAIL_PASSWORD = crypto.decrypt("AES-ECB", key, encoder.fromHex(u.emailPas
  -- You can change the time to be smaller if that works for you, I used 5000ms just because.  
  function connected(sck)  
    print("Połączono się z serwerem. rozpoczynam wysyłanie...")  
-   tmr.alarm(5,5000,1,do_next)  
+   tmr.alarm(4,5000,1,do_next_mail)  
  end  
 
- function send_email(subject,body)  
+ function send_email(subject,body)
+    gpio.write (pin, LED_ON)  
     count = 0  
     email_subject = subject  
     email_body = body  
     print ("Otworzono połączenie...")  
-    smtp_socket = net.createConnection(net.TCP,1)  
+    smtp_socket = net.createConnection(net.TCP,1)  --,1
     smtp_socket:on("connection",connected)  
     smtp_socket:on("receive",display)  
-    smtp_socket:connect(SMTP_PORT,SMTP_SERVER)  
+    smtp_socket:connect(SMTP_PORT,SMTP_SERVER)
+    gpio.write (pin, LED_OFF)
  end  
  -- Send an email  
  -- print ("Sending started...")  

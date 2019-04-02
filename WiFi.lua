@@ -1,7 +1,7 @@
 gpio.write (pin, LED_ON)
 -- wczytanie paramtrów sieci WiFi z pliku ustawienia.json
 
-local key = "abcdef0987654321" -- klucz musi sie składać z 16 znakow
+key = "abcdef0987654321" -- klucz musi sie składać z 16 znakow
 
 -- ustawienie połaczenie z WiFi
 

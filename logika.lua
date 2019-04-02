@@ -118,12 +118,12 @@ function czyAlertKalenadza (ob)
             ob.klucz = ob.klucz .. "k3"
         end
     else
-        ob.opis = ob.opis .. " Pompki były już uruchamiane!"
+        ob.opis = ob.opis .. " Pompki byly juz uruchamiane!"
         ob.klucz = ob.klucz .. "k1"
         ob.status = false    
     end
     if debugowanie then
-        print ("        w czyAlertKalenadza klucz: " .. k)
+        print ("        w czyAlertKalenadza klucz: " .. ob.klucz)
     end
     return ob
 end
@@ -132,10 +132,10 @@ function czyAlertPoziomuWody (ob)
     if not pTestowe.poziomWody then
         ileCzasu, ostatniPomiar = zaIleUruchomicPompkiKalendarz()
         if ileCzasu < ileCzasuDoWyslaniaMejla and ileCzasu > 0 and not czyWyslanoMejl then
-            local body = "Proszę o uzupełnienie wody w konewce. Do uruchomienia pompek zostało " .. podajCzasS(ileCzasu) .. ' (' .. ostatniPomiar ..')!'
-            send_email("Prośba ze sterownika podlewania", body)
+            local body = "Prosze o uzupełnienie wody w konewce. Do uruchomienia pompek zostało " .. podajCzasS(ileCzasu) .. ' (' .. ostatniPomiar ..')!'
+            send_email("Prosba ze sterownika podlewania", body)
             czyWyslanoMejl = true
-            ob.opis = ob.opis .. "Wysłano mejl o uzupełnieniu wody w konewce! "
+            ob.opis = ob.opis .. "Wyslano mejl o uzupelnieniu wody w konewce! "
             ob.klucz = ob.klucz .. "pw1"
         else
             ob.opis = "Zbyt niski poziom wody w konefce! " .. ob.opis
@@ -155,6 +155,9 @@ function czyAlertPrzedzialuCzasowego (ob)
     if czyMiesciSiePrzedzialeCzasowym () then
         ob.opis = ob.opis .. " Uruchomienie pompek miesci sie obecnym czasie podlewania!"
         ob.klucz = ob.klucz .. "pt1"
+        if ob.naglowek == '' then
+            ob.naglowek = ob.naglowek .. "To jest pora podlewania!"
+        end
     else 
         ob.opis = ob.opis .. " To nie jest pora na podlewanie!"
         if ob.naglowek == '' then
@@ -173,39 +176,37 @@ function ustawienieAlertowLogiki (ob)
     ob = czyAlerthumidity(ob)
     if debugowanie then
         print ("Parametry logiki po czyAlerthumidit:")
-        print (ob.naglowek, ob.opis, str(ob.status), str(ob.prior), ob.klucz)
+        print (ob.naglowek, ob.opis, ob.status, ob.prior, ob.klucz)
     end
     ob = czyAlertTempPow(ob)
     if debugowanie then
         print ("Parametry logiki po czyAlertTempPow:")
-        print (ob.naglowek, ob.opis, str(ob.status), str(ob.prior), ob.klucz)
+        print (ob.naglowek, ob.opis, ob.status, ob.prior, ob.klucz)
     end
     ob = czyAlertPozZasVp(ob)
     if debugowanie then
         print ("Parametry logiki po czyAlertPozZasVp:")
-        print (ob.naglowek, ob.opis, str(ob.status), str(ob.prior), ob.klucz)
+        print (ob.naglowek, ob.opis, ob.status, ob.prior, ob.klucz)
     end
     ob = czyAlertPozZasVc(ob)
     if debugowanie then
         print ("Parametry logiki po czyAlertPozZasVc:")
-        print (ob.naglowek, ob.opis, str(ob.status), str(ob.prior), ob.klucz)
+        print (ob.naglowek, ob.opis, ob.status, ob.prior, ob.klucz)
     end
     ob = czyAlertKalenadza(ob)
     if debugowanie then
         print ("Parametry logiki po czyAlertKalenadza")
-        print (ob.naglowek, ob.opis, str(ob.status), str(ob.prior), ob.klucz)
+        print (ob.naglowek, ob.opis, ob.status, ob.prior, ob.klucz)
     end
     ob = czyAlertPoziomuWody(ob)
     if debugowanie then
         print ("Parametry logiki po czyAlertPoziomuWody")
-        print (ob.naglowek, ob.opis, str(ob.status), str(ob.prior), ob.klucz)
+        print (ob.naglowek, ob.opis, ob.status, ob.prior, ob.klucz)
     end
     ob = czyAlertPrzedzialuCzasowego(ob)
     if debugowanie then
         print ("Parametry logiki po czyAlertPrzedzialuCzasowego")
-        print (ob.naglowek, ob.opis, str(ob.status), str(ob.prior), ob.klucz)
+        print (ob.naglowek, ob.opis, ob.status, ob.prior, ob.klucz)
     end
-    
     return ob
 end
-

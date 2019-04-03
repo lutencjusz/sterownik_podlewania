@@ -1,0 +1,42 @@
+<ng-container *ngIf="parametry && aDane; else brakDanych">
+    <div class="p-grid">
+        <div class="p-col-10">
+          <h2>Data pobrania danych z układu: {{aDane.dataPomiaru}}</h2>
+        </div>
+    </div>
+<div class="p-grid">
+    <div class="p-col-5">
+      <app-stan-parametru [nazwa]='"Napięcie układu"' [min]="parametry.VcMin" [max]="parametry.VcMax" [jednostka]='"V"' [stan]="zlaczLiczbe(aDane.Vc, aDane.Vc_u)"></app-stan-parametru>
+    </div>
+    <div class="p-col-5">
+      <app-stan-parametru [nazwa]='"Napięcie pompek"' [min]="parametry.VpMin" [max]="parametry.VpMax" [jednostka]='"V"' [stan]="aDane.Vp"></app-stan-parametru>
+    </div>
+  </div>
+  <div class="p-grid">
+    <div class="p-col-5">
+      <app-stan-parametru [nazwa]='"Temperatura pow."' [min]="parametry.temp_min" [max]="parametry.temp_max" [jednostka]='"℃"' [stan]="zlaczLiczbe(aDane.temp, aDane.temp_u)"></app-stan-parametru>
+    </div>
+    <div class="p-col-5">
+      <app-stan-parametru [nazwa]='"Wilgotoność pow."' [min]="parametry.humidityMin" [max]="parametry.humidityMax" [jednostka]='"%"' [stan]="aDane.humidity"></app-stan-parametru>
+    </div>
+  </div>
+  <div class="p-grid">
+    <div class="p-col-5">
+      <app-stan-parametru [nazwa]='"Ciśnienie"' [min]="this.pressure_min" [max]="this.pressure_max" [jednostka]='"hPa"' [stan]="aDane.pressure"></app-stan-parametru>
+    </div>
+    <div class="p-col-5">
+      <app-stan-parametru [nazwa]='"PM 1"' [min]="this.PM_min" [max]="this.PM1_max" [jednostka]='"µg/m3"' [stan]="zaokrag(zlaczLiczbe(aDane.pm1, aDane.pm1_u), 2)"></app-stan-parametru>
+    </div>
+</div>
+<div class="p-grid">
+    <div class="p-col-5">
+      <app-stan-parametru [nazwa]='"PM 10"' [min]="this.PM_min" [max]="this.PM_max" [jednostka]='"%"' [stan]="zaokrag((zlaczLiczbe(aDane.pm10, aDane.pm10_u)/50) * 100, 2)"></app-stan-parametru>
+    </div>
+    <div class="p-col-5">
+      <app-stan-parametru [nazwa]='"PM 2,5"' [min]="this.PM_min" [max]="this.PM_max" [jednostka]='"%"' [stan]="zaokrag((zlaczLiczbe(aDane.pm25, aDane.pm25_u)/25) * 100, 2)"></app-stan-parametru>
+    </div>
+</div>
+</ng-container>
+<ng-template #brakDanych>
+    <h2>brak danych w logu</h2>
+</ng-template>

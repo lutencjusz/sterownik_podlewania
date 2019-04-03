@@ -1,0 +1,22 @@
+<div class="p-grid p-justify-center">
+  <ng-container *ngIf="WykresEData.length>0; else brakDanych">
+    <div class="p-col">
+      <p-chart type="line" [data]="data" (onDataSelect)="selectData($event)"></p-chart>
+    </div>
+  </ng-container>
+  <ng-template #brakDanych>
+    <!--<p class="input-text">brak danych w logu</p>-->
+    <h2>brak danych w logu</h2>
+  </ng-template>
+</div>
+<div class="p-grid p-justify-center">
+  <div class="p-col-2">
+    <button pButton type="button" class="ui-button-raised ui-button-success" label="Wszystko" (click)="getWszystkoESPData()"></button>
+  </div>
+  <div class="p-col-2">
+    <button pButton type="button" class="ui-button-raised ui-button-success" label="Aktualne" (click)="getAktualneESPData()"></button>
+  </div>
+  <div class="p-col-2">
+      <button pButton type="button" class="ui-button-raised ui-button-danger" label="Usuń" (click)="usun()"></button>
+    </div>
+</div>

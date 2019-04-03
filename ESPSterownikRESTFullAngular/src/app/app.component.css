@@ -1,0 +1,36 @@
+.lewy-margines {
+  margin-left: 5%;
+}
+
+.lewy-dyzy-margines {
+  margin-left: 15%;
+}
+
+.male_litery {
+  font-size: 150%;
+}
+
+.header {
+  /*height: 105vh;*/
+  height: 165vh;
+  background: linear-gradient(to right bottom, transparent, rgba(240, 250, 109, 0.80) 10%, rgba(252, 191, 122, 0.95) 80%), url(../img/nat-1-large.jpg);
+  /*background-image: linear-gradient( to right bottom, rgba($kolor-glowny-jasny, 0.8), rgba($kolor-glowny-ciemny, 0.95)), url(../img/nat-7.jpg);*/
+
+  background-size: cover;
+  background-position: top;
+  position: relative;
+
+  font-size: 62.5%;
+
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  /*line-height: 1.2;*/
+  color: rgb(94, 93, 93);
+
+      /*do tąd dane dotyczące fontu głownego*/
+      padding: 1%;
+      /* 1% - ramka na około*/
+      box-sizing: border-box;
+
+}
+

@@ -1,0 +1,23 @@
+<ng-content></ng-content> <!-- bez tego nie będą przesłane zawartosc tagów rodzica-->
+<div class="p-grid grubsze">
+    <div class="p-col">
+      <p-fieldset legend={{nazwa}}>
+        <div class="p-grid vertical-container p-justify-around">
+          <div class="p-col-3 p-col-align-center mniejsze">
+            {{min}} {{jednostka}}
+          </div>
+          <div class="p-col-6 p-col-align-center">
+              <p-slider [(ngModel)]=stan [min]="min" [max]="max" disabled=true></p-slider>
+          </div>
+          <div class="p-col-3 p-col-align-center mniejsze">
+            {{max}} {{jednostka}}
+          </div>
+        </div>
+        <div class="p-grid">
+            <div class="p-col-5 p-offset-3 mniejsze">
+                {{stan}} {{jednostka}}
+            </div>
+        </div>
+      </p-fieldset>
+    </div>
+  </div>

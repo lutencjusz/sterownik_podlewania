@@ -1,0 +1,18 @@
+<ng-container *ngIf="this.kiedySpr; else brakDanych">
+  <div class="p-grid p-align-center vertical-container">
+    <div class="p-col-6">
+      <ng-container *ngIf="daneKalendarza.length>0; else brakDanych">
+          <p-chart type="doughnut" [data]="data" [width]="100" [height]="100" [options]="chartOptions"></p-chart>
+      </ng-container>
+    </div>
+    <div class="p-col-6">
+      <h3> Następne sprawdzenie nastąpi <br/>{{this.kiedySpr.status}}</h3>
+      <h2> zostało: {{this.godz | number:'2.'}}:{{this.min | number:'2.'}}:{{this.sek | number:'2.'}}</h2>
+      <h3> Następne uruchomienie pompek jest zaplanowane na:</h3>
+      <h2> {{this.dataUruchPompek}}</h2>
+    </div>
+  </div>
+</ng-container>
+<ng-template #brakDanych>
+    <h2>ładowanie...</h2>
+</ng-template>

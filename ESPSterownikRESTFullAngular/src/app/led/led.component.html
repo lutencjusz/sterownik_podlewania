@@ -1,0 +1,16 @@
+<div class="p-grid p-align-center">
+    <div class="p-col-5">
+      <h3 class="first">Pompka 1</h3>
+    </div>
+    <div class="p-col-5">
+      <h3 class="first">Pompka 2</h3>
+    </div>
+</div>
+<div class="p-grid p-align-center">
+    <div class="p-col-5">
+        <p-inputSwitch (onChange)="ustawLED($event, '0')" [(ngModel)]="led0"></p-inputSwitch>
+    </div>
+    <div class="p-col-5">
+        <p-inputSwitch (onChange)="ustawLED($event, '4')" [(ngModel)]="led4"></p-inputSwitch>
+    </div>
+</div>

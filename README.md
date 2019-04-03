@@ -56,7 +56,7 @@ Kolejna funckja `do_next` odpowiada za przebieg procesu bootowania i dzieli się
     - pliki,
     - WiFi - w tym ostatnim oczekuję na zsynchronizowanie zegara oczekując na ustawienie zmiennej ''czyZsynchonizowano = true''
 
-2. wczytuje moduł parametryZewn i pobiera dane pogodowe poprzez ''pobierzDanePowietrza()'' i udstawia zmienną ''dataOstatniegoZapisu'' podając aktualny czas jako string w formacie "dzień/miesiąc/rok godzina:minuta:sekunda".
+2. wczytuje moduł parametryZewn i pobiera dane pogodowe poprzez `pobierzDanePowietrza()` i udstawia zmienną `dataOstatniegoZapisu` podając aktualny czas jako string w formacie "dzień/miesiąc/rok godzina:minuta:sekunda".
 Prubuje pobrać dane z serisu zewnętrznego trzy razy i jeżeli się nie uda, restartuje sterownik.
 
 3. wczytuje moduł _init, który ładuje:
@@ -66,28 +66,28 @@ Prubuje pobrać dane z serisu zewnętrznego trzy razy i jeżeli się nie uda, re
     - wyslijMail
     - InfluxDB
     - ServerWWW, ktory uruchamia RESTFul API
-Następnie ładuje wartości czujników poprzez funkcję `odswierzZakresyCzujnikow()`. Po czym uruchamia funkcję ''obslugaModulu()'', która jest petlą głowna sterownika.
+Następnie ładuje wartości czujników poprzez funkcję `odswierzZakresyCzujnikow()`. Po czym uruchamia funkcję `obslugaModulu()`, która jest petlą główną sterownika.
 
 ### obsługa sterownika
 
 Obsługa sterownika dzili się na trzy grupy poleceń:
-1. Ten blok instrukcji sprawdza, czy od ostaniego wczytania danych powietrza ''dataOstatniegoZapisu'' nineło więcej niż ''czasDoOdswierzeniaMin'' (np. 10 min.) wtedy są ładowane dane pogodowe z serisu airly.eu ''pobierzDanePowietrza()'' przez 20 sek. 
-Jeżeli dane zostały pobrane, to wtedy odświerzana jest obiekt ''wynikPZ'', który jest obiektem aktualnych danych pogodowych wykorzystywanym przez inne moduły.
+1. Ten blok instrukcji sprawdza, czy od ostaniego wczytania danych powietrza `dataOstatniegoZapisu` nineło więcej niż `czasDoOdswierzeniaMin` (np. 10 min.) wtedy są ładowane dane pogodowe z serisu airly.eu `pobierzDanePowietrza()` przez 20 sek. 
+Jeżeli dane zostały pobrane, to wtedy odświerzana jest obiekt `wynikPZ`, który jest obiektem aktualnych danych pogodowych wykorzystywanym przez inne moduły.
 
-2. W tym bloku ładowane są z plików JSON odpowiednie obiekty poprzez ''initKalendarza()'', co ma na celu przygotowanie środowiska do sprawdzenia mozliwości uruchomienia pompek: 
+2. W tym bloku ładowane są z plików JSON odpowiednie obiekty poprzez '`initKalendarza()`, co ma na celu przygotowanie środowiska do sprawdzenia mozliwości uruchomienia pompek: 
 - tLog - przechowuje informacje uruchomieniach pompek 
 - tAlarm - przechowuje informacje o alarmach związanych z prubwami uruchomienia
 - tKalendarz - przechowuje informaje o początkach okresów, w których można podlewać rośliny
-Następnie podejmuje próbę zapisy do bazy InfluxDB poprzez ''zapiszPTestoweInfluxDB()'', jeżeli zmienna ''zapisDoInfluxDB'' jest ustawiona.
+Następnie podejmuje próbę zapisy do bazy InfluxDB poprzez `zapiszPTestoweInfluxDB()`, jeżeli zmienna `zapisDoInfluxDB()` jest ustawiona.
 
-3. Blok uruchamia sprawdzenie możliwości podlewania poprzez uruchomienie komórki decyzyjnej ''czyAlerthumidity()'', która ustawia zmienną globalną czyUruchomicPompkiKalendarz1 w zależności od wilgotności.
-Następnie uruchaminiane jest sprawdzenie możliwości uruchomienia pompek poprzez ''uruchomPompki()'' oraz wczytanie obiektów z plików poprzez ''initKalendarza()'', w celu zaktualizowania danych ładowanych w bloku 2, aby móc prawidłowo wyliczyć czas do następnego uruchomienia procedury obsługi sterownika. Następuje 6 prób wczytania logu uruchomienia sterownika "log.json" i w przypadku braku wczytania danych...
+3. Blok uruchamia sprawdzenie możliwości podlewania poprzez uruchomienie komórki decyzyjnej `czyAlerthumidity()`, która ustawia zmienną globalną czyUruchomicPompkiKalendarz1 w zależności od wilgotności.
+Następnie uruchaminiane jest sprawdzenie możliwości uruchomienia pompek poprzez `uruchomPompki()` oraz wczytanie obiektów z plików poprzez `initKalendarza()`, w celu zaktualizowania danych ładowanych w bloku 2, aby móc prawidłowo wyliczyć czas do następnego uruchomienia procedury obsługi sterownika. Następuje 6 prób wczytania logu uruchomienia sterownika "log.json" i w przypadku braku wczytania danych...
 
-4. W bloku wyliczany jest czas uruchomienia timera w poleceniu ''tmr.interval(5, d * 60 * 1000)'' (d jest w min.)
-W tym celu uruchamiana jest funkcja ''zaIleUruchomicPompkiKalendarz()'' skorygowana o czas potrzebny do wysłania mejla przypominającego o uzupełnienieniu wody w zbiorniku ''ileCzasuDoWyslaniaMejla''.
-Następnie sprawdzane jest czy nie został wyliczony czas późniejszy (<0), to zostaje skorygowany o ''ileCzasuDoWyslaniaMejla''. 
+4. W bloku wyliczany jest czas uruchomienia timera w poleceniu `tmr.interval(5, d * 60 * 1000)` (d jest w min.)
+W tym celu uruchamiana jest funkcja `zaIleUruchomicPompkiKalendarz()` skorygowana o czas potrzebny do wysłania mejla przypominającego o uzupełnienieniu wody w zbiorniku `ileCzasuDoWyslaniaMejla`.
+Następnie sprawdzane jest czy nie został wyliczony czas późniejszy (<0), to zostaje skorygowany o `ileCzasuDoWyslaniaMejla`. 
 Jeżeli nadal wychodzi czas późniejszy (<0) lub za duży niż możliwości układu ESP8266 (powyżej 113 minut) następuje ustawienie maksymalnej wartości czasu.
-Ustawiana jest czas następnego uruchomienia oraz zapisywana ''dataNastepnegoSprawdzenia'' na podstawie funkcji ''kiedyNastepneSprawdzenie()''.
+Ustawiana jest czas następnego uruchomienia oraz zapisywana `dataNastepnegoSprawdzenia` na podstawie funkcji `kiedyNastepneSprawdzenie()`.
 
 Na koniec następuje uruchomienie bootowania poprzez
-''tmr.alarm(3,1000,1,do_next)''
+`tmr.alarm(3,1000,1,do_next)`

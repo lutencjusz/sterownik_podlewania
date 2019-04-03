@@ -26,7 +26,7 @@ Sternik składa się z następujących modułów:
 
 ### init.lua
 Moduł wydzieliłem, żeby uprościć nieco development. jest to jedyny moduł znajdujący się bezpośrednio w pamięci RAM. Zarządza ustawieniami dwóch zmiennych:
-- debugowanie (true/false) - true oznacza, że podczas uruchamiania i pracy modułu na konsoli pojawią się dodatkowe informacje w poszczególnych modułach.
+- `debugowanie` *(true/false)* - true oznacza, że podczas uruchamiania i pracy modułu na konsoli pojawią się dodatkowe informacje w poszczególnych modułach.
 - zapisDoInfluxDB (true/false) - true oznacza, że w module InfluxDB wysyłanie do bazy (uruchoamienie timera w funkcji zapiszPTestoweInfluxDB()) będzie zablokowane.
 Uruchamia moduł bootowanie znajdujący się w pamięci LFS poprzez polecenie:
 '' pcall(function()node.flashindex("bootowanie")()end)''

@@ -38,7 +38,7 @@ Najpierw moduł czyści zbędne pliki z końcówką `.lua`, z wyjątkiem `init.l
 l = file.list();
 for k,v in pairs(l) do
     if string.find(k, ".lua")~=nil and string.find(k, "init.lua")==nil then 
-        if file.exists(k) then -- czy trzeba kompilować moduł
+        if file.exists(k) then
             file.remove(k)
             print("  usunieto " .. k .. " ...")
         end

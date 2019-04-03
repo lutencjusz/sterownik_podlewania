@@ -34,7 +34,7 @@ i oddaje mu kontrolę.
 
 ### botowanie
 Najpierw moduł czyści zbędne pliki z końcówką .lua, z wyjątkiem init.lua, w celu usunięcia zbędnych plików powstałych podczas ich edycji i zapisu.
-''
+```
 l = file.list();
 for k,v in pairs(l) do
     if string.find(k, ".lua")~=nil and string.find(k, "init.lua")==nil then 
@@ -46,11 +46,11 @@ for k,v in pairs(l) do
 end
 l=nil; k=nil; v=nil; s=nil
 collectgarbage() 
-''
+```
 ### ładowanie modułów i ustawianie wstępnych wartości zmiennych
 
-Następnie wczytuje plik ustawień ustawieniaZ.json i zapisuje do obiektu ''u'' po czym przypisuje obiekt do zmiennych.
-Kolejna funckja ''do_next'' odpowiada za przebieg procesu bootowania i dzieli się na trzy grupy:
+Następnie wczytuje plik ustawień ustawieniaZ.json i zapisuje do obiektu `u` po czym przypisuje obiekt do zmiennych.
+Kolejna funckja `do_next` odpowiada za przebieg procesu bootowania i dzieli się na trzy grupy:
 1. Ładowanie modułów:
     - Vc,
     - pliki,
@@ -66,7 +66,7 @@ Prubuje pobrać dane z serisu zewnętrznego trzy razy i jeżeli się nie uda, re
     - wyslijMail
     - InfluxDB
     - ServerWWW, ktory uruchamia RESTFul API
-Następnie ładuje wartości czujników poprzez funkcję ''odswierzZakresyCzujnikow()''. Po czym uruchamia funkcję ''obslugaModulu()'', która jest petlą głowna sterownika.
+Następnie ładuje wartości czujników poprzez funkcję `odswierzZakresyCzujnikow()`. Po czym uruchamia funkcję ''obslugaModulu()'', która jest petlą głowna sterownika.
 
 ### obsługa sterownika
 

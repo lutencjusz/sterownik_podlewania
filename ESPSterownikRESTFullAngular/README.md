@@ -1,8 +1,16 @@
-# MyProject
+# GUI Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.3.
+GUI do obsługi sterownika zostało napisane w [Angular CLI](https://github.com/angular/angular-cli) version 7.3.3 i służy do szybkiej i kompleksowej prezentacji danych zgdormadzonych w sterowniku podlewania w atrakcyjnej formie graficznej. 
+Aplikacja nie posiada funkcjonalności związanej z zabezpieczeniem dostępu przez osoby niepowołane. Być może z czasem pojawi się potrzeba jej wprowadzenia.
 
-## Development server
+## Funkcjoanlności
+Aplikacja realizauje następujące funkcjonalności:
+- przegladanie alertów pobranych ze sterownika
+- przeglądanie logów uruchomieniowych ze sterownika
+- prezentacja planowanego czasu uruchomienia i następnej kontroli.
+- niezalżne od logiki uruchomienie pompek, każdej z osobna
+w celach testowych:
+- wprowadzenie przykładowego logu uruchom
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 

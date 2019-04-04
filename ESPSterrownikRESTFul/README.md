@@ -5,7 +5,7 @@
 ```
 adc,crypto,encoder,file,gdbstub,gpio,http,net,node,ow,rtcfifo,rtcmem,rtctime,sjson,sntp,tmr,uart,websocket,wifi,tls
 ```
-- koniecznie należy zaznczyć opcję `LFS options (for master & dev branches)` i wybrać wartości zależne od stosowanego układu (np. dla ESP-12E - wszystkie maksymalne). Ze względu na ograniczoną wielkość pamięci RAM układu, konieczne jest trzymanie wszystkich możliwych modułów i funkcji w pamięci LFS w postaci pliku binarnego i stamtąd ich uruchamianie.
+- koniecznie należy zaznaczyć opcję `LFS options (for master & dev branches)` i wybrać wartości zależne od stosowanego układu (np. dla ESP-12E - wszystkie maksymalne). Ze względu na ograniczoną wielkość pamięci RAM układu, konieczne jest trzymanie wszystkich możliwych modułów i funkcji w pamięci LFS w postaci pliku binarnego i stamtąd ich uruchamianie.
 - dodatkowo należy wybrać `ssl = true`, co umożliwi dodanie modułu `tls`. 
 
 2. Przygotowane wersje firmware zostaną przysłane mejlem, jednak wykorzystana może być tylko wersja obsługująca zmienne integer np.
@@ -13,15 +13,20 @@ adc,crypto,encoder,file,gdbstub,gpio,http,net,node,ow,rtcfifo,rtcmem,rtctime,sjs
 nodemcu-master-18-modules-2017-02-19-13-15-55-integer.bin - tylko ta jest do wykorzystania
 nodemcu-master-18-modules-2017-02-19-13-15-55-float.bin
 ```
-ponieważ wersja `...float.bin` nie umozliwia wprowadzenia wygenerowanego obrazu `ESPCzujnikiRESTFul.img` do pamięci LFS.
+ponieważ wersja `...float.bin` nie umożliwia wprowadzenia wygenerowanego obrazu `ESPCzujnikiRESTFul.img` do pamięci LFS.
 
-## Przygotowanie własnych wersji obrazów biznarnych
+## Przygotowanie własnych wersji obrazów binarnych
 Ponieważ projekt jest nadal rozwijany, możliwe jest niedostosowanie wersji obrazów developerskich do dystrybucyjnych. W takim przypadku możliwe jest wygenerowanie własnych obrazów składających się z załączonych w plików '.lua' z wyjątkiem init.lua. W tym celu należy:
-1. skompersować pliki `.lua` (z wyjątkiem `init.lua`) do postaci `obraz.zip'
+1. skompresować pliki `.lua` (z wyjątkiem `init.lua`) do postaci `obraz.zip'
 2. uruchomić narzędzie z blogu Terry Ellison's [A Lua Cross-Compile Web Service](https://blog.ellisons.org.uk/article/nodemcu/a-lua-cross-compile-web-service/) i wczytać plik `obraz.zip` do narzędzia poprzez przycisk *Wybierz plik*. 
-3. Wybrać opcję `REMOTE LUAC.CROSS.INIT (MASTER), co spowoduje wygenerowanie i zapisanie pliku `obraz.img`
-4. 
-
+3. Wybrać opcję `REMOTE LUAC.CROSS.INIT (MASTER)`, co spowoduje wygenerowanie i zapisanie pliku `obraz.img`
+4. Za pomocą ESPlorer przycisku *Uload* należy wgrać na sterownik plik będący obrazem binarnym modułów `obraz.img`
+5. W linii poleceń sterownika należy wykonać komendę 
+```
+node.flashreload("obraz.img")
+```
+Po czym sterownik powinien się zrestartować, co kończy wgrywanie obrazu. Wiele błędów jest spowodowanych tym, że w pamięci sterownika znajdują się zbędne pliki i programy, dlatego najlepiej jest wgrywać obraz do sterownika bez pliku `init.lua` i jego restarcie.
+Na pewno jest możliwość wygenerowania własnych obrazów, umożliwiających nawet obsługę firmware'ów float, jednak całe rozwiązanie jest dostosowane do pracy na zmiennych integer, nawet dla liczb wymagających części ułamkowych.
 
 ## Wgranie oprogramowania
 Instalacja sterownika odbywa się za pomocą [ESPlorer](https://esp8266.ru/esplorer/) i wymaga zastosowania urządzenia klasy ESP8266 z co najmniej 40 KB pamięci RAM przeznaczonej na instrukcję i dodatkowej niewielkiej przestrzeni na pliki operacyjne i konfiguracyjne.
@@ -31,7 +36,7 @@ Instalacja sterownika odbywa się za pomocą [ESPlorer](https://esp8266.ru/esplo
 ```
 node.flashreload("ESPCzujnikiRESTFul.img")
 ```
-Po czym sterownik powinien się zrestartować. Wiele błedów jest spowodowanych tym, że w pamięci sterownika znajdują się zbędne pliki i programy, dlatego najlepiej jest wgrywać obraz do sterownika bez pliku `init.lua` i jego restarcie.
+Po czym sterownik powinien się zrestartować, co kończy wgrywanie obrazu. Wiele błedów jest spowodowanych tym, że w pamięci sterownika znajdują się zbędne pliki i programy, dlatego najlepiej jest wgrywać obraz do sterownika bez pliku `init.lua` i jego restarcie.
 
 4. Do sterownika należy wgrać następujące pliki:
 - ustawieniaZ.json

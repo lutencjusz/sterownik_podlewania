@@ -1,35 +1,35 @@
 # GUI Angular
 
-GUI do obsługi sterownika zostało napisane w [Angular CLI](https://github.com/angular/angular-cli) version 7.3.3 i służy do szybkiej i kompleksowej prezentacji danych zgdormadzonych w sterowniku podlewania w atrakcyjnej formie graficznej. 
+GUI do obsługi sterownika zostało napisane we frameworku [Angular CLI](https://github.com/angular/angular-cli) version 7.3.3 i służy do szybkiej i kompleksowej prezentacji danych zgromadzonych w sterowniku podlewania w formie graficznej. 
 Aplikacja nie posiada funkcjonalności związanej z zabezpieczeniem dostępu przez osoby niepowołane. Być może z czasem pojawi się potrzeba jej wprowadzenia.
 
-## Funkcjoanlności
-Aplikacja realizauje następujące funkcjonalności:
-- przegladanie alertów pobranych ze sterownika
+## Funkcjonalności
+Aplikacja realizuje następujące funkcjonalności:
+- przeglądanie alertów pobranych ze sterownika
 - przeglądanie logów uruchomieniowych ze sterownika
 - prezentacja planowanego czasu uruchomienia i następnej kontroli.
-- niezalżne od logiki uruchomienie pompek, każdej z osobna
-w celach testowych:
-- wprowadzenie przykładowego logu uruchom
+- niezależnie od logiki uruchomienie pompek, każdej z osobna
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+w celach testowych (funkcjonalności zablokowane):
+- wprowadzenie przykładowego logu uruchomieniowego
+- wprowadzenie przykładowego alarmu
+- restart sterownika
 
-## Code scaffolding
+## instalacja aplikacji
+Aby zainstalować aplikację należy:
+1. Rozpakować katalog [
+ESPSterownikRESTFullAngular](https://github.com/lutencjusz/sterownik_podlewania/blob/master/ESPSterownikRESTFullAngular/) w dowolnym miejscu na komputerze *(np. c:\programy\)*
+2. Ponieważ w archiwum nie ma modułów angularowych `node_module`, trzeba je zainstalować poprzez polecenie z katalogu rozpakowanej aplikacji:
+```
+ng install
+```
+3. Następnie należy uruchomić aplikację poprzez 
+```
+ng serve
+```
+Aplikacja będzie dostępna w `http://localhost:4200/` i powinna od razu połączyć się ze sterownikiem, pod warunkiem, że serwis RESTFul API sterownika jest dostępny domyślnie pod adresem 192.168.0.15...
+Dalsze budowanie wersji produkcyjnej aplikacji oraz umieszczenie jej na publicznym repozytorium (np. Firebase) nie leży w zakresie tego materiału.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Budowa aplikacji
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+...

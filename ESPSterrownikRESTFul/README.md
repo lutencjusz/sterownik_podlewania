@@ -1,12 +1,12 @@
 # Instalacja sterownika
-Instalacja sterownika odbywa się za pomocą [ESPlorer](https://esp8266.ru/esplorer/) i wymaga zastosowania urządzenia klasy ESP8266 z co najmniej 40 KB pamięci RAM przeznaczonej na istrukcję i dodatkowej niewielkiej przestrzeni na pliki operacyjne i konfiguracyjne.
-1. Całość katalogu [ESPSterrownikRESTFul](https://github.com/lutencjusz/sterownik_podlewania/edit/master/ESPSterrownikRESTFul/) należy rozpoakować w osobnym katalogu (np. C:\programy\sterownikPodlewania\).
+Instalacja sterownika odbywa się za pomocą [ESPlorer](https://esp8266.ru/esplorer/) i wymaga zastosowania urządzenia klasy ESP8266 z co najmniej 40 KB pamięci RAM przeznaczonej na instrukcję i dodatkowej niewielkiej przestrzeni na pliki operacyjne i konfiguracyjne.
+1. Całość katalogu [ESPSterrownikRESTFul](https://github.com/lutencjusz/sterownik_podlewania/edit/master/ESPSterrownikRESTFul/) należy rozpakować w osobnym katalogu (np. C:\programy\sterownikPodlewania\).
 2. Za pomocą ESPlorer przycisku *Uload* należy wgrać na sterownik plik będący obrazem binarnym modułów `ESPCzujnikiRESTFul.img`
 3. W linii poleceń sterownika należy wykonać komendę 
 ```
 node.flashreload("ESPCzujnikiRESTFul.img")
 ```
-4. Do sterownika nalezy wgrać nastepujące pliki:
+4. Do sterownika należy wgrać następujące pliki:
 - ustawieniaZ.json
 - parametryCz.json
 - log.json

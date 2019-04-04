@@ -1,11 +1,14 @@
 # Instalacja sterownika
 ## Wstępne przygotowanie ESP8266
-Do przygotowania odpowiedniego firmware wykorzystałem stronę [NodeMCU custom builds](https://nodemcu-build.com/). Dla chętnych można samemu przygotować odpowieni firmware, niemniej powinien on się składać z następujących modułów:
+1. Do przygotowania odpowiedniego firmware wykorzystałem stronę [NodeMCU custom builds](https://nodemcu-build.com/). Dla chętnych można samemu przygotować odpowieni firmware, niemniej powinien on się składać z następujących modułów (lista modułów jest dostępna w pliku moduły_kompilacji.txt):
+
 ```
 adc,crypto,encoder,file,gdbstub,gpio,http,net,node,ow,rtcfifo,rtcmem,rtctime,sjson,sntp,tmr,uart,websocket,wifi,tls
 ```
-koniecznie 
+- koniecznie należy zaznczyć opcję `LFS options (for master & dev branches)` i wybrać wartości zależne od stosowanego układu (np. dla ESP-12E - wszystkie maksymalne). Ze względu na ograniczoną wielkość pamięci RAM układu, konieczne jest trzymanie wszystkich możliwych modułów w pamięci LFS i z tamtąd ich uruchamianie.
+- dodatkowo należy wybrać `ssl = true`, co umożliwi dodanie modułu `tls`. 
 
+2. Przygotowane wersje firmware zostaną przysłane mejlem, jednak wykorzystana 
 ## Wgranie oprogramowania
 Instalacja sterownika odbywa się za pomocą [ESPlorer](https://esp8266.ru/esplorer/) i wymaga zastosowania urządzenia klasy ESP8266 z co najmniej 40 KB pamięci RAM przeznaczonej na instrukcję i dodatkowej niewielkiej przestrzeni na pliki operacyjne i konfiguracyjne.
 1. Całość katalogu [ESPSterrownikRESTFul](https://github.com/lutencjusz/sterownik_podlewania/edit/master/ESPSterrownikRESTFul/) należy rozpakować w osobnym katalogu (np. C:\programy\sterownikPodlewania\).

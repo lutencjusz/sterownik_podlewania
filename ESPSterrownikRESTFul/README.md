@@ -1,4 +1,12 @@
 # Instalacja sterownika
+## Wstępne przygotowanie ESP8266
+Do przygotowania odpowiedniego firmware wykorzystałem stronę [NodeMCU custom builds](https://nodemcu-build.com/). Dla chętnych można samemu przygotować odpowieni firmware, niemniej powinien on się składać z następujących modułów:
+```
+adc,crypto,encoder,file,gdbstub,gpio,http,net,node,ow,rtcfifo,rtcmem,rtctime,sjson,sntp,tmr,uart,websocket,wifi,tls
+```
+koniecznie 
+
+## Wgranie oprogramowania
 Instalacja sterownika odbywa się za pomocą [ESPlorer](https://esp8266.ru/esplorer/) i wymaga zastosowania urządzenia klasy ESP8266 z co najmniej 40 KB pamięci RAM przeznaczonej na instrukcję i dodatkowej niewielkiej przestrzeni na pliki operacyjne i konfiguracyjne.
 1. Całość katalogu [ESPSterrownikRESTFul](https://github.com/lutencjusz/sterownik_podlewania/edit/master/ESPSterrownikRESTFul/) należy rozpakować w osobnym katalogu (np. C:\programy\sterownikPodlewania\).
 2. Za pomocą ESPlorer przycisku *Uload* należy wgrać na sterownik plik będący obrazem binarnym modułów `ESPCzujnikiRESTFul.img`
@@ -6,6 +14,8 @@ Instalacja sterownika odbywa się za pomocą [ESPlorer](https://esp8266.ru/esplo
 ```
 node.flashreload("ESPCzujnikiRESTFul.img")
 ```
+Po czym sterownik powinien się zrestartować. Wiele błedów jest spowodowanych tym, że w pamięci sterownika znajdują się zbędne pliki i programy, dlatego najlepiej jest wgrywać obraz do sterownika bez pliku `init.lua` i jego restarcie.
+
 4. Do sterownika należy wgrać następujące pliki:
 - ustawieniaZ.json
 - parametryCz.json
@@ -13,9 +23,7 @@ node.flashreload("ESPCzujnikiRESTFul.img")
 - kalendarz.json
 - init.lua
 
-5. Po restarcie sterownik rozpocznie pracę w docelowym układzie.
-
-Po czym sterownik powinien się zrestartować. Wiele błedów jest spowodowanych tym, że w pamięci sterownika znajdują się zbędne pliki i programy, dlatego najlepiej jest wgrywać obraz do sterownika bez pliku `init.lua` i jego restarcie.
+5. Po restarcie ESP8266 jest gotowy do rozpoczęcia pracy i włożenia do układu docelowego. Należy pamiętać, że obudowa powinna być wodoodporna. Układ praktycznie się nie grzeje, więc nie wymaga dodatkowego chłodzenia. Nie testowałem układu w warunkach zimowych...
 
 # Rozwój sterownika
 W następnej wersji planuję wprowadzić możliwość procentowego określenia prawdopodobieństwa podlania roślin w przyszłości przez sterownik, co wiąże się z koniecznością zaplanowania uzupełnienia wody w zbiorniku, w przypadku urlopów lub dłuższych wyjazdów.

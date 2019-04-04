@@ -1,10 +1,26 @@
-# Budowa sterownika
+# Instalacja sterownika
+Instalacja sterownika odbywa się za pomocą [ESPlorer](https://esp8266.ru/esplorer/) i wymaga zastosowania urządzenia klasy ESP8266 z co najmniej 40 KB pamięci RAM przeznaczonej na istrukcję i dodatkowej niewielkiej przestrzeni na pliki operacyjne i konfiguracyjne.
+1. Całość katalogu [ESPSterrownikRESTFul](https://github.com/lutencjusz/sterownik_podlewania/edit/master/ESPSterrownikRESTFul/) należy rozpoakować w osobnym katalogu (np. C:\programy\sterownikPodlewania\).
+2. Za pomocą ESPlorer przycisku *Uload* należy wgrać na sterownik plik będący obrazem binarnym modułów `ESPCzujnikiRESTFul.img`
+3. W linii poleceń sterownika należy wykonać komendę 
+```
+node.flashreload("ESPCzujnikiRESTFul.img")
+```
+4. Do sterownika nalezy wgrać nastepujące pliki:
+- ustawieniaZ.json
+- parametryCz.json
+- log.json
+- kalendarz.json
+- init.lua
 
+5. Po restarcie sterownik rozpocznie pracę w docelowym układzie.
+
+Po czym sterownik powinien się zrestartować. Wiele błedów jest spowodowanych tym, że w pamięci sterownika znajdują się zbędne pliki i programy, dlatego najlepiej jest wgrywać obraz do sterownika bez pliku `init.lua` i jego restarcie.
 
 # Rozwój sterownika
-W następnej wersji planuję wprowadzić możliwość procentowego określenia prawdopodobieństwa podlania roślin w przyszłości przez sterownik, co wiąże się z koniecznością zapewnienia wody w zbiorniku.
+W następnej wersji planuję wprowadzić możliwość procentowego określenia prawdopodobieństwa podlania roślin w przyszłości przez sterownik, co wiąże się z koniecznością zaplanowania uzupełnienia wody w zbiorniku, w przypadku urlopów lub dłuższych wyjazdów.
 
-Rozważam również możliwość przejścia na platformę ESP32 (język MicroPython), ze względu na ograniczenia pamięci modułu ESP8266 szczególnie podczas pobierania informacji pogodowych z zewnętrznych serwisów (RESTFul API).
+Rozważam również możliwość przejścia na platformę ESP32 (język MicroPython), ze względu na ograniczenia pamięci modułu ESP8266 podczas pobierania informacji pogodowych z zewnętrznych serwisów (RESTFul API).
 
 Planuję rozwinąć panel Grafana wpółpracujący z InfluxDB, w celu wykonania bardziej złożonych statystyk, które mogą ulepszyć logikę modułu.
 

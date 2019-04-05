@@ -54,31 +54,31 @@ Rozważam również możliwość przejścia na platformę ESP32 (język MicroPyt
 
 Planuję rozwinąć panel Grafana wpółpracujący z InfluxDB, w celu wykonania bardziej złożonych statystyk, które mogą ulepszyć logikę modułu.
 
-## Moduły sterownika
+# Moduły sterownika
 Sternik składa się z następujących modułów:
--   init - mikro moduł startujący, proces bootowania
--   bootowanie - moduł bootowania oraz utrzymania sterownika
--	_init - moduł uruchamiający pozostałe moduły
--	httpServer - biblioteka do mini servera HTTP stworzona przez @yulincoder i @wangzexi https://github.com/wangzexi/NodeMCU-HTTP-Server
--	InfluxDB - moduł zapisujący dane ze sterownika w bazie czasu rzeczywistego.
--	kalendarz - moduł obsługujący daty i czasy oraz ich porównywania
--	logika - moduł zwierający logikę sterownika
--	parametyZewnętrzne - moduł pobierający dane pogodowe z serwisu airly.eu.
--	pliki - moduł obsługujący pliki zewnętrzne podczas pracy modułu (JSON)
--	ServerWWW - moduł obsługujący RESTFul API sterownika
--	Vc - moduł inicjujący i pobierający napięcie zasilania sterownika
--	WiFi - moduł podłączający sterownik do lokalnej sieci WiFi
--	wyslijMejl - moduł wykonujący sekwencję wysyłania poczty do serwera pocztowego.
+-   init.lua - mikro moduł startujący, proces bootowania
+-   bootowanie.lua - moduł bootowania oraz utrzymania sterownika
+-	_init.lua - moduł uruchamiający pozostałe moduły
+-	httpServer.lua - biblioteka do mini servera HTTP stworzona przez @yulincoder i @wangzexi https://github.com/wangzexi/NodeMCU-HTTP-Server
+-	`InfluxDB.lua` - moduł zapisujący dane ze sterownika w bazie czasu rzeczywistego.
+-	`kalendarz.lua` - moduł obsługujący daty i czasy oraz ich porównywania
+-	`logika.lua` - moduł zwierający logikę sterownika
+-	`parametyZewnętrzne.lua` - moduł pobierający dane pogodowe z serwisu airly.eu.
+-	`pliki.lua` - moduł obsługujący pliki zewnętrzne podczas pracy modułu (JSON)
+-	`ServerWWW.lua` - moduł obsługujący RESTFul API sterownika
+-	`Vc.lua` - moduł inicjujący i pobierający napięcie zasilania sterownika
+-	`WiFi.lua` - moduł podłączający sterownik do lokalnej sieci WiFi
+-	`wyslijMejl.lua` - moduł wykonujący sekwencję wysyłania poczty do serwera pocztowego.
 
-### init.lua
+## `init.lua`
 Moduł wydzieliłem, żeby uprościć nieco development. jest to jedyny moduł znajdujący się bezpośrednio w pamięci RAM. Zarządza ustawieniami dwóch zmiennych:
 - `debugowanie` *(true/false)* - true oznacza, że podczas uruchamiania i pracy modułu na konsoli pojawią się dodatkowe informacje w poszczególnych modułach.
-- zapisDoInfluxDB *(true/false)* - true oznacza, że w module InfluxDB wysyłanie do bazy (uruchomienie timera w funkcji zapiszPTestoweInfluxDB()) będzie zablokowane.
+- `zapisDoInfluxDB` *(true/false)* - true oznacza, że w module InfluxDB wysyłanie do bazy (uruchomienie timera w funkcji zapiszPTestoweInfluxDB()) będzie zablokowane.
 Uruchamia moduł bootowanie znajdujący się w pamięci LFS poprzez polecenie:
 `pcall(function()node.flashindex("bootowanie")()end)`
 i oddaje mu kontrolę.
 
-### botowanie
+## `botowanie.lua`
 Najpierw moduł czyści zbędne pliki z końcówką `.lua`, z wyjątkiem `init.lua`, w celu usunięcia zbędnych plików powstałych podczas ich edycji i zapisu.
 ```
 l = file.list();
@@ -137,3 +137,5 @@ Ustawiana jest czas następnego uruchomienia oraz zapisywana `dataNastepnegoSpra
 
 Na koniec następuje uruchomienie bootowania poprzez
 `tmr.alarm(3,1000,1,do_next)`
+
+## `logika.lua`

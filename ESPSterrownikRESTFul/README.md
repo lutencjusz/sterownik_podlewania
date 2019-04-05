@@ -1,38 +1,84 @@
-# Budowa sterownika
+# Instalacja sterownika
+## Wstępne przygotowanie ESP8266
+1. Do przygotowania odpowiedniego firmware wykorzystałem stronę [NodeMCU custom builds](https://nodemcu-build.com/). Dla chętnych można samemu przygotować odpowieni firmware, niemniej powinien on się składać z następujących modułów (lista modułów jest dostępna w pliku moduły_kompilacji.txt):
 
+```
+adc,crypto,encoder,file,gdbstub,gpio,http,net,node,ow,rtcfifo,rtcmem,rtctime,sjson,sntp,tmr,uart,websocket,wifi,tls
+```
+- koniecznie należy zaznaczyć opcję `LFS options (for master & dev branches)` i wybrać wartości zależne od stosowanego układu (np. dla ESP-12E - wszystkie maksymalne). Ze względu na ograniczoną wielkość pamięci RAM układu, konieczne jest trzymanie wszystkich możliwych modułów i funkcji w pamięci LFS w postaci pliku binarnego i stamtąd ich uruchamianie.
+- dodatkowo należy wybrać `ssl = true`, co umożliwi dodanie modułu `tls`. 
+
+2. Przygotowane wersje firmware zostaną przysłane mejlem, jednak wykorzystana może być tylko wersja obsługująca zmienne integer np.
+```
+nodemcu-master-18-modules-2017-02-19-13-15-55-integer.bin - tylko ta jest do wykorzystania
+nodemcu-master-18-modules-2017-02-19-13-15-55-float.bin
+```
+ponieważ wersja `...float.bin` nie umożliwia wprowadzenia wygenerowanego obrazu `ESPCzujnikiRESTFul.img` do pamięci LFS.
+
+## Przygotowanie własnych wersji obrazów binarnych
+Ponieważ projekt jest nadal rozwijany, możliwe jest niedostosowanie wersji obrazów developerskich do dystrybucyjnych. W takim przypadku możliwe jest wygenerowanie własnych obrazów składających się z załączonych w plików '.lua' z wyjątkiem init.lua. W tym celu należy:
+1. skompresować pliki `.lua` (z wyjątkiem `init.lua`) do postaci `obraz.zip'
+2. uruchomić narzędzie z blogu Terry Ellison's [A Lua Cross-Compile Web Service](https://blog.ellisons.org.uk/article/nodemcu/a-lua-cross-compile-web-service/) i wczytać plik `obraz.zip` do narzędzia poprzez przycisk *Wybierz plik*. 
+3. Wybrać opcję `REMOTE LUAC.CROSS.INIT (MASTER)`, co spowoduje wygenerowanie i zapisanie pliku `obraz.img`
+4. Za pomocą ESPlorer przycisku *Uload* należy wgrać na sterownik plik będący obrazem binarnym modułów `obraz.img`
+5. W linii poleceń sterownika należy wykonać komendę 
+```
+node.flashreload("obraz.img")
+```
+Po czym sterownik powinien się zrestartować, co kończy wgrywanie obrazu. Wiele błędów jest spowodowanych tym, że w pamięci sterownika znajdują się zbędne pliki i programy, dlatego najlepiej jest wgrywać obraz do sterownika bez pliku `init.lua` i jego restarcie.
+Na pewno jest możliwość wygenerowania własnych obrazów, umożliwiających nawet obsługę firmware'ów float, jednak całe rozwiązanie jest dostosowane do pracy na zmiennych integer, nawet dla liczb wymagających części ułamkowych.
+
+## Wgranie oprogramowania
+Instalacja sterownika odbywa się za pomocą [ESPlorer](https://esp8266.ru/esplorer/) i wymaga zastosowania urządzenia klasy ESP8266 z co najmniej 40 KB pamięci RAM przeznaczonej na instrukcję i dodatkowej niewielkiej przestrzeni na pliki operacyjne i konfiguracyjne.
+1. Całość katalogu [ESPSterrownikRESTFul](https://github.com/lutencjusz/sterownik_podlewania/edit/master/ESPSterrownikRESTFul/) należy rozpakować w osobnym katalogu (np. C:\programy\sterownikPodlewania\).
+2. Za pomocą ESPlorer przycisku *Uload* należy wgrać na sterownik plik będący obrazem binarnym modułów `ESPCzujnikiRESTFul.img`
+3. W linii poleceń sterownika należy wykonać komendę 
+```
+node.flashreload("ESPCzujnikiRESTFul.img")
+```
+Po czym sterownik powinien się zrestartować, co kończy wgrywanie obrazu. Wiele błedów jest spowodowanych tym, że w pamięci sterownika znajdują się zbędne pliki i programy, dlatego najlepiej jest wgrywać obraz do sterownika bez pliku `init.lua` i jego restarcie.
+
+4. Do sterownika należy wgrać następujące pliki:
+- ustawieniaZ.json
+- parametryCz.json
+- log.json
+- kalendarz.json
+- init.lua
+
+5. Po restarcie ESP8266 jest gotowy do rozpoczęcia pracy i włożenia do układu docelowego. Należy pamiętać, że obudowa powinna być wodoodporna. Układ praktycznie się nie grzeje, więc nie wymaga dodatkowego chłodzenia. Nie testowałem układu w warunkach zimowych...
 
 # Rozwój sterownika
-W następnej wersji planuję wprowadzić możliwość procentowego określenia prawdopodobieństwa podlania roślin w przyszłości przez sterownik, co wiąże się z koniecznością zapewnienia wody w zbiorniku.
+W następnej wersji planuję wprowadzić możliwość procentowego określenia prawdopodobieństwa podlania roślin w przyszłości przez sterownik, co wiąże się z koniecznością zaplanowania uzupełnienia wody w zbiorniku, w przypadku urlopów lub dłuższych wyjazdów.
 
-Rozważam również możliwość przejścia na platformę ESP32 (język MicroPython), ze względu na ograniczenia pamięci modułu ESP8266 szczególnie podczas pobierania informacji pogodowych z zewnętrznych serwisów (RESTFul API).
+Rozważam również możliwość przejścia na platformę ESP32 (język MicroPython), ze względu na ograniczenia pamięci modułu ESP8266 podczas pobierania informacji pogodowych z zewnętrznych serwisów (RESTFul API).
 
 Planuję rozwinąć panel Grafana wpółpracujący z InfluxDB, w celu wykonania bardziej złożonych statystyk, które mogą ulepszyć logikę modułu.
 
-## Moduły sterownika
+# Moduły sterownika
 Sternik składa się z następujących modułów:
--   init - mikro moduł startujący, proces bootowania
--   bootowanie - moduł bootowania oraz utrzymania sterownika
--	_init - moduł uruchamiający pozostałe moduły
--	httpServer - biblioteka do mini servera HTTP stworzona przez @yulincoder i @wangzexi https://github.com/wangzexi/NodeMCU-HTTP-Server
--	InfluxDB - moduł zapisujący dane ze sterownika w bazie czasu rzeczywistego.
--	kalendarz - moduł obsługujący daty i czasy oraz ich porównywania
--	logika - moduł zwierający logikę sterownika
--	parametyZewnętrzne - moduł pobierający dane pogodowe z serwisu airly.eu.
--	pliki - moduł obsługujący pliki zewnętrzne podczas pracy modułu (JSON)
--	ServerWWW - moduł obsługujący RESTFul API sterownika
--	Vc - moduł inicjujący i pobierający napięcie zasilania sterownika
--	WiFi - moduł podłączający sterownik do lokalnej sieci WiFi
--	wyslijMejl - moduł wykonujący sekwencję wysyłania poczty do serwera pocztowego.
+-   `init.lua` - mikro moduł startujący, proces bootowania
+-   `bootowanie.lua` - moduł bootowania oraz utrzymania sterownika
+-	`_init.lua` - moduł uruchamiający pozostałe moduły
+-	`httpServer.lua` - biblioteka do mini servera HTTP stworzona przez @yulincoder i @wangzexi https://github.com/wangzexi/NodeMCU-HTTP-Server
+-	`InfluxDB.lua` - moduł zapisujący dane ze sterownika w bazie czasu rzeczywistego.
+-	`kalendarz.lua` - moduł obsługujący daty i czasy oraz ich porównywania
+-	`logika.lua` - moduł zwierający logikę sterownika
+-	`parametyZewnętrzne.lua` - moduł pobierający dane pogodowe z serwisu airly.eu.
+-	`pliki.lua` - moduł obsługujący pliki zewnętrzne podczas pracy modułu (JSON)
+-	`ServerWWW.lua` - moduł obsługujący RESTFul API sterownika
+-	`Vc.lua` - moduł inicjujący i pobierający napięcie zasilania sterownika
+-	`WiFi.lua` - moduł podłączający sterownik do lokalnej sieci WiFi
+-	`wyslijMejl.lua` - moduł wykonujący sekwencję wysyłania poczty do serwera pocztowego.
 
-### init.lua
+## `init.lua`
 Moduł wydzieliłem, żeby uprościć nieco development. jest to jedyny moduł znajdujący się bezpośrednio w pamięci RAM. Zarządza ustawieniami dwóch zmiennych:
 - `debugowanie` *(true/false)* - true oznacza, że podczas uruchamiania i pracy modułu na konsoli pojawią się dodatkowe informacje w poszczególnych modułach.
-- zapisDoInfluxDB *(true/false)* - true oznacza, że w module InfluxDB wysyłanie do bazy (uruchomienie timera w funkcji zapiszPTestoweInfluxDB()) będzie zablokowane.
+- `zapisDoInfluxDB` *(true/false)* - true oznacza, że w module InfluxDB wysyłanie do bazy (uruchomienie timera w funkcji zapiszPTestoweInfluxDB()) będzie zablokowane.
 Uruchamia moduł bootowanie znajdujący się w pamięci LFS poprzez polecenie:
 `pcall(function()node.flashindex("bootowanie")()end)`
 i oddaje mu kontrolę.
 
-### botowanie
+## `botowanie.lua`
 Najpierw moduł czyści zbędne pliki z końcówką `.lua`, z wyjątkiem `init.lua`, w celu usunięcia zbędnych plików powstałych podczas ich edycji i zapisu.
 ```
 l = file.list();
@@ -91,3 +137,36 @@ Ustawiana jest czas następnego uruchomienia oraz zapisywana `dataNastepnegoSpra
 
 Na koniec następuje uruchomienie bootowania poprzez
 `tmr.alarm(3,1000,1,do_next)`
+
+## `logika.lua`
+Moduł zapewnia dostarczenie logiki do podejmowania decyzji o podlewaniu na podstawie dostępnych parametrów pogodowych. W skład modułu wchodzą następujące komórki decyzyjne, które zwracają zmodyfikowany obiekt alertu `ob` oraz ustawiają zmienne globalne:
+
+### czyAlertPozZasVc (ob)
+Komórka sprawdza, czy napięcie zasilania pompek `PTestowe.Vp` mieści się w wyznaczonym przedziale określonym przez parametry sterownika `pCz.VcMax` oraz `pCz.VcMin`, blokując jednocześnie uruchomienie pompek w przypadku nieprawidłowości.
+
+### czyAlertPozZasVp (ob)
+Komórka robi to samo co poprzednik, tylko dla napięcia układu określonego przez `PTestowe.Vc`. Przedział określa `pCz.VpMax` oraz `pCz.VpMin`.
+
+### czyAlerthumidity (ob)
+Komórka sprawdza wilgotność powietrza `pTestowe.humidity` ograniczoną przez `pCz.humidityMin` oraz `pCz.humidityMax` blokująco uruchomienie pompek. 
+Dodatkowo ustawia zmienną globalną `czyUruchomicPompkiKalendarz1` w przypadku, gdy wilgotność jest wyższa niż optymalna `pCz.humidityOpt`. Zmienna ta, jeżeli jest ustwiona na *false* blokuje poranne uruchomienie pompek.
+
+### czyAlertTempPow (ob)
+Komórka sprawdza temperaturę powetrza `pTestowe.temp/_u`, czy mieści się w przedziale określonym `pCz.temp_min` oraz `pCz.temp_max`. Jeżeli wykracza za przedział, komórka blokuje uruchomienie pompek.
+
+### czyAlertKalenadza (ob)
+Komórka określa aktualny czas w stosunku do czasów wyznaczonych w kalendarzu oraz daty ostatniego podlewania i sprawdza, czy podlewania miało już miejsce, czy jeszcze nie. Blokuje uruchomienie pompek, jeżeli podlewanie o tej porze miało już miejsce.
+
+### czyAlertPoziomuWody (ob)
+komórka sprawdza, czy jest wystarczająca ilość wody do polewania i jeżeli nie ma, blokuje uruchomienie podlewania. Obecnie komórka jest zablokowana i zawsze dopuszcza do podlewania.
+
+### czyAlertPrzedzialuCzasowego (ob)
+Komórka określa na podstawie aktualnego czasu, czy jest to ten moment na podlewanie, który mieści się w wyznaczonym przedziale czasu. Ten przedział mieści się między datą początku podlewania zapisaną w pliku 'kalendarz.json', a czasem wyznaczonym przez zmienną globalną `mozliwyCzasNaPodlewanie` (wyrażoną w godzinach). Komórka nie rozróżnia, czy ma do czynienia z podlewaniem porannym, czy wieczornym.
+Komórka do oceny wykorzystuje funkcję `czyMiesciSiePrzedzialeCzasowym ()` w `module kalendarz.lua`
+
+### ustawienieAlertowLogiki (ob)
+Funkcja łączy z sobą poszczególne komórki decyzyjne i zwraca wynik analizy w formie obiektu alertu `ob`.
+
+
+
+

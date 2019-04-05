@@ -1,7 +1,7 @@
 print("Usuwanie zbednych plikow...")
 l = file.list();
 for k,v in pairs(l) do
-    if string.find(k, ".lua")~=nil and string.find(k, "init.lua")==nil then 
+    if (string.find(k, ".lua")~=nil and string.find(k, "init.lua")==nil) or string.find(k, ".img")~=nil then 
         if file.exists(k) then -- czy trzeba kompilować moduł
             -- s = string.gsub(k, ".lua", ".lc")
             file.remove(k)
@@ -65,9 +65,9 @@ function do_next()  -- do prowadzenia dialogu z serwerem
         count = count+1
         tmr.stop(3)
         pcall(function()node.flashindex("vc")()end)
-        print ("Wczytano modul Vc")
+        print ("Wczytano modul Vc...")
         pcall(function()node.flashindex("pliki")()end)
-        print ("Wczytano modul pliki")
+        print ("Wczytano modul pliki...")
         pcall(function()node.flashindex("WiFi")()end)
         tmr.alarm(4, 1000, tmr.ALARM_AUTO, function()
             if czyZsynchonizowano then
@@ -76,6 +76,23 @@ function do_next()  -- do prowadzenia dialogu z serwerem
             end
         end)
     elseif(count==1) then
+        count = count+1
+        tmr.stop(3)
+        if file.exists('mejl.json') then
+            pcall(function()node.flashindex("wyslijMail")()end)
+            print ("Wczytano modul wyslijMail...")
+            send_email()
+            tmr.alarm(4, 2000, tmr.ALARM_AUTO, function()
+                if not file.exists('mejl.json') then
+                    tmr.stop(4)
+                    tmr.start(3)
+                end
+            end)
+        else
+            print ("Nie wczytano modulu wyslijMail... nie ma co wysylac")
+            tmr.start(3)
+        end
+    elseif(count==2) then
         count = count+1
         tmr.stop(3)
         pcall(function()node.flashindex("parametryZewn")()end)
@@ -98,7 +115,7 @@ function do_next()  -- do prowadzenia dialogu z serwerem
                 licznikPZ = licznikPZ + 1
             end
         end)
-    elseif(count==2) then
+    elseif(count==3) then
         count = count+1
         tmr.stop(3)
         pcall(function()node.flashindex("_init")()end)
@@ -116,10 +133,15 @@ end
 function obslugaModulu()
     -- print ("countOblugi= " .. countObslugi)
     if(countObslugi == 0) then
-        countObslugi = countObslugi + 1 
+        countObslugi = countObslugi + 1
         tmr.stop(5) -- zatrzymanie aż do uruchomienia po butowaniu
         tmr.interval(5, 1000) -- zmiana na obsługę klienta
         print ("Uruchomiono cykliczna obsluge - tmr.alarm(5)...")
+        if debugowanie then
+            print("Data ostatniego zapisu: " .. dataOstatniegoZapisu)
+            print("podaj czas: " .. podajCzas())
+            print("Czas do odswierzenia w min: " .. czasDoOdswierzeniaMin)
+        end
         if odlegloscDaty (dataOstatniegoZapisu, podajCzas())> czasDoOdswierzeniaMin then
             pobierzDanePowietrza() --pierwsze załadowanie danych pTestowe
             licznikPZ = 0
@@ -130,7 +152,7 @@ function obslugaModulu()
                     tmr.start(5)
                 else
                     licznikPZ = licznikPZ + 1
-                end
+                end   
             end)
         else
             tmr.start(5)

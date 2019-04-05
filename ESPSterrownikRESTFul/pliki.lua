@@ -117,33 +117,66 @@ function konwerujAlertNaObiekt (prior, naglowek, opis, klucz)
     return ob
 end
 
+function konwertujMejlNaObiekt (subject, body)
+    ob={}
+    ob.dataMejla = podajCzas() -- wymaga wcześniej wczytanego modułu WiFi
+    ob.subject = subject
+    ob.body = body
+    return ob    
+end
+
 function zapiszAlarmyDoPliku(prior, naglowek, opis, nazwaPliku, klucz)
--- dodatkowo potrzebuje:
---  maxIloscWierszyAlert
---  minIloscWierszyAlert
--- prior - priorytet
+    if debugowanie then
+        print ("Z zapiszAlarmyDoPliku zapisuje: ")
+        print ("Priorytet: " .. prior)
+        print ("Naglowek: " .. naglowek)
+        print ("Opis: " .. opis)
+        print ("Nazwa pliku: " .. nazwaPliku)
+        print ("klucz: " .. klucz)
+    end
     if file.exists(nazwaPliku) then
-        local iloscWierszyLog = 0;
+        local iloscWierszyLog = 0
+        local wielkosc = 0
         iloscWierszyAlert, wielkosc = ileWierszyWPliku (nazwaPliku)
-        if wielkosc > 4000 then
+        if wielkosc > 3800 then
             przepiszPliki (nazwaPliku, "tmp.json", minIloscWierszyAlert, iloscWierszyAlert)
         end
         if file.open(nazwaPliku, "a+") then 
-            local data = ","..sjson.encode(konwerujAlertNaObiekt(prior, naglowek, opis, klucz)).."\n"
+            local data = ','..sjson.encode(konwerujAlertNaObiekt(prior, naglowek, opis, klucz)) .. '\n'
             file.write(data)
             file.close()
         else
-            print ("Nie wczytano pliku: "..nazwaPliku)
+            print ("Nie zapisano do pliku: "..nazwaPliku)
             return "" 
         end
     elseif file.open(nazwaPliku, "w") then 
-        local data = sjson.encode(konwerujAlertNaObiekt(prior, naglowek, opis, klucz)).."\n"
+        local data = sjson.encode(konwerujAlertNaObiekt(prior, naglowek, opis, klucz)) .. '\n'
         file.write(data)
         file.close()
     end
-    systemInfo("/dadajAlert max")
+    -- systemInfo("/dadajAlert max")
     file=nil; data=nil;
     collectgarbage()
     return aktualnaIloscWierszyLog
+end
+
+function zapiszMejleDoPliku(subject, body)
+    if file.exists('mejl.json') then
+        if file.open('mejl.json', "a+") then 
+            local data = ', '..sjson.encode(konwertujMejlNaObiekt(subject, body))..'\n'
+            file.write(data)
+            file.close()
+        else
+            print ("Nie zapisano do pliku z mejlami ")
+            return "" 
+        end
+    elseif file.open('mejl.json', "w") then 
+        local data = sjson.encode(konwertujMejlNaObiekt(subject, body))..'\n'
+        file.write(data)
+        file.close()
+    end
+    systemInfo("zapisz Mejl")
+    file=nil; data=nil;
+    collectgarbage()
 end
 -- gpio.write (pin, LED_OFF)

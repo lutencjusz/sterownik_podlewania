@@ -8,6 +8,12 @@ function systemInfo(text)
     print("zajetosc plikow: "..used.." B, (wolne: "..remaining.." B)")
 end
 
+function restartujSterownik()
+    tmr.alarm(0, 2000, tmr.ALARM_AUTO, function() -- powtarza trzy razy
+        node.restart()
+    end) 
+end
+
 local function pobierzAktualneDaneZCzujnikow()
 -- wymaga wczytania modułu logika
     odswierzDanePowietrza()
@@ -61,13 +67,13 @@ function uruchomPompki(res)
     ob.status = true
     local tA = nil -- tablica atertow
     if tAlert ~= "" then -- jeśli jest plik to tworzy tablice alertow
-        local decTAlertJSON = sjson.decoder()
-        if decTAlertJSON:write ("[" .. tAlert .. "]") == nil then
-            print ("Blad przy zamianie tAlert na JSON w uruchomPompki! Usuwam alert.json")
-            usunPlik("alert.json")
-        else
-            tA = decTAlertJSON:result()
-        end    
+--        local decTAlertJSON = sjson.decoder()
+--        if decTAlertJSON:write ("[" .. tAlert .. "]") == nil then
+--            print ("Blad przy zamianie tAlert na JSON w uruchomPompki! Usuwam alert.json")
+--            usunPlik("alert.json")
+--        else
+--            tA = decTAlertJSON:result()
+--        end    
         -- tA = sjson.decode("[" .. tAlert .. "]")
     end
     if czyMiesciSiePrzedzialeCzasowym () then
@@ -83,19 +89,22 @@ function uruchomPompki(res)
                 print ("        zapis do pliku logu i alarmu z uruchomieniem pompek i wyslaniem mejla...")
                 local subject = "Sterownik podlewania uruchomił pompki"
                 local body = "Wlasnie podlalem kwiatki. Uzupelnij wode..."
-                send_email(subject,body)
-                if tA ~= nil and ob.klucz == tA[#tA].klucz then
-                    zapiszAlarmyDoPliku(3, "taki sam", "", "alert.json", ob.klucz)
-                else
-                    zapiszAlarmyDoPliku(3, ob.naglowek, ob.opis, "alert.json", ob.klucz)
+                zapiszMejleDoPliku(subject,body)
+                if  debugowanie then
+                    print ("Zapisuje alert.json z uruchomPompki:")
                 end
+--                if tA ~= nil and ob.klucz == tA[#tA].klucz then
+--                    zapiszAlarmyDoPliku(3, "taki sam", "taki sam", "alert.json", ob.klucz)
+--                else
+                    zapiszAlarmyDoPliku(3, ob.naglowek, ob.opis, "alert.json", ob.klucz)
+--                end
             else
                 print ("        nie ma co zapisac do pliku alertu z uruchom pompki...")
             end
         else
             print ("        zapis do pliku alarmu bez uruchomienia pompek...")
             if tA ~= nil and ob.klucz == tA[#tA].klucz then   
-                zapiszAlarmyDoPliku(ob.prior, "taki sam", "", "alert.json", ob.klucz)
+                zapiszAlarmyDoPliku(ob.prior, "taki sam", "taki sam", "alert.json", ob.klucz)
             else
                 zapiszAlarmyDoPliku(ob.prior, ob.naglowek, ob.opis, "alert.json", ob.klucz)
             end
@@ -110,6 +119,10 @@ function uruchomPompki(res)
             local data = sjson.encode(konwerujAlertNaObiekt (ob.prior, "do uruchomienia zostalo:" .. podajCzasS((zaIleUruchomicPompkiKalendarz() - ileCzasuDoWyslaniaMejla)) .. " .min", ob.opis, ob.klucz))
             res:send(data)
         end
+    end
+    if file.exists('mejl.json') then
+        print("SerwerWWW - utworzono mejl, wiec restartuje sterownik")
+        restartujSterownik()
     end
 end
 
@@ -194,7 +207,7 @@ httpServer:use('/restart', function(req, res)
     print ("Restart!")
     res:type('application/json')
     res:send('{"status":"restart na zadanie uzytkonika"}')
-    node.restart()   
+    restartujSterownik()  
 end)
 
 httpServer:use('/LED0=ON', function(req, res)

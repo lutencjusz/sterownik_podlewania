@@ -37,6 +37,7 @@ end
 
 function czyAlerthumidity (ob)
 -- pTestowe wymagaja modułu parametryZewn
+    czyUruchomicPompkiKalendarz1 = true
     if pTestowe.humidity > pCz.humidityMax then
         ob.naglowek = "Zbyt wysoka wilgotnosc!"
         ob.opis = "Wilgotnosc ("..pTestowe.humidity..")>Wilgotnosc max("..pCz.humidityMax..")! "..ob.opis
@@ -133,7 +134,7 @@ function czyAlertPoziomuWody (ob)
         ileCzasu, ostatniPomiar = zaIleUruchomicPompkiKalendarz()
         if ileCzasu < ileCzasuDoWyslaniaMejla and ileCzasu > 0 and not czyWyslanoMejl then
             local body = "Prosze o uzupełnienie wody w konewce. Do uruchomienia pompek zostało " .. podajCzasS(ileCzasu) .. ' (' .. ostatniPomiar ..')!'
-            send_email("Prosba ze sterownika podlewania", body)
+            zapiszMejleDoPliku("Prosba ze sterownika podlewania", body)
             czyWyslanoMejl = true
             ob.opis = ob.opis .. "Wyslano mejl o uzupelnieniu wody w konewce! "
             ob.klucz = ob.klucz .. "pw1"

@@ -84,8 +84,11 @@ function odswierzDanePowietrza()
             pTestowe.temp, pTestowe.temp_u = tempFloatNaIntAirapi (wynikPZ, "TURE")
             pTestowe.pressure, pTestowe.pressure_u = tempFloatNaIntAirapi (wynikPZ, "SURE")
             if dataOstatniegoZapisu ~= nil then
-                pTestowe.dataPomiaru = dataOstatniegoZapisu
-            elseif czyZsynchonizowano then
+                pTestowe.dataOdczytu = dataOstatniegoZapisu
+            else
+                pTestowe.dataOdczytu = podajCzas()
+            end
+            if czyZsynchonizowano then
                 pTestowe.dataPomiaru = podajCzas()
             else
                 pTestowe.dataPomiaru = "01/01/2019 00:00:01"
@@ -116,7 +119,7 @@ function odswierzDanePowietrza()
                 n = "Restart sterownika z powodu braku odswierzenia"
                 k = "r1"
                 p = 1
-                zapiszAlarmyDoPliku(1, n, o, "alert.json", k)
+                -- zapiszAlarmyDoPliku(1, n, o, "alert.json", k)
                 print("odswierzDanePowietrza() " .. n)
                 node.restart()
             end 

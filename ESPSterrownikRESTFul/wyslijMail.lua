@@ -1,7 +1,7 @@
 -- https://myaccount.google.com/security
 -- dostęp do mniej bezpiecznych aplikaji należy włączyć
 -- wymaga WiFi.lua
-gpio.write (pin, LED_ON)
+-- gpio.write (pin, LED_ON)
 local MY_EMAIL = "lutencjusz@gmail.com"  
 local EMAIL_PASSWORD = crypto.decrypt("AES-ECB", key, encoder.fromHex(u.emailPass))  
 -- u.emailPass ustawiana w module WiFi
@@ -27,7 +27,7 @@ local EMAIL_PASSWORD = crypto.decrypt("AES-ECB", key, encoder.fromHex(u.emailPas
     print("Otrzymano odpowiedz: ")  
     print(response)  
  end  
-
+ 
  function do_next_mail()  -- do prowadzenia dialogu z serwerem
        if(count == 0)then  
          count = count+1  
@@ -62,10 +62,12 @@ local EMAIL_PASSWORD = crypto.decrypt("AES-ECB", key, encoder.fromHex(u.emailPas
          smtp_socket:send(message.."\r\n.\r\n")  
        elseif(count==8) then  
          count = count+1  
-          tmr.stop(4)  
+          -- tmr.stop(4) 
           smtp_socket:send("QUIT\r\n")  
        else  
          smtp_socket:close()
+         usunPlik("mejl.json") 
+         node.restart()
        end  
  end  
  -- The connectted() function is executed when the SMTP socket is connected to the SMTP server.  
@@ -77,19 +79,45 @@ local EMAIL_PASSWORD = crypto.decrypt("AES-ECB", key, encoder.fromHex(u.emailPas
    tmr.alarm(4,5000,1,do_next_mail)  
  end  
 
- function send_email(subject,body)
-    gpio.write (pin, LED_ON)  
-    count = 0  
-    email_subject = subject  
-    email_body = body  
-    print ("Otworzono połączenie...")  
-    smtp_socket = net.createConnection(net.TCP,1)  --,1
-    smtp_socket:on("connection",connected)  
-    smtp_socket:on("receive",display)  
-    smtp_socket:connect(SMTP_PORT,SMTP_SERVER)
-    gpio.write (pin, LED_OFF)
- end  
+ function send_email()
+    emails = wczytajPlikDoZmiennej('mejl.json')
+    tMail = nil
+    if emails ~= '' then
+        local obE = sjson.decoder()
+        if obE:write ("[" .. emails .. "]") == nil then
+            print ("Blad przy odczycie pliku z poczta do wyslania! Usuwam mail.json")
+            usunPlik("mejl.json")
+        else
+            tMail = obE:result()
+        end
+    end
+    if emails ~= '' then
+        for i = 1, #tMail do
+            if debugowanie then
+                print("Wysłano mejl!")
+                print ("tMail[i].subject= " .. tMail[i].subject)
+                print ("tMail[i].bodyt= " .. tMail[i].body)
+            end
+            -- zapiszAlarmyDoPliku(3, "Wystłano mejl!", ("Proba wyslania mejla " .. podajCzas()), "alert.json", "m1") 
+            gpio.write (pin, LED_ON)  
+            count = 0  
+            email_subject = tMail[i].subject  
+            email_body = tMail[i].body  
+            print ("Otworzono połączenie...")  
+            smtp_socket = net.createConnection(net.TCP,1)
+            smtp_socket:on("connection",connected)  
+            smtp_socket:on("receive",display)  
+            smtp_socket:connect(SMTP_PORT,SMTP_SERVER)
+            gpio.write (pin, LED_OFF)
+        end
+    else
+        if debugowanie then
+            print ('Nie ma mejli do wysłania!')
+        end
+    end
+ end
+
  -- Send an email  
  -- print ("Sending started...")  
  -- send_email("ESP8266-GMailSender","Hi there!")  
-gpio.write (pin, LED_OFF)
+-- gpio.write (pin, LED_OFF)

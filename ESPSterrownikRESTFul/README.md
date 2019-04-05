@@ -56,10 +56,10 @@ Planuję rozwinąć panel Grafana wpółpracujący z InfluxDB, w celu wykonania 
 
 # Moduły sterownika
 Sternik składa się z następujących modułów:
--   init.lua - mikro moduł startujący, proces bootowania
--   bootowanie.lua - moduł bootowania oraz utrzymania sterownika
--	_init.lua - moduł uruchamiający pozostałe moduły
--	httpServer.lua - biblioteka do mini servera HTTP stworzona przez @yulincoder i @wangzexi https://github.com/wangzexi/NodeMCU-HTTP-Server
+-   `init.lua` - mikro moduł startujący, proces bootowania
+-   `bootowanie.lua` - moduł bootowania oraz utrzymania sterownika
+-	`_init.lua` - moduł uruchamiający pozostałe moduły
+-	`httpServer.lua` - biblioteka do mini servera HTTP stworzona przez @yulincoder i @wangzexi https://github.com/wangzexi/NodeMCU-HTTP-Server
 -	`InfluxDB.lua` - moduł zapisujący dane ze sterownika w bazie czasu rzeczywistego.
 -	`kalendarz.lua` - moduł obsługujący daty i czasy oraz ich porównywania
 -	`logika.lua` - moduł zwierający logikę sterownika
@@ -139,3 +139,34 @@ Na koniec następuje uruchomienie bootowania poprzez
 `tmr.alarm(3,1000,1,do_next)`
 
 ## `logika.lua`
+Moduł zapewnia dostarczenie logiki do podejmowania decyzji o podlewaniua na podstawie dostępnych parametrów pogodowych. W skład modułu wchodzą następujące komórki decyzyjne, które wzracają zmodyfikowany obiekt `ob` oraz ustawiają zmienne globalne:
+
+### czyAlertPozZasVc (ob)
+Komórka sprawdza, czy napięcie zasilania pompek `PTestowe.Vp` miesci się w wyznaczonym przedziale określonym przez paramtry sterownika `pCz.VcMax` oraz `pCz.VcMin`, blokując jednocześnie uruchomienie pompek w przypadku nieprawidłowości.
+
+### czyAlertPozZasVp (ob)
+Komórka robi to samo co poprzednik, tylko dla napięcia układu określonego przez `PTestowe.Vc`. Przedział określa `pCz.VpMax` oraz `pCz.VpMin`.
+
+### czyAlerthumidity (ob)
+Komórka sprawdza wilgotność powietrza `pTestowe.humidity` ograniczoną przez `pCz.humidityMin` oraz `pCz.humidityMax` blokująco uruchomienie pompek. 
+Dodatkowo ustawia zmienną globalną `czyUruchomicPompkiKalendarz1` w przypadku, gdy wilgotność jest wyższa niż optymalna `pCz.humidityOpt`. Zmienna ta, jeżeli jest ustwaiona na *false* blokuje poranne uruchomienie pompek.
+
+### czyAlertTempPow (ob)
+Komórka sprawdza temperaturę powetrza `pTestowe.temp/_u`, czy mieści się w przedziale określonym `pCz.temp_min` oraz `pCz.temp_max`. Jeżeli wykracza za przedział, komórka blokuje uruchomienie pompek.
+
+### czyAlertKalenadza (ob)
+Komórka określa aktualny czas w stosunku do czasów wyznaczonych w kalendarzu oraz daty ostatniego podlewania i sprawdza, czy podlewania miało już miejsce, czy jeszcze nie. Blokuje uruchomienie pompek, jeżeli podlewanie o tej porze miało już miejsce.
+
+### czyAlertPoziomuWody (ob)
+komórka sprawdza, czy jest wystarczająca ilość wody do polewania i jeżeli nie ma, blokuje uruchomienie podlewania. Obecznie komórka jest zablokowana i zawsze dopuszcza do podlewania.
+
+### czyAlertPrzedzialuCzasowego (ob)
+Komórka określa na podstawie aktualnego czasu, czy jest to ten moment na podlewanie, który mieści się w wyznaczonym przedziale czasu. Ten przedział mieści się między datą początku podlewania zapisaną w pliku 'kalendarz.json', a czasem wyznaczonym przez zmienną globalną `mozliwyCzasNaPodlewanie` (wyrażoną w godzinach). Komórka nie rozróżnia, czy ma do czynienia z podlewaniem porannym, czy wieczornym.
+Komórka do oceny wykorzystuje funkcję `czyMiesciSiePrzedzialeCzasowym ()` w `module kalendarz.lua`
+
+### ustawienieAlertowLogiki (ob)
+Funcja łaczy z sobą poszczególne komróki decyzyjne i zwraca wynik analizy w formie obiektu alertu `ob`.
+
+
+
+

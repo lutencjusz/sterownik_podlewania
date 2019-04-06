@@ -1,1 +1,2 @@
-{"Vp":12,"temp_u":86,"humidity":54,"temp_max_u":26,"temp_min_u":93,"pressure":1002,"temp_max":16,"temp_min":12,"temp":14,"dataPomiaru":"16/03/2019 13:22:02","Vc":3}
+{"pm10":54,"dataOdczytu":"06/04/2019 06:05:54","pm1":25,"humidity":60,"pm10_u":65,"pm1_u":29,"poziomWody":true,"dataPomiaru":"06/04/2019 09:12:03","Vp":12,"pm25":35,"temp_u":86,"pressure":1013,"humidity_u":54,"Vc_u":90,"pm25_u":69,"temp":5,"pressure_u":1,"Vc":2}
+,{"pm10":44,"dataOdczytu":"06/04/2019 19:01:52","pm1":21,"humidity":34,"pm10_u":47,"pm1_u":5,"poziomWody":true,"dataPomiaru":"06/04/2019 20:01:03","Vp":12,"pm25":29,"temp_u":2,"pressure":1010,"humidity_u":2,"Vc_u":89,"pm25_u":52,"temp":15,"pressure_u":73,"Vc":2}

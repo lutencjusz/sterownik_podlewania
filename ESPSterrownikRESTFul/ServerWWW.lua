@@ -21,10 +21,6 @@ local function pobierzAktualneDaneZCzujnikow()
 end
 
 function dodajAktualneDaneDoPliku(nazwaPliku)
--- dodatkowo potrzebuje:
---  maxIloscWierszyLog
---  minIloscWierszyLog
---    local dCz = pobierzAktualneDaneZCzujnikow()
 
     if file.exists(nazwaPliku) then
         local iloscWierszyLog = 0;
@@ -33,13 +29,11 @@ function dodajAktualneDaneDoPliku(nazwaPliku)
             przepiszPliki (nazwaPliku, "tmp.json", minIloscWierszyLog, iloscWierszyLog)
         end
         if file.open(nazwaPliku, "a+") and pTestowe ~= nil then
-            -- print (pTestowe)
             pTestoweJSON = sjson.encode(pTestowe)
             print ("pTestoweJSON = " .. pTestoweJSON)
             local data = ","..pTestoweJSON.."\n"
             file.write(data)
             file.close()
-            -- print ("Nowy plik "..data)
         else
             print ("Nie wczytano lub zapisano pliku: "..nazwaPliku)
             return "" 
@@ -49,7 +43,6 @@ function dodajAktualneDaneDoPliku(nazwaPliku)
             local data = sjson.encode(pTestowe).."\n"
             file.write(data)
             file.close()
-            -- print ("Dodaje "..data)
         end
     end
     systemInfo("/dadaj max")
@@ -66,16 +59,6 @@ function uruchomPompki(res)
     ob.prior = 3
     ob.status = true
     local tA = nil -- tablica atertow
-    if tAlert ~= "" then -- jeśli jest plik to tworzy tablice alertow
---        local decTAlertJSON = sjson.decoder()
---        if decTAlertJSON:write ("[" .. tAlert .. "]") == nil then
---            print ("Blad przy zamianie tAlert na JSON w uruchomPompki! Usuwam alert.json")
---            usunPlik("alert.json")
---        else
---            tA = decTAlertJSON:result()
---        end    
-        -- tA = sjson.decode("[" .. tAlert .. "]")
-    end
     if czyMiesciSiePrzedzialeCzasowym () then
         ob = ustawienieAlertowLogiki (ob) 
         if debugowanie then

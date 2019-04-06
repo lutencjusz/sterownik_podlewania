@@ -78,11 +78,7 @@ function kiedyNastepneSprawdzenie (n)
     local mk = 0
     local dk = 0
     dkA, mikA, rkA, gkA, mkA, skA = parsowanieDaty(podajCzas())
-    -- print (podajCzas())
-    -- print (dkA, mikA, rkA, gkA, mkA, skA)
-    -- print (podajCzasZnormalizowany(n))
     gkB, mkB = parsowanieCzasu(podajCzasZnormalizowany(n))
-    -- print (gkB, mkB)
     sk = skA
     if mkA + mkB >= 60 then
         gk = 1
@@ -90,7 +86,6 @@ function kiedyNastepneSprawdzenie (n)
     else
         mk = mkA + mkB
     end
-    -- print ("gA: " .. gkA .. ";g: " ..gk)
     if gkA + gkB + gk >= 24 then
         dk = dkA + 1
         gk = gk + gkB + gkA - 24
@@ -128,8 +123,6 @@ function podajCzasS(czasSek)
 end
 
 function zaIleUruchomicPompkiKalendarz()
--- wymaga modułu pliki
--- watość oznacza, że pomkpke należy uruchomic na wartosc minut
     local decTLogJSON = sjson.decoder()
     if decTLogJSON:write ("[" .. tLog .. "]") == nil then
         print ("Blad przy zamianie tLog na JSON w uruchomPompki!")

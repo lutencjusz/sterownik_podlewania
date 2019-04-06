@@ -1,23 +1,10 @@
--- https://myaccount.google.com/security
--- dostęp do mniej bezpiecznych aplikaji należy włączyć
--- wymaga WiFi.lua
--- gpio.write (pin, LED_ON)
+gpio.write (pin, LED_ON)
 local MY_EMAIL = "lutencjusz@gmail.com"  
 local EMAIL_PASSWORD = crypto.decrypt("AES-ECB", key, encoder.fromHex(u.emailPass))  
 -- u.emailPass ustawiana w module WiFi
  local SMTP_SERVER = "smtp.gmail.com"  
  local SMTP_PORT = "465"  
  local mail_to = "lutencjusz@gmail.com"  
--- local SSID = "Tech_D0044603"  
--- local SSID_PASSWORD = "RBRVEZZV"  
- -- configure ESP as a station  
--- station_cfg={}
--- station_cfg.ssid=SSID
--- station_cfg.pwd=SSID_PASSWORD
--- station_cfg.save=true
--- wifi.sta.config(station_cfg)
- -- These are global variables. Don't change their values  
- -- they will be changed in the functions below  
  local email_subject = ""  -- ustawienie zmiennej początkowej
  local email_body = ""  -- ustawienie zmiennej początkowej
  local count = 0  -- licznik komunikatów
@@ -69,11 +56,8 @@ local EMAIL_PASSWORD = crypto.decrypt("AES-ECB", key, encoder.fromHex(u.emailPas
          usunPlik("mejl.json") 
          node.restart()
        end  
- end  
- -- The connectted() function is executed when the SMTP socket is connected to the SMTP server.  
- -- This function will create a timer to call the do_next function which will send the SMTP commands  
- -- in sequence, one by one, every 5000 seconds.   
- -- You can change the time to be smaller if that works for you, I used 5000ms just because.  
+ end
+ 
  function connected(sck)  
    print("Połączono się z serwerem. rozpoczynam wysyłanie...")  
    tmr.alarm(4,5000,1,do_next_mail)  
@@ -116,8 +100,3 @@ local EMAIL_PASSWORD = crypto.decrypt("AES-ECB", key, encoder.fromHex(u.emailPas
         end
     end
  end
-
- -- Send an email  
- -- print ("Sending started...")  
- -- send_email("ESP8266-GMailSender","Hi there!")  
--- gpio.write (pin, LED_OFF)

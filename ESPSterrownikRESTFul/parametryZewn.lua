@@ -1,6 +1,3 @@
--- wynik = ""
--- czyZsynchonizowano = false
--- pTestowe= {}
 
 function tempFloatNaIntAirapi (s, t) -- wyszukuje liczbe float i zmianienia ja na dwie
 -- s - string do przeszukania
@@ -43,12 +40,8 @@ function znajdzDanePogodoweJSON(s)
 end
 
 function pobierzDanePowietrza()
-    -- wynikPZ = nil -- inicjacja danych
     print(" Wczytuje dane testowe z serwisu airapi.airly.eu...")
     local host = "airapi.airly.eu"
-    -- local headers = 'apikey: WZDiLQVB5GkGODEV5aX3WWA6rko5zn8f\r\n', 
-    -- 'Accept: application/json\r\n'
-    -- local path = "/v2/measurements/point?&lat=50.062006&lng=19.940984"
     local path = "/v2/measurements/installation?installationId=6532"
     local url = "https://" .. host .. path;
     local srv = tls.createConnection(net.TCP, 0)
@@ -119,7 +112,7 @@ function odswierzDanePowietrza()
                 n = "Restart sterownika z powodu braku odswierzenia"
                 k = "r1"
                 p = 1
-                -- zapiszAlarmyDoPliku(1, n, o, "alert.json", k)
+                zapiszAlarmyDoPliku(1, n, o, "alert.json", k)
                 print("odswierzDanePowietrza() " .. n)
                 node.restart()
             end 

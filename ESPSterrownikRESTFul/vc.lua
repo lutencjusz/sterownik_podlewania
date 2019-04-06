@@ -3,8 +3,6 @@ function initADC()
 	    print("Zbyt mała wartość zasilania...")
     else
         print ("Uruchomiono ADC...")
-    -- node.restart()
-    -- return -- don't bother continuing, the restart is scheduled
     end
 end
 
@@ -24,4 +22,3 @@ function parsowanieVc ()
 end
 
 initADC()
--- nz = adc.readvdd33(0)/1000 -- napięcie zasilania    

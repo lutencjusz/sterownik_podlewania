@@ -1,26 +1,12 @@
 gpio.write (pin, LED_ON)
 -- wczytanie paramtrów sieci WiFi z pliku ustawienia.json
-
 key = "abcdef0987654321" -- klucz musi sie składać z 16 znakow
-
--- ustawienie połaczenie z WiFi
 
 station_cfg={}
 station_cfg.ssid=crypto.decrypt("AES-ECB", key, encoder.fromHex(u.ssid))
 station_cfg.pwd=crypto.decrypt("AES-ECB", key, encoder.fromHex(u.pass))
 station_cfg.save=true
 wifi.sta.config(station_cfg)
-
--- Ustawienie Monitaora
--- wifi.eventmon.register(wifi.eventmon.STA_CONNECTED, function(T)
--- print("\n\tSTATUS: CONNECTED".."\n\tSSID: "..T.SSID.."\n\tBSSID: "..
--- T.BSSID.."\n\tChannel: "..T.channel)
--- end)
-
---  wifi.eventmon.register(wifi.eventmon.STA_DISCONNECTED, function(T)
--- print("\n\tSTATUS: DISCONNECTED".."\n\tSSID: "..T.SSID.."\n\tBSSID: "..
--- T.BSSID)
--- end)
 
   wifi.eventmon.register(wifi.eventmon.STA_GOT_IP, function(T)
  print("\n\tSTATUS: GOT IP".."\n\tStation IP: "..T.IP.."\n\tSubnet mask: "..
@@ -38,8 +24,6 @@ tmr.alarm(0, 1000, tmr.ALARM_AUTO, function()
         sntp.sync(nil, nil, nil, 1)
     end
 end)
-
--- offsetCzasLetni=2 --ustawienie dla przesunięcia w naszej strefie
 
 function podajCzas ()
     tm = rtctime.epoch2cal(rtctime.get())

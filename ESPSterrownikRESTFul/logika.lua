@@ -16,8 +16,6 @@ function czyAlertPozZasVc (ob)
     return ob
 end
 
--- print (czyAlertPozZasVc ("1", "2", "3"))
-
 function czyAlertPozZasVp (ob)
     if pTestowe.Vp > pCz.VpMax then
         ob.naglowek = "Zbyt wysokie napiecie zasilania pompek!"
@@ -36,7 +34,6 @@ function czyAlertPozZasVp (ob)
 end
 
 function czyAlerthumidity (ob)
--- pTestowe wymagaja modułu parametryZewn
     czyUruchomicPompkiKalendarz1 = true
     if pTestowe.humidity > pCz.humidityMax then
         ob.naglowek = "Zbyt wysoka wilgotnosc!"
@@ -92,8 +89,8 @@ function czyAlertKalenadza (ob)
     local porDatyK2Tlog = odlegloscDaty(l[#l].dataPomiaru, konwersjaCzasNaData(tKalendarz[2]))
     if porDatyK1Tlog > 0 and porDatyK2Tlog > 0 then  wynikPorDatyKalTlog = 0
     -- porownanie ostatniego uruchomienia z kalendarzem
-        elseif porDatyK1Tlog < 0 and porDatyK2Tlog > 0 then  wynikPorDatyKalTlog = 1
-        elseif porDatyK1Tlog < 0 and porDatyK2Tlog < 0 then  wynikPorDatyKalTlog = 2
+        elseif porDatyK1Tlog <= 0 and porDatyK2Tlog > 0 then  wynikPorDatyKalTlog = 1
+        elseif porDatyK1Tlog <= 0 and porDatyK2Tlog <= 0 then  wynikPorDatyKalTlog = 2
     end -- jeśli wynik 0 - pompki nie byly uruchomione; 1 - byly po K1; 2 - były po K1 i K2
     if debugowanie then
         print ("        wynikPorDatyKalTlog: " .. wynikPorDatyKalTlog)

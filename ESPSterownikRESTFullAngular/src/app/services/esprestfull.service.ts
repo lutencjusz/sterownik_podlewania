@@ -20,6 +20,7 @@ export class EsprestfullService {
   obserwatorESPData$ = this.obserwatorESPData.asObservable();
   obserwatorESPKiedyNastSpraw$ = this.obserwatorESPKiedyNastSpraw.asObservable();
   obserwatorESPAktualnyStatus$ = this.obserwatorESPAktualnyStatus.asObservable();
+  EDataN: ESPData[];
 
   constructor(private http: HttpClient, private PService: ParametryService, private PZService: PomiaryZewnService) {
     // this.getWszystkoESPData();
@@ -37,10 +38,35 @@ export class EsprestfullService {
     this.getAktualnyStatusESPData();
    }
 
+   private zlaczLiczbe(c: number, u: number) {
+    const w = (c + (u / 100));
+    return w;
+  }
+
+  private zaokrag(n: number, k: number) {
+    const factor = Math.pow(10, k);
+    return Math.round(n * factor) / factor;
+  }
   getWszystkoESPData(): Observable <Array<ESPData>> {
     this.http.get<Array<ESPData>>('http://192.168.0.15/wszystko').subscribe(list => {
-        this.obserwatorListyESPData.next(list);
-        this.obserwatorWykresuESPData.next(list);
+        this.EDataN = [];
+        list.forEach((d, i) => {
+          const data = {} as ESPData;
+          data.humidity = this.zlaczLiczbe(d.humidity, d.humidity_u);
+          data.temp = this.zlaczLiczbe(d.temp, d.temp_u);
+          data.pm10 = this.zlaczLiczbe(d.pm10, d.pm10_u);
+          data.pm25 = this.zlaczLiczbe(d.pm25, d.pm25_u);
+          data.pm1 = this.zlaczLiczbe(d.pm1 , d.pm1_u);
+          data.Vc = this.zlaczLiczbe(d.Vc, d.Vc_u);
+          data.pressure = this.zlaczLiczbe(d.pressure, d.pressure_u);
+          data.Vp = d.Vp;
+          data.dataPomiaru = d.dataPomiaru;
+          data.poziomWody = d.poziomWody;
+          this.EDataN.push(data);
+        });
+        console.log(this.EDataN);
+        this.obserwatorListyESPData.next(this.EDataN);
+        this.obserwatorWykresuESPData.next(this.EDataN);
     });
     return this.obserwatorListyESPData.asObservable();
   }

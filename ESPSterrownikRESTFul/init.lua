@@ -1,4 +1,4 @@
-debugowanie = true
+debugowanie = false
 zapisDoInfluxDB = false
 
 print ("Start bootowania...")

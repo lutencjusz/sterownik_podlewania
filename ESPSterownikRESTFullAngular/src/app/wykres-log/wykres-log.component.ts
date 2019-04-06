@@ -81,7 +81,7 @@ export class WykresLogComponent implements OnInit {
           }
       ]
     };
-    console.log(this.WykresEData.map((d) => d.Vc));
+    console.log(this.WykresEData.map((d) => d.temp));
   }
 
   selectData(event) {

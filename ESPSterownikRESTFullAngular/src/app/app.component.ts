@@ -30,6 +30,7 @@ export interface ESPData {
   Vc?: number;
   Vc_u?: number;
   dataPomiaru?: string;
+  dataOdczytu?: string;
 }
 
 export interface ESPAlert {

@@ -156,7 +156,13 @@ function obslugaModulu()
             end)
         else
             tmr.start(5)
-        end  
+        end
+        if odlegloscDaty (dataOstatniegoZapisu, podajCzas())> czasDoOdswierzeniaMax then
+            print ("Trzeba odswierzyc dane... restart.")
+            node.restart()
+        else
+            print ("Dane aktualne, nie trzeba odswierzac...")
+        end   
     elseif(countObslugi==1) then
         countObslugi = countObslugi + 1 
         tmr.stop(5)    

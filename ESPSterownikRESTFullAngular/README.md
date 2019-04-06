@@ -30,6 +30,3 @@ ng serve
 Aplikacja będzie dostępna w `http://localhost:4200/` i powinna od razu połączyć się ze sterownikiem, pod warunkiem, że serwis RESTFul API sterownika jest dostępny domyślnie pod adresem 192.168.0.15...
 Dalsze budowanie wersji produkcyjnej aplikacji oraz umieszczenie jej na publicznym repozytorium (np. Firebase) nie leży w zakresie tego materiału.
 
-## Budowa aplikacji
-
-...

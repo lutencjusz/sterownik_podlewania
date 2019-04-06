@@ -1,13 +1,29 @@
 <div class="p-grid p-justify-center">
   <ng-container *ngIf="WykresEData.length>0; else brakDanych">
-    <div class="p-col">
-      <p-chart type="line" [data]="data" (onDataSelect)="selectData($event)"></p-chart>
+    <div class="p-grid p-justify-center">
+      <div class="p-col-6">
+        <p-chart type="line" [data]="data" (onDataSelect)="selectData($event)"></p-chart>
+      </div>
+      <div class="p-col-6">
+        <p-chart type="line" [data]="dataPM" (onDataSelect)="selectData($event)"></p-chart>
+      </div>
+    </div>
+    <div class="p-grid p-justify-center">
+      <div class="p-col-6">
+        <p-chart type="line" [data]="dataT" (onDataSelect)="selectData($event)"></p-chart>
+      </div>
+      <div class="p-col-6">
+        <p-chart type="line" [data]="dataW" (onDataSelect)="selectData($event)"></p-chart>
+      </div>
     </div>
   </ng-container>
   <ng-template #brakDanych>
     <!--<p class="input-text">brak danych w logu</p>-->
     <h2>brak danych w logu</h2>
   </ng-template>
+</div>
+<div class="p-grid">
+  <h2></h2>
 </div>
 <div class="p-grid p-justify-center">
   <div class="p-col-2">

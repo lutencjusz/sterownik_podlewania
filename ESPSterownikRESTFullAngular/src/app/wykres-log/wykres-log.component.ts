@@ -14,6 +14,9 @@ export class WykresLogComponent implements OnInit {
 
   changedData: any;
   data: any;
+  dataPM: any;
+  dataW: any;
+  dataT: any;
   EData: ESPData[];
   WykresEData: ESPData[] = [];
   ObserwatorWykresLog$: Observable<Array<ESPData>>;
@@ -48,19 +51,12 @@ export class WykresLogComponent implements OnInit {
             data: this.WykresEData.map((d) => d.Vp),
             fill: false,
             borderColor: '#565656'
-          },
-          {
-            label: 'Temp. powietrza',
-            data: this.WykresEData.map((d) => d.temp),
-            fill: false,
-            borderColor: '#565656'
-          },
-          {
-            label: 'Wilgotonosc',
-            data: this.WykresEData.map((d) => d.humidity),
-            fill: false,
-            borderColor: '#565656'
-          },
+          }
+      ]
+    };
+    this.dataPM = {
+      labels: this.WykresEData.map((s) => s.dataPomiaru),
+      datasets: [
           {
             label: 'PM1',
             data: this.WykresEData.map((d) => d.pm1),
@@ -81,7 +77,29 @@ export class WykresLogComponent implements OnInit {
           }
       ]
     };
-    console.log(this.WykresEData.map((d) => d.temp));
+    this.dataW = {
+      labels: this.WykresEData.map((s) => s.dataPomiaru),
+      datasets: [
+        {
+          label: 'Wilgotonosc',
+          data: this.WykresEData.map((d) => d.humidity),
+          fill: false,
+          borderColor: '#565656'
+        }
+      ]
+    };
+    this.dataT = {
+      labels: this.WykresEData.map((s) => s.dataPomiaru),
+      datasets: [
+        {
+          label: 'Temp. powietrza',
+          data: this.WykresEData.map((d) => d.temp),
+          fill: false,
+          borderColor: '#565656'
+        }
+      ]
+    };
+    // console.log(this.WykresEData.map((d) => d.temp));
   }
 
   selectData(event) {

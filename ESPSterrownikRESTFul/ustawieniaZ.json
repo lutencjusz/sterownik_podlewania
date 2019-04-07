@@ -1,0 +1,17 @@
+{
+    "ssid":"<sidd WiFi>",
+    "pass":"<haslo WiFi",
+    "emailPass":"<haslo mejla>",
+    "LED_ON":0,
+    "LED_OFF":1,  
+    "pin":0,
+    "maxIloscWierszyLog":35,
+    "minIloscWierszyLog":30,
+    "czasDoOdswierzeniaMax":60,
+    "czasDoOdswierzeniaMin":10,
+    "maxIloscWierszyAlert":12,
+    "minIloscWierszyAlert":9,
+    "ileCzasuDoWyslaniaMejla":60,
+    "mozliwyCzasNaPodlewanie":1,
+    "offsetCzasLetni":2
+}

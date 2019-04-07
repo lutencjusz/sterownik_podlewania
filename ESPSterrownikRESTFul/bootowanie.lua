@@ -138,9 +138,9 @@ function obslugaModulu()
         tmr.interval(5, 1000) -- zmiana na obsługę klienta
         print ("Uruchomiono cykliczna obsluge - tmr.alarm(5)...")
         if debugowanie then
-            print("Data ostatniego zapisu: " .. dataOstatniegoZapisu)
-            print("podaj czas: " .. podajCzas())
-            print("Czas do odswierzenia w min: " .. czasDoOdswierzeniaMin)
+            print("     Data ostatniego zapisu: " .. dataOstatniegoZapisu)
+            print("     podaj czas: " .. podajCzas())
+            print("     Czas do odswierzenia w min: " .. czasDoOdswierzeniaMax)
         end
         if odlegloscDaty (dataOstatniegoZapisu, podajCzas())> czasDoOdswierzeniaMin then
             pobierzDanePowietrza() --pierwsze załadowanie danych pTestowe
@@ -168,19 +168,28 @@ function obslugaModulu()
         tmr.stop(5)    
         initKalendarza() -- wczytanie najnowszych log i kalendarza
         print ("    Uruchomiono kalendarz...")
-        zapiszPTestoweInfluxDB()
-        print ("    Uruchomiono InfluxDB...")
-        tmr.alarm(6, 1000, tmr.ALARM_AUTO, function()
-            if tLog ~= nil then
-                tmr.stop(6)
-                tmr.start(5)
-            end
-        end)
+        if zapisDoInfluxDB then
+            zapiszPTestoweInfluxDB()
+            print ("    Uruchomiono InfluxDB...")
+            tmr.alarm(6, 1000, tmr.ALARM_AUTO, function()
+                if tLog ~= nil then
+                    tmr.stop(6)
+                    tmr.start(5)
+                end
+            end)
+         else
+            print ("    Nie uruchomilem InfluxDB...")
+            tmr.start(5)
+         end
     elseif(countObslugi==2) then
         countObslugi = countObslugi + 1 
         tmr.stop(5)
         print ("    Ustawienie porannego podlewania...")
-        czyAlerthumidity  ("", "", true, 3, "") -- ustawianie czy poranne podlewanie      
+        if pTestowe.humidity > pCz.humidityOpt then
+            czyUruchomicPompkiKalendarz1 = false
+            print("     Wylaczam poranne podlewanie.")
+            print("     Jest zbyt wilgotno (" .. pTestowe.humidity .. ") > Wilgotnosci optymalnej(" .. pCz.humidityOpt)
+        end
         print ("    Uruchomiono pompki...")
         uruchomPompki()
         print ("    Uruchomiono initKalendarz...")

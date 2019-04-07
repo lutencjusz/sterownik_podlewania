@@ -17,12 +17,7 @@ end
 
 
 function zapiszPTestoweInfluxDB ()
-    if zapisDoInfluxDB then
-        tmr.alarm(3,1000,1,do_next_InfluxDB)
-    end
--- wymaga modulu parametryZewn.lua
--- wymaga modulu logika,lua oraz pliku parametryCz.json
-
+    tmr.alarm(3,1000,1,do_next_InfluxDB)
 end 
 
 function do_next_InfluxDB()

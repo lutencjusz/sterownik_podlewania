@@ -1,4 +1,4 @@
-# Instalacja sterownika [(->EN)](https://github.com/lutencjusz/sterownik_podlewania/edit/master/ESPSterrownikRESTFul/README.md)
+# Instalacja sterownika [(->EN)](https://github.com/lutencjusz/sterownik_podlewania/blob/master/ESPSterrownikRESTFul/README.md)
 ## Wstępne przygotowanie ESP8266
 1. Do przygotowania odpowiedniego firmware wykorzystałem stronę [NodeMCU custom builds](https://nodemcu-build.com/). Dla chętnych można samemu przygotować odpowieni firmware, niemniej powinien on się składać z następujących modułów (lista modułów jest dostępna w pliku moduły_kompilacji.txt):
 

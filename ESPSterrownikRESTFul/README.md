@@ -16,24 +16,24 @@ because the `... float.bin` version does not allow you to enter the generated` E
 
 ## Software installation
 The installation of software is done using [ESPlorer] (https://esp8266.ru/esplorer/) and requires the use of the ESP8266 class device with at least 40 KB of RAM allocated for the instruction and an additional small space for operating and configuration files.
-1. The entire catalog [ESPProviderRESTFul](https://github.com/lutencjusz/sterownik_podlewania/edit/master/ESPSterrownikRESTFul/) should be unpacked in a separate directory (eg C:\programs\watering\).
-2. Using button *Uload* you should upload the file which is a binary image of the lua modules `ESPCSensorsRESTFul.img`
+1. The entire catalog [ESPProviderRESTFul](https://github.com/lutencjusz/sterownik_podlewania/edit/master/ESPSterownikRESTFul/) should be unpacked in a separate directory (eg C:\programs\watering\).
+2. Using button *Uload* you should upload the file which is a binary image of the lua modules `ESPSterownikRESTFul.img`
 3. In the command line of the ESPlorer you must run
 ```
-node.flashreload("ESPCzujnikiRESTFul.img")
+node.flashreload("ESPSterownikRESTFul.img")
 ```
 After that the ESP8266 will be restarted, which completes the uploading of the image. Many errors are caused by the fact that there are unnecessary files and programs in the controller's memory, so it is best to delete 'init.lua' file and restart controller before upload the image to its memory.
 It is certainly possible to generate your own images that even support float firmware, but the software is adapted to work on variable integers, even for numbers requiring fractional parts.
 
 ## Preparation of own versions of binary images by using A Lua Cross-Compile Web Service
-As the project is still being developed, it is possible that the version of the development and distribution images will not be adjusted. In this case, it is possible to generate your own image consisting of attached files '.lua':
+As the project is still being developed, it is possible that the version of the development and distribution images will not be adjusted. In this case, it is possible to generate your own image consisting of attached files `.lua':
 1. compress `.lua` files (except` init.lua`) to the form 'image.zip'
 2. run the tool from Terry Ellison's blog [A Lua Cross-Compile Web Service] (https://blog.ellisons.org.uk/article/nodemcu/a-lua-cross-compile-web-service/) and load the file `image.zip` to the tool via the button *Select file*. 
 3. Select the option `REMOTE LUAC.CROSS.INIT (MASTER)`, which will generate file `image.img` and save it.
 4. Using the button *Uload* you need to upload the file which is a binary image of the lua modules `image.img` to the watering controller.
 5. In the command line of the ESPlorer you must run
 ```
-node.flashreload("obraz.img")
+node.flashreload("image.img")
 ```
 After that the ESP8266 will be restarted, which completes the uploading of the image.
 

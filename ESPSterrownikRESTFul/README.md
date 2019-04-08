@@ -1,4 +1,4 @@
-# Installation of watering controller
+# Installation of watering controller                                                               (PL)
 ## Preliminary preparation of ESP8266
 1. to prepare firmware I used the [NodeMCU custom builds](https://nodemcu-build.com/). For the willing, you can prepare the right firmware yourself, but it should consist of the following modules (the list of modules is available in the moduly_kompilacji.txt):
 ```

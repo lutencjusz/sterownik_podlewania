@@ -1,6 +1,6 @@
 # Installation of watering controller
 ## Preliminary preparation of ESP8266
-1. to prepare firmware I used the [NodeMCU custom builds](https://nodemcu-build.com/) to prepare the appropriate firmware. For the willing, you can prepare the right firmware yourself, but it should consist of the following modules (the list of modules is available in the program_compilation_path.txt):
+1. to prepare firmware I used the [NodeMCU custom builds](https://nodemcu-build.com/). For the willing, you can prepare the right firmware yourself, but it should consist of the following modules (the list of modules is available in the program_compilation_path.txt):
 ```
 adc,crypto,encoder,file,gdbstub,gpio,http,net,node,ow,rtcfifo,rtcmem,rtctime,sjson,sntp,tmr,uart,websocket,wifi,tls
 ```

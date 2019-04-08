@@ -1,85 +1,87 @@
-# Instalacja sterownika
-## Wstępne przygotowanie ESP8266
-1. Do przygotowania odpowiedniego firmware wykorzystałem stronę [NodeMCU custom builds](https://nodemcu-build.com/). Dla chętnych można samemu przygotować odpowieni firmware, niemniej powinien on się składać z następujących modułów (lista modułów jest dostępna w pliku moduły_kompilacji.txt):
-
+# Installation of watering controller [(->PL)](https://github.com/lutencjusz/sterownik_podlewania/blob/master/ESPSterrownikRESTFul/READMEpl.md)
+## Preliminary preparation of ESP8266
+1. to prepare firmware I used the [NodeMCU custom builds](https://nodemcu-build.com/). For the willing, you can prepare the right firmware yourself, but it should consist of the following modules (the list of modules is available in the moduly_kompilacji.txt):
 ```
 adc,crypto,encoder,file,gdbstub,gpio,http,net,node,ow,rtcfifo,rtcmem,rtctime,sjson,sntp,tmr,uart,websocket,wifi,tls
 ```
-- koniecznie należy zaznaczyć opcję `LFS options (for master & dev branches)` i wybrać wartości zależne od stosowanego układu (np. dla ESP-12E - wszystkie maksymalne). Ze względu na ograniczoną wielkość pamięci RAM układu, konieczne jest trzymanie wszystkich możliwych modułów i funkcji w pamięci LFS w postaci pliku binarnego i stamtąd ich uruchamianie.
-- dodatkowo należy wybrać `ssl = true`, co umożliwi dodanie modułu `tls`. 
+- it is abslolutly necessary to select the option `LFS options (for master & dev branches)` and select the values depending on the used chip (eg for ESP-12E - all maximum). Due to the limited size of the system's RAM memory, it is necessary to keep all possible modules and functions in the LFS memory as a binary file and from there run them.
+- additionally, you must select `ssl = true`, which allows you to add the `tls` module.
 
-2. Przygotowane wersje firmware zostaną przysłane mejlem, jednak wykorzystana może być tylko wersja obsługująca zmienne integer np.
+2. Prepared versions of the firmware will be sent by e-mail, however, only the version supporting the variable integer can be used, e.g.
 ```
 nodemcu-master-18-modules-2017-02-19-13-15-55-integer.bin - tylko ta jest do wykorzystania
 nodemcu-master-18-modules-2017-02-19-13-15-55-float.bin
 ```
-ponieważ wersja `...float.bin` nie umożliwia wprowadzenia wygenerowanego obrazu `ESPCzujnikiRESTFul.img` do pamięci LFS.
+because the `... float.bin` version does not allow you to enter the generated` ESPCSensorRetFul.img` image into the LFS memory.
 
-## Przygotowanie własnych wersji obrazów binarnych
-Ponieważ projekt jest nadal rozwijany, możliwe jest niedostosowanie wersji obrazów developerskich do dystrybucyjnych. W takim przypadku możliwe jest wygenerowanie własnych obrazów składających się z załączonych w plików '.lua' z wyjątkiem init.lua. W tym celu należy:
-1. skompresować pliki `.lua` (z wyjątkiem `init.lua`) do postaci `obraz.zip'
-2. uruchomić narzędzie z blogu Terry Ellison's [A Lua Cross-Compile Web Service](https://blog.ellisons.org.uk/article/nodemcu/a-lua-cross-compile-web-service/) i wczytać plik `obraz.zip` do narzędzia poprzez przycisk *Wybierz plik*. 
-3. Wybrać opcję `REMOTE LUAC.CROSS.INIT (MASTER)`, co spowoduje wygenerowanie i zapisanie pliku `obraz.img`
-4. Za pomocą ESPlorer przycisku *Uload* należy wgrać na sterownik plik będący obrazem binarnym modułów `obraz.img`
-5. W linii poleceń sterownika należy wykonać komendę 
+## Software installation
+The installation of software is done using [ESPlorer] (https://esp8266.ru/esplorer/) and requires the use of the ESP8266 class device with at least 40 KB of RAM allocated for the instruction and an additional small space for operating and configuration files.
+1. The entire catalog [ESPProviderRESTFul](https://github.com/lutencjusz/sterownik_podlewania/edit/master/ESPSterownikRESTFul/) should be unpacked in a separate directory (eg C:\programs\watering\).
+2. Using button *Uload* you should upload the file which is a binary image of the lua modules `ESPSterownikRESTFul.img`
+3. In the command line of the ESPlorer you must run
 ```
-node.flashreload("obraz.img")
+node.flashreload("ESPSterownikRESTFul.img")
 ```
-Po czym sterownik powinien się zrestartować, co kończy wgrywanie obrazu. Wiele błędów jest spowodowanych tym, że w pamięci sterownika znajdują się zbędne pliki i programy, dlatego najlepiej jest wgrywać obraz do sterownika bez pliku `init.lua` i jego restarcie.
-Na pewno jest możliwość wygenerowania własnych obrazów, umożliwiających nawet obsługę firmware'ów float, jednak całe rozwiązanie jest dostosowane do pracy na zmiennych integer, nawet dla liczb wymagających części ułamkowych.
+After that the ESP8266 will be restarted, which completes the uploading of the image. Many errors are caused by the fact that there are unnecessary files and programs in the controller's memory, so it is best to delete 'init.lua' file and restart controller before upload the image to its memory.
+It is certainly possible to generate your own images that even support float firmware, but the software is adapted to work on variable integers, even for numbers requiring fractional parts.
 
-## Wgranie oprogramowania
-Instalacja sterownika odbywa się za pomocą [ESPlorer](https://esp8266.ru/esplorer/) i wymaga zastosowania urządzenia klasy ESP8266 z co najmniej 40 KB pamięci RAM przeznaczonej na instrukcję i dodatkowej niewielkiej przestrzeni na pliki operacyjne i konfiguracyjne.
-1. Całość katalogu [ESPSterrownikRESTFul](https://github.com/lutencjusz/sterownik_podlewania/edit/master/ESPSterrownikRESTFul/) należy rozpakować w osobnym katalogu (np. C:\programy\sterownikPodlewania\).
-2. Za pomocą ESPlorer przycisku *Uload* należy wgrać na sterownik plik będący obrazem binarnym modułów `ESPCzujnikiRESTFul.img`
-3. W linii poleceń sterownika należy wykonać komendę 
+## Preparation of own versions of binary images by using A Lua Cross-Compile Web Service
+As the project is still being developed, it is possible that the version of the development and distribution images will not be adjusted. In this case, it is possible to generate your own image consisting of attached files `.lua':
+1. compress `.lua` files (except` init.lua`) to the form 'image.zip'
+2. run the tool from Terry Ellison's blog [A Lua Cross-Compile Web Service] (https://blog.ellisons.org.uk/article/nodemcu/a-lua-cross-compile-web-service/) and load the file `image.zip` to the tool via the button *Select file*. 
+3. Select the option `REMOTE LUAC.CROSS.INIT (MASTER)`, which will generate file `image.img` and save it.
+4. Using the button *Uload* you need to upload the file which is a binary image of the lua modules `image.img` to the watering controller.
+5. In the command line of the ESPlorer you must run
 ```
-node.flashreload("ESPCzujnikiRESTFul.img")
+node.flashreload("image.img")
 ```
-Po czym sterownik powinien się zrestartować, co kończy wgrywanie obrazu. Wiele błedów jest spowodowanych tym, że w pamięci sterownika znajdują się zbędne pliki i programy, dlatego najlepiej jest wgrywać obraz do sterownika bez pliku `init.lua` i jego restarcie.
+After that the ESP8266 will be restarted, which completes the uploading of the image.
 
-4. Do sterownika należy wgrać następujące pliki:
+4. Additionally, the following files must be loaded to the driver:
 - ustawieniaZ.json
 - parametryCz.json
 - log.json
 - kalendarz.json
 - init.lua
 
-5. Po restarcie ESP8266 jest gotowy do rozpoczęcia pracy i włożenia do układu docelowego. Należy pamiętać, że obudowa powinna być wodoodporna. Układ praktycznie się nie grzeje, więc nie wymaga dodatkowego chłodzenia. Nie testowałem układu w warunkach zimowych...
+5. After reboot, ESP8266 is ready to insert into the target electronic board. Please note that the housing of the controller should be waterproof. The system practically does not heat, so it does not require additional cooling. I have not tested the system in winter conditions...
 
-# Rozwój sterownika
-W następnej wersji planuję wprowadzić możliwość procentowego określenia prawdopodobieństwa podlania roślin w przyszłości przez sterownik, co wiąże się z koniecznością zaplanowania uzupełnienia wody w zbiorniku, w przypadku urlopów lub dłuższych wyjazdów.
+# Watering controller development
+In the next version I intend to introduce the possibility of determining the probability of watering the plants in the future by the controller, which involves the need to plan water replenishment in the tank, in the case of holidays or longer absence.
 
-Rozważam również możliwość przejścia na platformę ESP32 (język MicroPython), ze względu na ograniczenia pamięci modułu ESP8266 podczas pobierania informacji pogodowych z zewnętrznych serwisów (RESTFul API).
+I am also considering the possibility of changing to the ESP32 platform (MicroPython language) due to memory constraints of the ESP8266 module when downloading weather information from external websites (RESTFul API).
 
-Planuję rozwinąć panel Grafana wpółpracujący z InfluxDB, w celu wykonania bardziej złożonych statystyk, które mogą ulepszyć logikę modułu.
+I plan to create a Grafan panel that works with InfluxDB to perform more complex statistics that can improve the logic of the module.
 
-# Moduły sterownika
-Sternik składa się z następujących modułów:
--   `init.lua` - mikro moduł startujący, proces bootowania
--   `bootowanie.lua` - moduł bootowania oraz utrzymania sterownika
--	`_init.lua` - moduł uruchamiający pozostałe moduły
--	`httpServer.lua` - biblioteka do mini servera HTTP stworzona przez @yulincoder i @wangzexi https://github.com/wangzexi/NodeMCU-HTTP-Server
--	`InfluxDB.lua` - moduł zapisujący dane ze sterownika w bazie czasu rzeczywistego.
--	`kalendarz.lua` - moduł obsługujący daty i czasy oraz ich porównywania
--	`logika.lua` - moduł zwierający logikę sterownika
--	`parametyZewnętrzne.lua` - moduł pobierający dane pogodowe z serwisu airly.eu.
--	`pliki.lua` - moduł obsługujący pliki zewnętrzne podczas pracy modułu (JSON)
--	`ServerWWW.lua` - moduł obsługujący RESTFul API sterownika
--	`Vc.lua` - moduł inicjujący i pobierający napięcie zasilania sterownika
--	`WiFi.lua` - moduł podłączający sterownik do lokalnej sieci WiFi
--	`wyslijMejl.lua` - moduł wykonujący sekwencję wysyłania poczty do serwera pocztowego.
+# Modules of controller
+The software of watering controller consists of the following modules:
+-   `init.lua` - starter module, that iniciate boot process,
+-   `bootowanie.lua` - module for booting and maintaining the controller,
+-	`_init.lua` - module for loading other modules,
+-	`httpServer.lua` - library for mini server HTTP created by @yulincoder i @wangzexi https://github.com/wangzexi/NodeMCU-HTTP-Server,
+-	`InfluxDB.lua` - module that records data from the controller in the real-time database,
+-	`kalendarz.lua` - module supporting dates and times and their comparison
+-	`logika.lua` - module of the controller's logic,
+-	`parametyZewnętrzne.lua` - module that downloads weather data from the web service airly.eu.
+-	`pliki.lua` - module supporting operations on external files (JSON),
+-	`ServerWWW.lua` - module supporting the RESTFul API service of controller,
+-	`Vc.lua` - module support metering of supply voltage,
+-	`WiFi.lua` - module connecting the controller to the local WiFi network,
+-	`wyslijMejl.lua` - module executing the sequence of sending mail
 
 ## `init.lua`
-Moduł wydzieliłem, żeby uprościć nieco development. jest to jedyny moduł znajdujący się bezpośrednio w pamięci RAM. Zarządza ustawieniami dwóch zmiennych:
-- `debugowanie` *(true/false)* - true oznacza, że podczas uruchamiania i pracy modułu na konsoli pojawią się dodatkowe informacje w poszczególnych modułach.
-- `zapisDoInfluxDB` *(true/false)* - true oznacza, że w module InfluxDB wysyłanie do bazy (uruchomienie timera w funkcji zapiszPTestoweInfluxDB()) będzie zablokowane.
-Uruchamia moduł bootowanie znajdujący się w pamięci LFS poprzez polecenie:
-`pcall(function()node.flashindex("bootowanie")()end)`
-i oddaje mu kontrolę.
+I have separated the module to simplify development. it is the only module directly in RAM. Manages the settings of two variables:
+- `debugowanie` *(true/false)* - true means that during the module startup and operation the log console will display additional information from modules,
+- `zapisDoInfluxDB` *(true/false)* - 
+true means that the InfluxDB module will send parameters to the real-time database (use the timer function `zapiszPTestoweInfluxDB()`).
+Runs the `bootowanie` module in LFS memory by command:
+```
+pcall(function()node.flashindex("bootowanie")()end)
+```
+and gives him control.
 
 ## `botowanie.lua`
-Najpierw moduł czyści zbędne pliki z końcówką `.lua`, z wyjątkiem `init.lua`, w celu usunięcia zbędnych plików powstałych podczas ich edycji i zapisu.
+First, the module cleans out unnecessary files with the `.lua` end, with the exception of` init.lua`, in order to delete unnecessary files created during developing.
 ```
 l = file.list();
 for k,v in pairs(l) do
@@ -93,14 +95,14 @@ end
 l=nil; k=nil; v=nil; s=nil
 collectgarbage() 
 ```
-### ładowanie modułów i ustawianie wstępnych wartości zmiennych
+### Loading modules and setting pre-values ​​of variables
 
-Następnie wczytuje plik ustawień ustawieniaZ.json i zapisuje do obiektu `u` po czym przypisuje obiekt do zmiennych.
-Kolejna funkcja `do_next` odpowiada za przebieg procesu bootowania i dzieli się na trzy grupy:
-1. Ładowanie modułów:
+Then it reads the settings file `ustawieniaZ.json`, writes to the object` u` and assigns the object to variables.
+Another function `do_next` is responsible for the course of the boot process and is divided into three major groups:
+1. Loading of modules:
     - Vc,
     - pliki,
-    - WiFi - w tym ostatnim oczekuję na zsynchronizowanie zegara oczekując na ustawienie zmiennej ''czyZsynchonizowano = true''
+    - WiFi - the module expects to synchronize the clock and the variable setting `czyZsynchonizowano = true`
 
 2. wczytuje moduł parametryZewn i pobiera dane pogodowe poprzez `pobierzDanePowietrza()` i ustawia zmienną `dataOstatniegoZapisu` podając aktualny czas jako string w formacie "dzień/miesiąc/rok godzina:minuta:sekunda".
 Próbuje pobrać dane z serwisu zewnętrznego trzy razy i jeżeli się nie uda, restartuje sterownik.
@@ -166,7 +168,3 @@ Komórka do oceny wykorzystuje funkcję `czyMiesciSiePrzedzialeCzasowym ()` w `m
 
 ### ustawienieAlertowLogiki (ob)
 Funkcja łączy z sobą poszczególne komórki decyzyjne i zwraca wynik analizy w formie obiektu alertu `ob`.
-
-
-
-

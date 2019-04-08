@@ -146,24 +146,17 @@ function zaIleUruchomicPompkiKalendarz()
 end
 
 function czyMiesciSiePrzedzialeCzasowym ()
-    local decTLogJSON = sjson.decoder()
-    if decTLogJSON:write ("[" .. tLog .. "]") == nil then
-        print ("Blad przy zamianie tLog na JSON w czyMiesciSiePrzedzialeCzasowym!")
-        return false
-    else
-        local l = decTLogJSON:result()
-        local czasKalendarz1 = odlegloscDaty(podajCzas(), konwersjaCzasNaData(tKalendarz[1]))
-        local czasKalendarz2 = odlegloscDaty(podajCzas(), konwersjaCzasNaData(tKalendarz[2]))
-        if debugowanie then
-            print ("        Odelgłości od czasow kalendarzowych:")
-            print ("         - przedzial dla czasKalendarz1 =(" .. czasKalendarz1 .. " - " .. czasKalendarz1 + mozliwyCzasNaPodlewanie * 60 .. ")")
-            print ("         - przedzial dla czasKalendarz2 =(" .. czasKalendarz2 .. " - " .. czasKalendarz2 + mozliwyCzasNaPodlewanie * 60 .. ")")
-        end
-        if czyUruchomicPompkiKalendarz1 and czasKalendarz1 < 5 and czasKalendarz1 + mozliwyCzasNaPodlewanie * 60 >= 0 then
-            return true
-        elseif czasKalendarz2 < 5 and czasKalendarz2 + mozliwyCzasNaPodlewanie * 60 >= 0 then
-            return true
-        end
+    local czasKalendarz1 = odlegloscDaty(podajCzas(), konwersjaCzasNaData(tKalendarz[1]))
+    local czasKalendarz2 = odlegloscDaty(podajCzas(), konwersjaCzasNaData(tKalendarz[2]))
+    if debugowanie then
+        print ("        Odelgłości od czasow kalendarzowych:")
+        print ("         - przedzial dla czasKalendarz1 =(" .. czasKalendarz1 .. " - " .. czasKalendarz1 + mozliwyCzasNaPodlewanie * 60 .. ")")
+    print ("         - przedzial dla czasKalendarz2 =(" .. czasKalendarz2 .. " - " .. czasKalendarz2 + mozliwyCzasNaPodlewanie * 60 .. ")")
+    end
+    if czyUruchomicPompkiKalendarz1 and czasKalendarz1 < 5 and czasKalendarz1 + mozliwyCzasNaPodlewanie * 60 >= 0 then
+        return true
+    elseif czasKalendarz2 < 5 and czasKalendarz2 + mozliwyCzasNaPodlewanie * 60 >= 0 then
+        return true
     end
     return false            
 end

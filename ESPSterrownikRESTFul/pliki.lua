@@ -1,14 +1,20 @@
 -- gpio.write (pin, LED_ON)
 function wczytajPlikDoZmiennej(nazwaPliku)
     if file.open(nazwaPliku, "r") then 
-        local line=file.read()
-        file.close()
-        return line
+        local lines = ""
+        repeat
+            local line = file:readline()
+            if line then 
+                lines = lines .. line
+            end
+        until line == nil 
+        file:close()
+        return lines
     else
         print ("Nie wczytano pliku: "..nazwaPliku)
         return "" 
     end
-    file=nil; line=nil
+    file=nil; line=nil; lines=nil
     collectgarbage()
 end
 

@@ -1,4 +1,5 @@
-debugowanie = true
+-- node.flashreload("ESPCzujnikiRESTFul.img")
+debugowanie = false
 zapisDoInfluxDB = false
 
 print ("Start bootowania...")

@@ -75,11 +75,13 @@ I have separated the module to simplify development. it is the only module direc
 - `zapisDoInfluxDB` *(true/false)* - 
 true means that the InfluxDB module will send parameters to the real-time database (use the timer function `zapiszPTestoweInfluxDB()`).
 Runs the `bootowanie` module in LFS memory by command:
-`pcall(function()node.flashindex("bootowanie")()end)`
+```
+pcall(function()node.flashindex("bootowanie")()end)
+```
 and gives him control.
 
 ## `botowanie.lua`
-Najpierw moduł czyści zbędne pliki z końcówką `.lua`, z wyjątkiem `init.lua`, w celu usunięcia zbędnych plików powstałych podczas ich edycji i zapisu.
+First, the module cleans out unnecessary files with the `.lua` end, with the exception of` init.lua`, in order to delete unnecessary files created during developing.
 ```
 l = file.list();
 for k,v in pairs(l) do
@@ -93,14 +95,14 @@ end
 l=nil; k=nil; v=nil; s=nil
 collectgarbage() 
 ```
-### ładowanie modułów i ustawianie wstępnych wartości zmiennych
+### Loading modules and setting pre-values ​​of variables
 
-Następnie wczytuje plik ustawień ustawieniaZ.json i zapisuje do obiektu `u` po czym przypisuje obiekt do zmiennych.
-Kolejna funkcja `do_next` odpowiada za przebieg procesu bootowania i dzieli się na trzy grupy:
-1. Ładowanie modułów:
+Then it reads the settings file `ustawieniaZ.json`, writes to the object` u` and assigns the object to variables.
+Another function `do_next` is responsible for the course of the boot process and is divided into three major groups:
+1. Loading of modules:
     - Vc,
     - pliki,
-    - WiFi - w tym ostatnim oczekuję na zsynchronizowanie zegara oczekując na ustawienie zmiennej ''czyZsynchonizowano = true''
+    - WiFi - the module expects to synchronize the clock and the variable setting `czyZsynchonizowano = true`
 
 2. wczytuje moduł parametryZewn i pobiera dane pogodowe poprzez `pobierzDanePowietrza()` i ustawia zmienną `dataOstatniegoZapisu` podając aktualny czas jako string w formacie "dzień/miesiąc/rok godzina:minuta:sekunda".
 Próbuje pobrać dane z serwisu zewnętrznego trzy razy i jeżeli się nie uda, restartuje sterownik.

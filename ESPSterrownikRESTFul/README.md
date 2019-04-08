@@ -46,36 +46,37 @@ After that the ESP8266 will be restarted, which completes the uploading of the i
 
 5. After reboot, ESP8266 is ready to insert into the target electronic board. Please note that the housing of the controller should be waterproof. The system practically does not heat, so it does not require additional cooling. I have not tested the system in winter conditions...
 
-# Rozwój sterownika
-W następnej wersji planuję wprowadzić możliwość procentowego określenia prawdopodobieństwa podlania roślin w przyszłości przez sterownik, co wiąże się z koniecznością zaplanowania uzupełnienia wody w zbiorniku, w przypadku urlopów lub dłuższych wyjazdów.
+# Watering controller development
+In the next version I intend to introduce the possibility of determining the probability of watering the plants in the future by the controller, which involves the need to plan water replenishment in the tank, in the case of holidays or longer absence.
 
-Rozważam również możliwość przejścia na platformę ESP32 (język MicroPython), ze względu na ograniczenia pamięci modułu ESP8266 podczas pobierania informacji pogodowych z zewnętrznych serwisów (RESTFul API).
+I am also considering the possibility of changing to the ESP32 platform (MicroPython language) due to memory constraints of the ESP8266 module when downloading weather information from external websites (RESTFul API).
 
-Planuję rozwinąć panel Grafana wpółpracujący z InfluxDB, w celu wykonania bardziej złożonych statystyk, które mogą ulepszyć logikę modułu.
+I plan to create a Grafan panel that works with InfluxDB to perform more complex statistics that can improve the logic of the module.
 
-# Moduły sterownika
-Sternik składa się z następujących modułów:
--   `init.lua` - mikro moduł startujący, proces bootowania
--   `bootowanie.lua` - moduł bootowania oraz utrzymania sterownika
--	`_init.lua` - moduł uruchamiający pozostałe moduły
--	`httpServer.lua` - biblioteka do mini servera HTTP stworzona przez @yulincoder i @wangzexi https://github.com/wangzexi/NodeMCU-HTTP-Server
--	`InfluxDB.lua` - moduł zapisujący dane ze sterownika w bazie czasu rzeczywistego.
--	`kalendarz.lua` - moduł obsługujący daty i czasy oraz ich porównywania
--	`logika.lua` - moduł zwierający logikę sterownika
--	`parametyZewnętrzne.lua` - moduł pobierający dane pogodowe z serwisu airly.eu.
--	`pliki.lua` - moduł obsługujący pliki zewnętrzne podczas pracy modułu (JSON)
--	`ServerWWW.lua` - moduł obsługujący RESTFul API sterownika
--	`Vc.lua` - moduł inicjujący i pobierający napięcie zasilania sterownika
--	`WiFi.lua` - moduł podłączający sterownik do lokalnej sieci WiFi
--	`wyslijMejl.lua` - moduł wykonujący sekwencję wysyłania poczty do serwera pocztowego.
+# Modules of controller
+The software of watering controller consists of the following modules:
+-   `init.lua` - starter module, that iniciate boot process,
+-   `bootowanie.lua` - module for booting and maintaining the controller,
+-	`_init.lua` - module for loading other modules,
+-	`httpServer.lua` - library for mini server HTTP created by @yulincoder i @wangzexi https://github.com/wangzexi/NodeMCU-HTTP-Server,
+-	`InfluxDB.lua` - module that records data from the controller in the real-time database,
+-	`kalendarz.lua` - module supporting dates and times and their comparison
+-	`logika.lua` - module of the controller's logic,
+-	`parametyZewnętrzne.lua` - module that downloads weather data from the web service airly.eu.
+-	`pliki.lua` - module supporting operations on external files (JSON),
+-	`ServerWWW.lua` - module supporting the RESTFul API service of controller,
+-	`Vc.lua` - module support metering of supply voltage,
+-	`WiFi.lua` - module connecting the controller to the local WiFi network,
+-	`wyslijMejl.lua` - module executing the sequence of sending mail
 
 ## `init.lua`
-Moduł wydzieliłem, żeby uprościć nieco development. jest to jedyny moduł znajdujący się bezpośrednio w pamięci RAM. Zarządza ustawieniami dwóch zmiennych:
-- `debugowanie` *(true/false)* - true oznacza, że podczas uruchamiania i pracy modułu na konsoli pojawią się dodatkowe informacje w poszczególnych modułach.
-- `zapisDoInfluxDB` *(true/false)* - true oznacza, że w module InfluxDB wysyłanie do bazy (uruchomienie timera w funkcji zapiszPTestoweInfluxDB()) będzie zablokowane.
-Uruchamia moduł bootowanie znajdujący się w pamięci LFS poprzez polecenie:
+I have separated the module to simplify development. it is the only module directly in RAM. Manages the settings of two variables:
+- `debugowanie` *(true/false)* - true means that during the module startup and operation the log console will display additional information from modules,
+- `zapisDoInfluxDB` *(true/false)* - 
+true means that the InfluxDB module will send parameters to the real-time database (use the timer function `zapiszPTestoweInfluxDB()`).
+Runs the `bootowanie` module in LFS memory by command:
 `pcall(function()node.flashindex("bootowanie")()end)`
-i oddaje mu kontrolę.
+and gives him control.
 
 ## `botowanie.lua`
 Najpierw moduł czyści zbędne pliki z końcówką `.lua`, z wyjątkiem `init.lua`, w celu usunięcia zbędnych plików powstałych podczas ich edycji i zapisu.

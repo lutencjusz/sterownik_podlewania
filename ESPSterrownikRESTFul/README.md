@@ -123,26 +123,30 @@ Main loop of the controller is carried out by the function `obslugaModulu()`, wh
 if it's been longer than minutes in variable`czasDoOdswierzeniaMax` (eg. 60 min.). Then the weather data from the service airly.eu `pobierzDanePowietrza()` for max. 20 seconds.
 If the data has been sukcesfully downloaded, the `wynikPZ` object is refreshed, which is the object of the current weather data used by other modules.
 
-2. W tym bloku ładowane są z plików JSON odpowiednie obiekty poprzez '`initKalendarza()`, co ma na celu przygotowanie środowiska do sprawdzenia możliwości uruchomienia pompek: 
-- tLog - przechowuje informacje uruchomieniach pompek 
-- tAlarm - przechowuje informacje o alarmach związanych z próbnymi uruchomieniami
-- tKalendarz - przechowuje informaje o początkach okresów, w których można podlewać rośliny
-Następnie podejmuje próbę zapisy do bazy InfluxDB poprzez `zapiszPTestoweInfluxDB()`, jeżeli zmienna `zapisDoInfluxDB()` jest ustawiona.
+2. In this block the appropriate objects are loaded from JSON files through 'initKalendarza()', which is to prepare the environment to check the possibility of starting the pumps: 
+- `tLog` - stores information about pump start-ups 
+- `tAlarm` - stores information about alarms related to trial run
+- `tKalendarz` - stores information about the beginning of periods in which plants can be watered
+Then it attempts to write to the InfluxDB database by `zapiszPTestoweInfluxDB()`, if the variable `zapisDoInfluxDB()` is set.
 
-3. Blok uruchamia sprawdzenie możliwości podlewania poprzez uruchomienie komórki decyzyjnej `czyAlerthumidity()`, która ustawia zmienną globalną czyUruchomicPompkiKalendarz1 w zależności od wilgotności.
-Następne jest sprawdzena możliwość uruchomienia pompek poprzez `uruchomPompki()` oraz wczytania obiektów z plików poprzez `initKalendarza()`, w celu zaktualizowania danych ładowanych w bloku 2. Aby móc prawidłowo wyliczyć czas do następnego uruchomienia procedury obsługi sterownika, następuje 6 prób wczytania logu uruchomienia sterownika "log.json" i w przypadku braku wczytania danych...
+3. The block starts checking the possibility of watering by activating functionality the decision cell `czyAlerthumidity()`, which sets the global variable `czyUruchomicPompkiKalendarz1`, depending on the humidity.
+Next is checking the ability to start the pumps by function `uruchomPompki()` and to load new values of objects from files by `initKalendar ()`, to update the data loaded in block nr 2. To correctly calculate the time until the next runing watering, is taken six attempts to read the log "log.json" are carried out to run the controller and if no data is loaded controller is restarting.
 
-4. W bloku wyliczany jest czas uruchomienia timera w poleceniu `tmr.interval(5, d * 60 * 1000)` (d jest w min.)
-W tym celu uruchamiana jest funkcja `zaIleUruchomicPompkiKalendarz()` skorygowana o czas potrzebny do wysłania mejla przypominającego o uzupełnieniu wody w zbiorniku `ileCzasuDoWyslaniaMejla`.
-Następnie sprawdzane jest, czy nie został wyliczony czas późniejszy (<0), to zostaje skorygowany o `ileCzasuDoWyslaniaMejla`. 
-Jeżeli nadal wychodzi czas późniejszy (<0) lub za duży niż możliwości układu ESP8266 (powyżej 113 minut) następuje ustawienie maksymalnej wartości czasu.
-Ustawiana jest czas następnego uruchomienia oraz zapisywana `dataNastepnegoSprawdzenia` na podstawie funkcji `kiedyNastepneSprawdzenie()`.
+4. The block calculates time to start next check of watering in the command
+```
+tmr.interval(5, d * 60 * 1000) -- d jest w min.
+```
+To do this, the `zaIleUruchomicPompkiKalendarz()` function is run, corrected by the time it takes to send a reminder e-mail to fill up the water in the tank that is in varable `ileCzasuDoWyslaniaMejla`.
+Then it is checked whether the time has been calculated on earlier then now (<0), if yes, it is corrected by varaible `ileCzasuDoWyslaniaMejla`.
+If calculated time is still too early then now or is bigger then posbilities of the ESP8266 (over 113 minutes). Calculated time is set to maximum time and write to global variable `dataNastepnegoSprawdzenia` based on `kiedyNastepneSprawdzenie()` function.
 
-Na koniec następuje uruchomienie bootowania poprzez
-`tmr.alarm(3,1000,1,do_next)`
+Finally, whole porcess of booting is started by command:
+```
+tmr.alarm(3,1000,1,do_next)
+```
 
 ## `logika.lua`
-Moduł zapewnia dostarczenie logiki do podejmowania decyzji o podlewaniu na podstawie dostępnych parametrów pogodowych. W skład modułu wchodzą następujące komórki decyzyjne, które zwracają zmodyfikowany obiekt alertu `ob` oraz ustawiają zmienne globalne:
+The module provides logic for making watering decisions based on available weather parameters. The module consists of the following decision cells that return the modified `ob` object and set the global variable `czyUruchomicPompkiKalendarz1` by `czyAlerthumidity (ob)`:
 
 ### czyAlertPozZasVc (ob)
 Komórka sprawdza, czy napięcie zasilania pompek `PTestowe.Vp` mieści się w wyznaczonym przedziale określonym przez parametry sterownika `pCz.VcMax` oraz `pCz.VcMin`, blokując jednocześnie uruchomienie pompek w przypadku nieprawidłowości.

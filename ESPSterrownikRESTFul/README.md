@@ -95,7 +95,7 @@ end
 l=nil; k=nil; v=nil; s=nil
 collectgarbage() 
 ```
-### Loading modules and setting pre-values ​​of variables
+### Loading modules and setting pre-values of variables
 
 Then it reads the settings file `ustawieniaZ.json`, writes to the object` u` and assigns the object to variables.
 Another function `do_next` is responsible for the course of the boot process and is divided into three major groups:
@@ -104,23 +104,24 @@ Another function `do_next` is responsible for the course of the boot process and
     - pliki,
     - WiFi - the module expects to synchronize the clock and the variable setting `czyZsynchonizowano = true`
 
-2. wczytuje moduł parametryZewn i pobiera dane pogodowe poprzez `pobierzDanePowietrza()` i ustawia zmienną `dataOstatniegoZapisu` podając aktualny czas jako string w formacie "dzień/miesiąc/rok godzina:minuta:sekunda".
-Próbuje pobrać dane z serwisu zewnętrznego trzy razy i jeżeli się nie uda, restartuje sterownik.
+2. reads the `parametryZewn` module and retrieves weather data by `pobierzDanePowietrza()` and sets the global variable `dataOstatniegoZapisu` giving the current time as a string in the format 'day/month/year hour:minute:second'.
+It tries to download data from the external service three times and if it fails, it reboots the controller.
 
-3. wczytuje moduł _init, który ładuje:
-    - httpServer
-    - kalendarz
-    - logika
-    - wyslijMail
-    - InfluxDB
-    - ServerWWW, ktory uruchamia RESTFul API
-Następnie ładuje wartości czujników poprzez funkcję `odswierzZakresyCzujnikow()`. Po czym uruchamia funkcję `obslugaModulu()`, która jest pętlą główną sterownika.
+3. loading the `_init.lua` module that loads additional modules:
+    - `httpServer.lua`
+    - `kalendarz.lua`
+    - `logika.lua`
+    - `wyslijMail.lua`
+    - `InfluxDB.lua` - conditionally, if the variable `zapisDoInfluxDB` is *true*, which is set in 'init.lua'
+    - `ServerWWW.lua` - which runs the RESTFul API
+Then it loads the values from the service through the function `odswierzZakresyCzujnikow()`. Finally, he runs the function `obslugaModulu()`, which is the main loop of the controller.
 
-### obsługa sterownika
+### main loop of the controller
 
-Obsługa sterownika dzieli się na trzy grupy poleceń:
-1. Ten blok instrukcji sprawdza, czy od ostaniego wczytania danych powietrza `dataOstatniegoZapisu` nineło więcej niż `czasDoOdswierzeniaMin` (np. 10 min.) wtedy są ładowane dane pogodowe z serwisu airly.eu `pobierzDanePowietrza()` przez 20 sek. 
-Jeżeli dane zostały pobrane, to wtedy odświeżany jest obiekt `wynikPZ`, który jest obiektem aktualnych danych pogodowych wykorzystywanym przez inne moduły.
+Main loop of the controller is carried out by the function `obslugaModulu()`, which is divided into three commands groups:
+1. This block of instructions checks data of last loading weather data that is in variable `dataOstatniegoZapisu` 
+if it's been longer than minutes in variable`czasDoOdswierzeniaMax` (eg. 60 min.). Then the weather data from the service airly.eu `pobierzDanePowietrza()` for max. 20 seconds.
+If the data has been sukcesfully downloaded, the `wynikPZ` object is refreshed, which is the object of the current weather data used by other modules.
 
 2. W tym bloku ładowane są z plików JSON odpowiednie obiekty poprzez '`initKalendarza()`, co ma na celu przygotowanie środowiska do sprawdzenia możliwości uruchomienia pompek: 
 - tLog - przechowuje informacje uruchomieniach pompek 

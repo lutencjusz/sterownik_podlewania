@@ -1,5 +1,5 @@
-# Sterownik podlewania (Logic plant watering)
-system of automatic watering of plants based on ESP8266 (Lua) as RESTFul API. All documnetantion is prepared in polish language that will be changed in the nearest future.
+# Sterownik podlewania (Logic plant watering)[(->EN)](README.md)
+System automatycznego podlewania kwiatów oparty o układ ESP8266 (Lua) oraz serwis RESTFul API. Cała dokumentacja jest przygotowana po polsku i angielsku.
 
 # Cel projektu
 Przedstawione rozwiązanie jest nadal rozwijane i modyfikowane. Przygotowana dystrybucja ma celu uporządkowanie dokumentacji w celu dalszego rozwoju w zależności od możliwości zastosowanych układów elektronicznych.

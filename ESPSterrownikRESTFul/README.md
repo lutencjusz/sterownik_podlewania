@@ -149,27 +149,28 @@ tmr.alarm(3,1000,1,do_next)
 The module provides logic for making watering decisions based on available weather parameters. The module consists of the following decision cells that return the modified `ob` object and set the global variable `czyUruchomicPompkiKalendarz1` by `czyAlerthumidity (ob)`:
 
 ### czyAlertPozZasVc (ob)
-Komórka sprawdza, czy napięcie zasilania pompek `PTestowe.Vp` mieści się w wyznaczonym przedziale określonym przez parametry sterownika `pCz.VcMax` oraz `pCz.VcMin`, blokując jednocześnie uruchomienie pompek w przypadku nieprawidłowości.
+The decision cell checks the supply voltage pumps (variable `PTestowe.Vc`) is within the designated range specified by the parameters `pCz.VcMin` and` pCz.VcMax`, while blocking the activation of the pumps in the event of value is out of range.
 
 ### czyAlertPozZasVp (ob)
-Komórka robi to samo co poprzednik, tylko dla napięcia układu określonego przez `PTestowe.Vc`. Przedział określa `pCz.VpMax` oraz `pCz.VpMin`.
+The cell does the same as its before one, only for the system voltage specified by `PTestowe.Vp`. The range is specified by `pCz.VpMin` and` pCz.VpMax`.
 
 ### czyAlerthumidity (ob)
-Komórka sprawdza wilgotność powietrza `pTestowe.humidity` ograniczoną przez `pCz.humidityMin` oraz `pCz.humidityMax` blokująco uruchomienie pompek. 
-Dodatkowo ustawia zmienną globalną `czyUruchomicPompkiKalendarz1` w przypadku, gdy wilgotność jest wyższa niż optymalna `pCz.humidityOpt`. Zmienna ta, jeżeli jest ustwiona na *false* blokuje poranne uruchomienie pompek.
+The decision cell checks the air humidity `PTestowe.humidity` limited by` pCz.humidityMin` and `pCz.humidityMax` to block the activation of push-ups.
+Additionally, it sets the global variable `czyUruchomicPompkiKalendarz1` if the humidity is higher than the optimal value that is in variable `pCz.humidityOpt`. if the variable is set to *false*, blocks the morning start of watering.
 
 ### czyAlertTempPow (ob)
-Komórka sprawdza temperaturę powetrza `pTestowe.temp/_u`, czy mieści się w przedziale określonym `pCz.temp_min` oraz `pCz.temp_max`. Jeżeli wykracza za przedział, komórka blokuje uruchomienie pompek.
+The decision cell checks the temperature of air `pTestowe.temp/_u`. if it is without the range specified by `pCz.temp_min` and `pCz.temp_max`, blocks the start of watering.
 
 ### czyAlertKalenadza (ob)
-Komórka określa aktualny czas w stosunku do czasów wyznaczonych w kalendarzu oraz daty ostatniego podlewania i sprawdza, czy podlewania miało już miejsce, czy jeszcze nie. Blokuje uruchomienie pompek, jeżeli podlewanie o tej porze miało już miejsce.
+The decision cell determines the current time in relation to the times set in the calendar as well as the date of the last watering. Checks whether the watering has already taken place or not yet. It blocks the start of watering, if watering at that time has already taken place.
 
 ### czyAlertPoziomuWody (ob)
-komórka sprawdza, czy jest wystarczająca ilość wody do polewania i jeżeli nie ma, blokuje uruchomienie podlewania. Obecnie komórka jest zablokowana i zawsze dopuszcza do podlewania.
+The decision cell checks if there is enough water for watering. if it is not fill, it blocks the start of watering. Currently, the cell is blocked and always allows watering.
 
 ### czyAlertPrzedzialuCzasowego (ob)
-Komórka określa na podstawie aktualnego czasu, czy jest to ten moment na podlewanie, który mieści się w wyznaczonym przedziale czasu. Ten przedział mieści się między datą początku podlewania zapisaną w pliku 'kalendarz.json', a czasem wyznaczonym przez zmienną globalną `mozliwyCzasNaPodlewanie` (wyrażoną w godzinach). Komórka nie rozróżnia, czy ma do czynienia z podlewaniem porannym, czy wieczornym.
-Komórka do oceny wykorzystuje funkcję `czyMiesciSiePrzedzialeCzasowym ()` w `module kalendarz.lua`
+The cell determines on the basis of the current time whether it is the moment for watering, which fits within the designated time interval. This interval is between the date of the beginning of watering stored in the 'kalendarz.json' file and time determined by the global variable `mozliwyCzasNaPodlewanie` (expressed in hours). The decision cell does not distinguish whether it is watering the morning or evening.
+The decision cell for the evaluation uses the external function `czyMiesciSiePrzedzialeCzasowym ()` in module `kalendarz.lua`.
 
 ### ustawienieAlertowLogiki (ob)
-Funkcja łączy z sobą poszczególne komórki decyzyjne i zwraca wynik analizy w formie obiektu alertu `ob`.
+The function combines individual decision cells and returns the result of the analysis in the form of an `ob` object.
+

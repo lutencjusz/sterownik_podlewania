@@ -1,5 +1,5 @@
 # Sterownik podlewania (Logic plant watering)[(->PL)](READMEpl.md)
-system of automatic watering of plants based on ESP8266 (Lua) as RESTFul API. All documnetantion is prepared in polish language that will be changed in the nearest future.
+system of automatic watering of plants based on ESP8266 (Lua) as RESTFul API. All documnetantion is prepared in polish and english language.
 
 # The goal of the project
 The presented solution is still developed and modified. Prepared distribution is aimed at organizing documentation for further development depending on the capabilities of the electronic systems used.

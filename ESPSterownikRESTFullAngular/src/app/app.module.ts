@@ -26,6 +26,9 @@ import { ParametryComponent } from './parametry/parametry.component';
 import { StanParametruComponent } from './parametry/stan-parametru/stan-parametru.component';
 import { PomiaryZewnService } from './services/pomiary-zewn.service';
 import { OdliczanieComponent } from './odliczanie/odliczanie.component';
+import { TabViewModule } from 'primeng/tabview';
+import { PrognozaComponent } from './prognoza/prognoza.component';
+import { PrognozaService } from './services/prognoza.service';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,8 @@ import { OdliczanieComponent } from './odliczanie/odliczanie.component';
     WykresAlertComponent,
     ParametryComponent,
     StanParametruComponent,
-    OdliczanieComponent
+    OdliczanieComponent,
+    PrognozaComponent
   ],
   imports: [
     BrowserModule,
@@ -55,9 +59,10 @@ import { OdliczanieComponent } from './odliczanie/odliczanie.component';
     SliderModule,
     ToastModule,
     HttpClientModule,
-    FieldsetModule
+    FieldsetModule,
+    TabViewModule
   ],
-  providers: [EsprestfullService, MessageService, AlertyService, PomiaryZewnService],
+  providers: [EsprestfullService, MessageService, AlertyService, PomiaryZewnService, PrognozaService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

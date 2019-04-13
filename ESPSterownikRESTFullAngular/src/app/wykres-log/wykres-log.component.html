@@ -1,26 +1,37 @@
 <div class="p-grid p-justify-center">
+    <div class="p-col-1"></div> <!--dodałem-->
+    <div class="p-col-11"> <!--dodałem-->
   <ng-container *ngIf="WykresEData.length>0; else brakDanych">
-    <div class="p-grid p-justify-center">
-      <div class="p-col-6">
-        <p-chart type="line" [data]="data" (onDataSelect)="selectData($event)"></p-chart>
-      </div>
-      <div class="p-col-6">
-        <p-chart type="bar" [data]="dataPM" (onDataSelect)="selectData($event)"></p-chart>
-      </div>
-    </div>
-    <div class="p-grid p-justify-center">
-      <div class="p-col-6">
-        <p-chart type="bar" [data]="dataT" (onDataSelect)="selectData($event)"></p-chart>
-      </div>
-      <div class="p-col-6">
-        <p-chart type="bar" [data]="dataW" (onDataSelect)="selectData($event)"></p-chart>
-      </div>
-    </div>
+      <p-tabView>
+          <p-tabPanel header="Sterownik" class="przezroczyste">
+              <div class="p-grid p-justify-center">
+                  <div class="p-col-6">
+                    <p-chart type="line" [data]="data" (onDataSelect)="selectData($event)"></p-chart>
+                  </div>
+                  <div class="p-col-6">
+                    <p-chart type="bar" [data]="dataPM" (onDataSelect)="selectData($event)"></p-chart>
+                  </div>
+                </div>
+                <div class="p-grid p-justify-center">
+                  <div class="p-col-6">
+                    <p-chart type="bar" [data]="dataT" (onDataSelect)="selectData($event)"></p-chart>
+                  </div>
+                  <div class="p-col-6">
+                    <p-chart type="bar" [data]="dataW" (onDataSelect)="selectData($event)"></p-chart>
+                  </div>
+                </div>
+          </p-tabPanel>
+          <p-tabPanel header="Prognoza">
+            <app-prognoza></app-prognoza>
+          </p-tabPanel>
+      </p-tabView>
+
   </ng-container>
   <ng-template #brakDanych>
     <!--<p class="input-text">brak danych w logu</p>-->
     <h2>brak danych w logu</h2>
   </ng-template>
+  </div> <!--dodałem-->
 </div>
 <div class="p-grid">
   <h2></h2>

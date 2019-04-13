@@ -66,3 +66,11 @@ export interface ESPSatusSprawdzenia {
   dataUruchPompek?: string;
 }
 
+export interface Prognoza {
+  naglowek?: string;
+  opis?: string;
+  status?: string;
+  klucz?: string;
+  data?: string;
+  wynik?: number;
+}

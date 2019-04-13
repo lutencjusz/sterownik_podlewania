@@ -1,0 +1,6 @@
+<p-toast [style]="{marginTop: '30px'}" position="top-left" key="pr"></p-toast>
+<div class="p-grid p-justify-center">
+    <div class="p-col-12">
+        <p-chart type="bar" [data]="dataPrognozy" (onDataSelect)="selectData($event)"></p-chart>
+    </div>
+</div>

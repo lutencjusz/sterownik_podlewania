@@ -64,9 +64,9 @@ export class WykresAlertComponent implements OnInit {
           {
               data: this.wartosci,
               backgroundColor: [
-                  'red', // '#FF6384'
-                  '#FFCE56',
-                  '#36A2EB'
+                  '#ff000077', // '#FF6384'
+                  '#ffcf567e',
+                  '#36a3eb80'
               ],
               hoverBackgroundColor: [
                   'red',

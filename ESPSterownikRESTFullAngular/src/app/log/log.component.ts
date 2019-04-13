@@ -21,14 +21,14 @@ export class LogComponent implements OnInit {
 
     this.cols = [
         { field: 'dataPomiaru', header: 'Data Pomiaru' },
-        { field: 'temp', header: 'Temp. powietza' },
+        { field: 'temp', header: 'Temp. powiet.' },
         { field: 'pm1', header: 'PM 1' },
         { field: 'pm25', header: 'PM 2,5' },
         { field: 'pm10', header: 'PM 10' },
-        { field: 'humidity', header: 'Wilgotność' },
-        { field: 'pressure', header: 'Ciśnienie' },
-        { field: 'Vc', header: 'Napięcie układu' },
-        { field: 'Vp', header: 'Napięcie pompek' }
+        { field: 'humidity', header: 'Wilgot.' },
+        { field: 'pressure', header: 'Ciś.' },
+        { field: 'Vc', header: 'Nap. układu' },
+        { field: 'Vp', header: 'Nap. pompek' }
     ];
 
     this.selectedColumns = this.cols;

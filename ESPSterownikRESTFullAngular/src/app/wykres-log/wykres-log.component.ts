@@ -37,6 +37,10 @@ export class WykresLogComponent implements OnInit {
 
   odwierz() {
 
+    this.WykresEData.forEach((element, i) => { // skrócenie zapisu labelek
+      element.dataPomiaru = element.dataPomiaru.substring(0, 5) + ' ' + element.dataPomiaru.substring(11, 16);
+    });
+
     this.data = {
       labels: this.WykresEData.map((s) => s.dataPomiaru),
       datasets: [
@@ -50,7 +54,7 @@ export class WykresLogComponent implements OnInit {
             label: 'Vp',
             data: this.WykresEData.map((d) => d.Vp),
             fill: false,
-            borderColor: '#565656'
+            borderColor: '#4ef35cf6'
           }
       ]
     };
@@ -60,20 +64,23 @@ export class WykresLogComponent implements OnInit {
           {
             label: 'PM1',
             data: this.WykresEData.map((d) => d.pm1),
-            fill: false,
-            borderColor: '#565656'
+            // fill: false,
+            borderColor: '#a3a2a2',
+            backgroundColor: '#a3a2a2'
           },
           {
             label: 'PM10',
             data: this.WykresEData.map((d) => d.pm10),
-            fill: false,
-            borderColor: '#565656'
+            // fill: false,
+            borderColor: '#757575',
+            backgroundColor: '#757575'
           },
           {
             label: 'PM25',
             data: this.WykresEData.map((d) => d.pm25),
-            fill: false,
-            borderColor: '#565656'
+            // fill: false,
+            borderColor: '#494948',
+            backgroundColor: '#494948'
           }
       ]
     };
@@ -83,8 +90,9 @@ export class WykresLogComponent implements OnInit {
         {
           label: 'Wilgotonosc',
           data: this.WykresEData.map((d) => d.humidity),
-          fill: false,
-          borderColor: '#565656'
+          // fill: false,
+          borderColor: '#73bcf7',
+          backgroundColor: '#2a6799'
         }
       ]
     };
@@ -94,8 +102,9 @@ export class WykresLogComponent implements OnInit {
         {
           label: 'Temp. powietrza',
           data: this.WykresEData.map((d) => d.temp),
-          fill: false,
-          borderColor: '#565656'
+          // fill: false,
+          borderColor: '#00790a',
+          backgroundColor: '#00790a6c'
         }
       ]
     };
@@ -123,7 +132,7 @@ export class WykresLogComponent implements OnInit {
      // this.odwierz();
   }
 
-  usun(){
+  usun() {
     this.RService.usunWszystko();
     // this.RService.getObservableESPData().subscribe(eData => this.WykresEData = eData);
     // this.odwierz();

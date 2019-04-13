@@ -5,15 +5,15 @@
         <p-chart type="line" [data]="data" (onDataSelect)="selectData($event)"></p-chart>
       </div>
       <div class="p-col-6">
-        <p-chart type="line" [data]="dataPM" (onDataSelect)="selectData($event)"></p-chart>
+        <p-chart type="bar" [data]="dataPM" (onDataSelect)="selectData($event)"></p-chart>
       </div>
     </div>
     <div class="p-grid p-justify-center">
       <div class="p-col-6">
-        <p-chart type="line" [data]="dataT" (onDataSelect)="selectData($event)"></p-chart>
+        <p-chart type="bar" [data]="dataT" (onDataSelect)="selectData($event)"></p-chart>
       </div>
       <div class="p-col-6">
-        <p-chart type="line" [data]="dataW" (onDataSelect)="selectData($event)"></p-chart>
+        <p-chart type="bar" [data]="dataW" (onDataSelect)="selectData($event)"></p-chart>
       </div>
     </div>
   </ng-container>

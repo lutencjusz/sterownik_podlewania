@@ -92,11 +92,11 @@ export class OdliczanieComponent implements OnInit {
           {
               data: this.daneKalendarza,
               backgroundColor: [
-                  'red',
-                  'green',
-                  'red',
-                  'green',
-                  'red'
+                  '#f8640e77',
+                  '#00790a88',
+                  '#f8640e77',
+                  '#00790a88',
+                  '#f8640e77'
               ],
               hoverBackgroundColor: [
                   'red',

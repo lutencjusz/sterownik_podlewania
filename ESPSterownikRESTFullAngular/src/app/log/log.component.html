@@ -1,9 +1,9 @@
 <h2></h2>
-<p-table [columns]="selectedColumns" [value]="EData" [scrollable]="true" scrollHeight="200px">
+<p-table [columns]="selectedColumns" [value]="EData" [scrollable]="true" scrollHeight="300px">
   <ng-template pTemplate="caption">
       <div style="text-align:left">
           <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                      selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns"></p-multiSelect>
+                      selectedItemsLabel="{0} columns selected" [style]="{minWidth: '300px'}" defaultLabel="Choose Columns"></p-multiSelect>
       </div>
   </ng-template>
   <ng-template pTemplate="header" let-columns>

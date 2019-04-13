@@ -95,7 +95,7 @@ end
 l=nil; k=nil; v=nil; s=nil
 collectgarbage() 
 ```
-### Loading modules and setting pre-values ​​of variables
+### Loading modules and setting pre-values of variables
 
 Then it reads the settings file `ustawieniaZ.json`, writes to the object` u` and assigns the object to variables.
 Another function `do_next` is responsible for the course of the boot process and is divided into three major groups:
@@ -104,67 +104,73 @@ Another function `do_next` is responsible for the course of the boot process and
     - pliki,
     - WiFi - the module expects to synchronize the clock and the variable setting `czyZsynchonizowano = true`
 
-2. wczytuje moduł parametryZewn i pobiera dane pogodowe poprzez `pobierzDanePowietrza()` i ustawia zmienną `dataOstatniegoZapisu` podając aktualny czas jako string w formacie "dzień/miesiąc/rok godzina:minuta:sekunda".
-Próbuje pobrać dane z serwisu zewnętrznego trzy razy i jeżeli się nie uda, restartuje sterownik.
+2. reads the `parametryZewn` module and retrieves weather data by `pobierzDanePowietrza()` and sets the global variable `dataOstatniegoZapisu` giving the current time as a string in the format 'day/month/year hour:minute:second'.
+It tries to download data from the external service three times and if it fails, it reboots the controller.
 
-3. wczytuje moduł _init, który ładuje:
-    - httpServer
-    - kalendarz
-    - logika
-    - wyslijMail
-    - InfluxDB
-    - ServerWWW, ktory uruchamia RESTFul API
-Następnie ładuje wartości czujników poprzez funkcję `odswierzZakresyCzujnikow()`. Po czym uruchamia funkcję `obslugaModulu()`, która jest pętlą główną sterownika.
+3. loading the `_init.lua` module that loads additional modules:
+    - `httpServer.lua`
+    - `kalendarz.lua`
+    - `logika.lua`
+    - `wyslijMail.lua`
+    - `InfluxDB.lua` - conditionally, if the variable `zapisDoInfluxDB` is *true*, which is set in 'init.lua'
+    - `ServerWWW.lua` - which runs the RESTFul API
+Then it loads the values from the service through the function `odswierzZakresyCzujnikow()`. Finally, he runs the function `obslugaModulu()`, which is the main loop of the controller.
 
-### obsługa sterownika
+### main loop of the controller
 
-Obsługa sterownika dzieli się na trzy grupy poleceń:
-1. Ten blok instrukcji sprawdza, czy od ostaniego wczytania danych powietrza `dataOstatniegoZapisu` nineło więcej niż `czasDoOdswierzeniaMin` (np. 10 min.) wtedy są ładowane dane pogodowe z serwisu airly.eu `pobierzDanePowietrza()` przez 20 sek. 
-Jeżeli dane zostały pobrane, to wtedy odświeżany jest obiekt `wynikPZ`, który jest obiektem aktualnych danych pogodowych wykorzystywanym przez inne moduły.
+Main loop of the controller is carried out by the function `obslugaModulu()`, which is divided into three commands groups:
+1. This block of instructions checks data of last loading weather data that is in variable `dataOstatniegoZapisu` 
+if it's been longer than minutes in variable`czasDoOdswierzeniaMax` (eg. 60 min.). Then the weather data from the service airly.eu `pobierzDanePowietrza()` for max. 20 seconds.
+If the data has been sukcesfully downloaded, the `wynikPZ` object is refreshed, which is the object of the current weather data used by other modules.
 
-2. W tym bloku ładowane są z plików JSON odpowiednie obiekty poprzez '`initKalendarza()`, co ma na celu przygotowanie środowiska do sprawdzenia możliwości uruchomienia pompek: 
-- tLog - przechowuje informacje uruchomieniach pompek 
-- tAlarm - przechowuje informacje o alarmach związanych z próbnymi uruchomieniami
-- tKalendarz - przechowuje informaje o początkach okresów, w których można podlewać rośliny
-Następnie podejmuje próbę zapisy do bazy InfluxDB poprzez `zapiszPTestoweInfluxDB()`, jeżeli zmienna `zapisDoInfluxDB()` jest ustawiona.
+2. In this block the appropriate objects are loaded from JSON files through 'initKalendarza()', which is to prepare the environment to check the possibility of starting the pumps: 
+- `tLog` - stores information about pump start-ups 
+- `tAlarm` - stores information about alarms related to trial run
+- `tKalendarz` - stores information about the beginning of periods in which plants can be watered
+Then it attempts to write to the InfluxDB database by `zapiszPTestoweInfluxDB()`, if the variable `zapisDoInfluxDB()` is set.
 
-3. Blok uruchamia sprawdzenie możliwości podlewania poprzez uruchomienie komórki decyzyjnej `czyAlerthumidity()`, która ustawia zmienną globalną czyUruchomicPompkiKalendarz1 w zależności od wilgotności.
-Następne jest sprawdzena możliwość uruchomienia pompek poprzez `uruchomPompki()` oraz wczytania obiektów z plików poprzez `initKalendarza()`, w celu zaktualizowania danych ładowanych w bloku 2. Aby móc prawidłowo wyliczyć czas do następnego uruchomienia procedury obsługi sterownika, następuje 6 prób wczytania logu uruchomienia sterownika "log.json" i w przypadku braku wczytania danych...
+3. The block starts checking the possibility of watering by activating functionality the decision cell `czyAlerthumidity()`, which sets the global variable `czyUruchomicPompkiKalendarz1`, depending on the humidity.
+Next is checking the ability to start the pumps by function `uruchomPompki()` and to load new values of objects from files by `initKalendar ()`, to update the data loaded in block nr 2. To correctly calculate the time until the next runing watering, is taken six attempts to read the log "log.json" are carried out to run the controller and if no data is loaded controller is restarting.
 
-4. W bloku wyliczany jest czas uruchomienia timera w poleceniu `tmr.interval(5, d * 60 * 1000)` (d jest w min.)
-W tym celu uruchamiana jest funkcja `zaIleUruchomicPompkiKalendarz()` skorygowana o czas potrzebny do wysłania mejla przypominającego o uzupełnieniu wody w zbiorniku `ileCzasuDoWyslaniaMejla`.
-Następnie sprawdzane jest, czy nie został wyliczony czas późniejszy (<0), to zostaje skorygowany o `ileCzasuDoWyslaniaMejla`. 
-Jeżeli nadal wychodzi czas późniejszy (<0) lub za duży niż możliwości układu ESP8266 (powyżej 113 minut) następuje ustawienie maksymalnej wartości czasu.
-Ustawiana jest czas następnego uruchomienia oraz zapisywana `dataNastepnegoSprawdzenia` na podstawie funkcji `kiedyNastepneSprawdzenie()`.
+4. The block calculates time to start next check of watering in the command
+```
+tmr.interval(5, d * 60 * 1000) -- d jest w min.
+```
+To do this, the `zaIleUruchomicPompkiKalendarz()` function is run, corrected by the time it takes to send a reminder e-mail to fill up the water in the tank that is in varable `ileCzasuDoWyslaniaMejla`.
+Then it is checked whether the time has been calculated on earlier then now (<0), if yes, it is corrected by varaible `ileCzasuDoWyslaniaMejla`.
+If calculated time is still too early then now or is bigger then posbilities of the ESP8266 (over 113 minutes). Calculated time is set to maximum time and write to global variable `dataNastepnegoSprawdzenia` based on `kiedyNastepneSprawdzenie()` function.
 
-Na koniec następuje uruchomienie bootowania poprzez
-`tmr.alarm(3,1000,1,do_next)`
+Finally, whole porcess of booting is started by command:
+```
+tmr.alarm(3,1000,1,do_next)
+```
 
 ## `logika.lua`
-Moduł zapewnia dostarczenie logiki do podejmowania decyzji o podlewaniu na podstawie dostępnych parametrów pogodowych. W skład modułu wchodzą następujące komórki decyzyjne, które zwracają zmodyfikowany obiekt alertu `ob` oraz ustawiają zmienne globalne:
+The module provides logic for making watering decisions based on available weather parameters. The module consists of the following decision cells that return the modified `ob` object and set the global variable `czyUruchomicPompkiKalendarz1` by `czyAlerthumidity (ob)`:
 
 ### czyAlertPozZasVc (ob)
-Komórka sprawdza, czy napięcie zasilania pompek `PTestowe.Vp` mieści się w wyznaczonym przedziale określonym przez parametry sterownika `pCz.VcMax` oraz `pCz.VcMin`, blokując jednocześnie uruchomienie pompek w przypadku nieprawidłowości.
+The decision cell checks the supply voltage pumps (variable `PTestowe.Vc`) is within the designated range specified by the parameters `pCz.VcMin` and` pCz.VcMax`, while blocking the activation of the pumps in the event of value is out of range.
 
 ### czyAlertPozZasVp (ob)
-Komórka robi to samo co poprzednik, tylko dla napięcia układu określonego przez `PTestowe.Vc`. Przedział określa `pCz.VpMax` oraz `pCz.VpMin`.
+The cell does the same as its before one, only for the system voltage specified by `PTestowe.Vp`. The range is specified by `pCz.VpMin` and` pCz.VpMax`.
 
 ### czyAlerthumidity (ob)
-Komórka sprawdza wilgotność powietrza `pTestowe.humidity` ograniczoną przez `pCz.humidityMin` oraz `pCz.humidityMax` blokująco uruchomienie pompek. 
-Dodatkowo ustawia zmienną globalną `czyUruchomicPompkiKalendarz1` w przypadku, gdy wilgotność jest wyższa niż optymalna `pCz.humidityOpt`. Zmienna ta, jeżeli jest ustwiona na *false* blokuje poranne uruchomienie pompek.
+The decision cell checks the air humidity `PTestowe.humidity` limited by` pCz.humidityMin` and `pCz.humidityMax` to block the activation of push-ups.
+Additionally, it sets the global variable `czyUruchomicPompkiKalendarz1` if the humidity is higher than the optimal value that is in variable `pCz.humidityOpt`. if the variable is set to *false*, blocks the morning start of watering.
 
 ### czyAlertTempPow (ob)
-Komórka sprawdza temperaturę powetrza `pTestowe.temp/_u`, czy mieści się w przedziale określonym `pCz.temp_min` oraz `pCz.temp_max`. Jeżeli wykracza za przedział, komórka blokuje uruchomienie pompek.
+The decision cell checks the temperature of air `pTestowe.temp/_u`. if it is without the range specified by `pCz.temp_min` and `pCz.temp_max`, blocks the start of watering.
 
 ### czyAlertKalenadza (ob)
-Komórka określa aktualny czas w stosunku do czasów wyznaczonych w kalendarzu oraz daty ostatniego podlewania i sprawdza, czy podlewania miało już miejsce, czy jeszcze nie. Blokuje uruchomienie pompek, jeżeli podlewanie o tej porze miało już miejsce.
+The decision cell determines the current time in relation to the times set in the calendar as well as the date of the last watering. Checks whether the watering has already taken place or not yet. It blocks the start of watering, if watering at that time has already taken place.
 
 ### czyAlertPoziomuWody (ob)
-komórka sprawdza, czy jest wystarczająca ilość wody do polewania i jeżeli nie ma, blokuje uruchomienie podlewania. Obecnie komórka jest zablokowana i zawsze dopuszcza do podlewania.
+The decision cell checks if there is enough water for watering. if it is not fill, it blocks the start of watering. Currently, the cell is blocked and always allows watering.
 
 ### czyAlertPrzedzialuCzasowego (ob)
-Komórka określa na podstawie aktualnego czasu, czy jest to ten moment na podlewanie, który mieści się w wyznaczonym przedziale czasu. Ten przedział mieści się między datą początku podlewania zapisaną w pliku 'kalendarz.json', a czasem wyznaczonym przez zmienną globalną `mozliwyCzasNaPodlewanie` (wyrażoną w godzinach). Komórka nie rozróżnia, czy ma do czynienia z podlewaniem porannym, czy wieczornym.
-Komórka do oceny wykorzystuje funkcję `czyMiesciSiePrzedzialeCzasowym ()` w `module kalendarz.lua`
+The cell determines on the basis of the current time whether it is the moment for watering, which fits within the designated time interval. This interval is between the date of the beginning of watering stored in the 'kalendarz.json' file and time determined by the global variable `mozliwyCzasNaPodlewanie` (expressed in hours). The decision cell does not distinguish whether it is watering the morning or evening.
+The decision cell for the evaluation uses the external function `czyMiesciSiePrzedzialeCzasowym ()` in module `kalendarz.lua`.
 
 ### ustawienieAlertowLogiki (ob)
-Funkcja łączy z sobą poszczególne komórki decyzyjne i zwraca wynik analizy w formie obiektu alertu `ob`.
+The function combines individual decision cells and returns the result of the analysis in the form of an `ob` object.
+

@@ -69,8 +69,14 @@ export interface ESPSatusSprawdzenia {
 export interface Prognoza {
   naglowek?: string;
   opis?: string;
-  status?: string;
+  status?: boolean;
   klucz?: string;
   data?: string;
   wynik?: number;
+  temp?: number;
+  wilgotnosc?: number;
+  czyUruchomicK1: boolean;
+  zachmurzenie?: number;
+  wiatr?: number;
+  dsk?: string;
 }

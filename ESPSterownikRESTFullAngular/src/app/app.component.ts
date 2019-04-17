@@ -79,4 +79,5 @@ export interface Prognoza {
   zachmurzenie?: number;
   wiatr?: number;
   dsk?: string;
+  poraPodlewania?: boolean;
 }

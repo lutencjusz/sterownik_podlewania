@@ -43,14 +43,18 @@ export class PrognozaComponent implements OnInit {
 
   odswierzPrognozyAlertow() {
 
+    // tslint:disable-next-line:no-shadowed-variable
     this.PAlerty.forEach((element, i) => { // uzupełnienie o parametry alertu
       console.log(element.data);
+      let szansaNaPodlewanie = 0;
       this.PAlerty[i].data = element.data.substring(8, 10) + '/' + element.data.substring(5, 7) + ' ' + element.data.substring(11, 16);
       if (element.status) {
-        this.PAlerty[i].wynik = 100;
-      } else {
-        this.PAlerty[i].wynik = 0;
+        szansaNaPodlewanie += 40;
       }
+      if (element.poraPodlewania) {
+        szansaNaPodlewanie += 60;
+      }
+      this.PAlerty[i].wynik = szansaNaPodlewanie;
     });
 
     this.dataPrognozy = {
@@ -82,8 +86,12 @@ export class PrognozaComponent implements OnInit {
   }
 
   selectData(event) {
-    console.log(event.element._index);
-    console.log(this.PAlerty[event.element._index].naglowek);
+    // console.log(event.element._index);
+    // console.log(this.PAlerty[event.element._index].naglowek);
+    let textPoryPodlewania = ';\nTo nie jest pora podlewania';
+    if (this.PAlerty[event.element._index].poraPodlewania) {
+      textPoryPodlewania = ';\nPora podlewania';
+    }
     this.messageService.add({key: 'pr', severity: 'info',
     summary: this.PAlerty[event.element._index].data + ' ' + this.PAlerty[event.element._index].naglowek,
      life: 20000,
@@ -94,10 +102,11 @@ export class PrognozaComponent implements OnInit {
     + this.PAlerty[event.element._index].wilgotnosc
     + ' <' + this.parametry.humidityMin
     + ';' + this.parametry.humidityOpt
-    + ';' + this.parametry.humidityMax + '>\nZachmurzenie: '
+    + ';' + this.parametry.humidityMax + '>;\nZachmurzenie: '
     + this.PAlerty[event.element._index].zachmurzenie
-    + '\nWiatr: ' + this.PAlerty[event.element._index].wiatr
-    + '\nOpis: ' + this.PAlerty[event.element._index].dsk
+    + ';\nWiatr: ' + this.PAlerty[event.element._index].wiatr
+    + ';\nOpis: ' + this.PAlerty[event.element._index].dsk
+    + textPoryPodlewania
     });
   }
 }

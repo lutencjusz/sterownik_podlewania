@@ -81,3 +81,25 @@ export interface Prognoza {
   dsk?: string;
   poraPodlewania?: boolean;
 }
+
+export class ProcessDefinition {
+  id: string;
+  name: string;
+  key: string;
+}
+
+export interface Task {
+  id?: string;
+  topicName?: string;
+  key?: string;
+}
+
+export class MyProcessData {
+
+  constructor(
+    public firstName: string,
+    public lastName: string,
+    public approved: boolean
+  ) {  }
+
+}

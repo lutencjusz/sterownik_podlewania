@@ -1,0 +1,71 @@
+<ng-container *ngIf="parametry; else brakDanych">
+  <form (ngSubmit)="onSubmit(ce)" #ce="ngForm">
+      <div class="p-grid">
+        <div class="p-col-4">
+          <h3 for="zakresTemp">Temperatury: {{m.zakresTemp[0] + ' - ' + m.zakresTemp[1]}}</h3>
+          <p-slider [(ngModel)]="m.zakresTemp" #zakresTemp="ngModel" [range]="true" id="zakresTemp" name="zakresTemp" required></p-slider>
+        </div>
+        <div class="p-col-4">
+          <h3></h3>
+          <div class="ui-inputgroup">
+              <span class="ui-inputgroup-addon">email: </span>
+              <input [(ngModel)]="m.email" #email="ngModel" type="email" id="email" name="email" required pInputText placeholder="Mejl">
+          </div>
+          <div class="ui-inputgroup">
+            <span class="ui-inputgroup-addon">hasło: </span>
+            <input [(ngModel)]="m.emailHaslo" #emailHaslo="ngModel" type="password" id="emailHaslo" name="emailHaslo" required pPassword>
+          </div>
+        </div>
+        <div class="p-col-4">
+          <h3></h3>
+          <div class="ui-inputgroup">
+            <span class="ui-inputgroup-addon">WiFi:_</span>
+            <input [(ngModel)]="m.wifi" #wifi="ngModel" type="wifi" id="wifi" name="wifi" [disabled]=false required pInputText placeholder="WiFi">
+          </div>
+          <div class="ui-inputgroup">
+            <span class="ui-inputgroup-addon">hasło: </span>
+            <input [(ngModel)]="m.wifiHaslo" #wifiHaslo="ngModel" type="password" id="wifiHaslo" name="wifiHaslo" required pPassword>
+          </div>
+        </div>
+      </div>
+      <div class="p-grid p-justify-left p-align-end vertical-container">
+        <div class="p-col-4">
+          <h3 for="zakresW">Wilgotność: {{m.zakresW[0] + ' - ' + m.zakresW[1]}}</h3>
+          <p-slider [(ngModel)]="m.zakresW" #zakresW="ngModel" [range]="true" id="zakresW" name="zakresW" required></p-slider>
+        </div>
+        <div class="p-col-4">
+          <label for="mozliwyCzasNaPodlewanie">Możliwy czas trwania podl.: </label>
+          <input [(ngModel)]="m.mozliwyCzasNaPodlewanie" #mozliwyCzasNaPodlewanie="ngModel" type="number" id="mozliwyCzasNaPodlewanie" name="mozliwyCzasNaPodlewanie" required pInputText placeholder="Możliwe trwanie podlewania">
+          <div *ngIf="!mozliwyCzasNaPodlewanie.valid && mozliwyCzasNaPodlewanie.dirty">Pole nazwa jest wymagane</div>
+        </div>
+      </div>
+      <div class="p-grid p-justify-left p-align-end vertical-container">
+        <div class="p-col-4">
+          <div class="ui-inputgroup">
+            <span class="ui-inputgroup-addon">Opt: </span>
+            <input [(ngModel)]="m.humidityOpt" #humidityOpt="ngModel" type="number" id="humidityOpt" name="humidityOpt" required pInputText placeholder="Wilgotność optymalna">
+            <div *ngIf="!humidityOpt.valid && humidityOpt.dirty">Pole nazwa jest wymagane</div>
+          </div>
+        </div>
+      </div>
+      <div class="p-grid">
+      </div>
+      <div class="p-grid">
+        <div class="p-col-12">
+          <h3></h3>
+        </div>
+      </div>
+      <div class="p-grid p-justify-center p-align-center vertical-container">
+        <div class="p-col-2">
+          <button pButton [disabled]="!ce.valid" class="ui-button-raised ui-button-success" type="submit" label="Wyslij"></button>
+        </div>
+        <div class="p-col-2">
+          <button pButton class="ui-button-raised ui-button-danger" type="reset" (onclick)="onResetetowanie()" label="Reset"></button>
+        </div>
+      </div>
+  </form>
+</ng-container>
+<ng-template #brakDanych>
+    <!--<p class="input-text">brak danych w logu</p>-->
+    <h2>brak danych w logu</h2>
+</ng-template>

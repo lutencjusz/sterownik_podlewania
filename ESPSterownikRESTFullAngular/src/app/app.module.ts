@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AccordionModule, MultiSelectModule, MessageService, FieldsetModule } from 'primeng/primeng';
+import { AccordionModule, MultiSelectModule, MessageService, FieldsetModule, PasswordModule } from 'primeng/primeng';
 import { PanelModule } from 'primeng/primeng';
 import { ButtonModule } from 'primeng/primeng';
 import { RadioButtonModule } from 'primeng/primeng';
@@ -29,6 +29,9 @@ import { OdliczanieComponent } from './odliczanie/odliczanie.component';
 import { TabViewModule } from 'primeng/tabview';
 import { PrognozaComponent } from './prognoza/prognoza.component';
 import { PrognozaService } from './services/prognoza.service';
+import { CamundaEngineComponent } from './camunda-engine/camunda-engine.component';
+import { CamundaRestService } from './services/camunda-rest.service';
+import { UstawieniaComponent } from './ustawienia/ustawienia.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +44,9 @@ import { PrognozaService } from './services/prognoza.service';
     ParametryComponent,
     StanParametruComponent,
     OdliczanieComponent,
-    PrognozaComponent
+    PrognozaComponent,
+    CamundaEngineComponent,
+    UstawieniaComponent
   ],
   imports: [
     BrowserModule,
@@ -60,9 +65,11 @@ import { PrognozaService } from './services/prognoza.service';
     ToastModule,
     HttpClientModule,
     FieldsetModule,
-    TabViewModule
+    TabViewModule,
+    PasswordModule
   ],
-  providers: [EsprestfullService, MessageService, AlertyService, PomiaryZewnService, PrognozaService],
+  providers: [EsprestfullService, MessageService, AlertyService,
+    PomiaryZewnService, PrognozaService, CamundaRestService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

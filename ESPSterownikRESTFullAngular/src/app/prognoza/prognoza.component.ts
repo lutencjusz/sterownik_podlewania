@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { PrognozaService } from '../services/prognoza.service';
-import { Observable, interval } from 'rxjs';
+import { Observable, interval, timer } from 'rxjs';
 import { ESPAlert, Prognoza, ESPParametry } from '../app.component';
 import { debounce } from 'rxjs/operators';
 import { MessageService } from 'primeng/primeng';
 import { element } from 'protractor';
+import { CamundaRestService } from '../services/camunda-rest.service';
 
 @Component({
   selector: 'app-prognoza',
@@ -19,8 +20,13 @@ export class PrognozaComponent implements OnInit {
   PAlerty: Prognoza[] = [];
   dataPrognozy: any;
   parametry: ESPParametry;
+  CzyLadujePrognoze = true;
+  komentarz1 = '';
+  komentarz2 = '';
+  proces: any;
+  taski: any;
 
-  constructor(private PService: PrognozaService, private messageService: MessageService) {
+  constructor(private PService: PrognozaService, private CService: CamundaRestService,  private messageService: MessageService) {
     this.ObserwatorPrognozy$ = this.PService.obserwatorPrognozy$;
     this.ObserwatorParametry$ = this.PService.obserwatorParametry$;
 
@@ -39,15 +45,55 @@ export class PrognozaComponent implements OnInit {
   }
 
   ngOnInit() {
+
+  }
+
+  ladowaniePognozy() {
+    let licznik = 0;
+    this.komentarz1 = 'Uruchamiam proces Camunda: Prognoza Pogody...';
+    this.CService.postProcessInstance('PrognozaPodlewania').subscribe(t => {
+      this.proces = t;
+      this.komentarz2 = 'Uruchomiłem proces id: ' + this.proces.id;
+    });
+    const timerPobierP = timer(1000, 1000); // po 20 sekundach uruchamia timer co 1 minute wywyłuje update
+    const subscribe = timerPobierP.subscribe(val => {
+      this.komentarz1 = 'Czekam na micro: ';
+      licznik += 1;
+      this.CService.getProcessExternalTasks('PrognozaPodlewania', this.proces.id).subscribe(t => {
+        this.taski = t;
+      });
+      if (this.taski) {
+        this.taski.forEach(t => {
+          this.komentarz1 += t.topicName + '; ';
+        });
+      }
+      if (licznik > 0 && this.taski && this.taski.length === 0) {
+        subscribe.unsubscribe(); // wyłacza timer
+        this.komentarz1 = '';
+        this.komentarz2 = 'Proces ukończony. id: ' + this.proces.id;
+        const wynikPrognozy = this.ObserwatorPrognozy$.pipe(debounce (() => interval(100)));
+        // reaguje na zmianę w obserwable
+        wynikPrognozy.subscribe(x => {
+          this.PAlerty = x;
+          if (this.PAlerty.length > 0) {
+            this.odswierzPrognozyAlertow(); // na bazie obsługi tego co zwaraca observable updateuje dane wna wykresie
+            this.komentarz2 = '';
+          }
+        });
+
+      }
+    });
+
   }
 
   odswierzPrognozyAlertow() {
-
     // tslint:disable-next-line:no-shadowed-variable
     this.PAlerty.forEach((element, i) => { // uzupełnienie o parametry alertu
-      console.log(element.data);
+      // console.log(element.data);
       let szansaNaPodlewanie = 0;
-      this.PAlerty[i].data = element.data.substring(8, 10) + '/' + element.data.substring(5, 7) + ' ' + element.data.substring(11, 16);
+      if (element.data.length > 13) {
+        this.PAlerty[i].data = element.data.substring(8, 10) + '/' + element.data.substring(5, 7) + ' ' + element.data.substring(11, 16);
+      }
       if (element.status) {
         szansaNaPodlewanie += 40;
       }

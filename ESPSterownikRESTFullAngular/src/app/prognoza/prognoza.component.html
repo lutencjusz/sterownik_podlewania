@@ -1,6 +1,15 @@
 <p-toast [style]="{marginTop: '30px'}" position="top-left" key="pr"></p-toast>
+<button type="button" pButton class="ui-button-raised ui-button-success" (click)="ladowaniePognozy()" label="Pobierz prognozę podlewania"></button>
+{{komentarz1}}
+<h4>{{komentarz2}}</h4>
+<ng-container *ngIf="this.PAlerty.length>0; else brakDanych">
 <div class="p-grid p-justify-center">
     <div class="p-col-12">
         <p-chart type="bar" [data]="dataPrognozy" (onDataSelect)="selectData($event)"></p-chart>
     </div>
 </div>
+</ng-container>
+<ng-template #brakDanych>
+    <h2>brak danych z prognozy pogody.</h2>
+    <h4>Uruchom microservice pokazAlarmy.js (localhost/3000...)</h4>
+</ng-template>

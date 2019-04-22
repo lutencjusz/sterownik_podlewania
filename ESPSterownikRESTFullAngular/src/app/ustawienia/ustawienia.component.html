@@ -28,24 +28,36 @@
           </div>
         </div>
       </div>
-      <div class="p-grid p-justify-left p-align-end vertical-container">
+      <div class="p-grid p-justify-left p-align-center vertical-container">
         <div class="p-col-4">
           <h3 for="zakresW">Wilgotność: {{m.zakresW[0] + ' - ' + m.zakresW[1]}}</h3>
           <p-slider [(ngModel)]="m.zakresW" #zakresW="ngModel" [range]="true" id="zakresW" name="zakresW" required></p-slider>
+          <p-slider [(ngModel)]="m.humidityOpt" #humidityOpt="ngModel" id="humidityOpt" name="humidityOpt" required></p-slider>
+          <h3 for="zakres">Wilgotność optymalna: {{m.humidityOpt}}</h3>
         </div>
         <div class="p-col-4">
           <label for="mozliwyCzasNaPodlewanie">Możliwy czas trwania podl.: </label>
           <input [(ngModel)]="m.mozliwyCzasNaPodlewanie" #mozliwyCzasNaPodlewanie="ngModel" type="number" id="mozliwyCzasNaPodlewanie" name="mozliwyCzasNaPodlewanie" required pInputText placeholder="Możliwe trwanie podlewania">
           <div *ngIf="!mozliwyCzasNaPodlewanie.valid && mozliwyCzasNaPodlewanie.dirty">Pole nazwa jest wymagane</div>
         </div>
+        <div class="p-col-4">
+          <div class="ui-inputgroup">
+            <span class="ui-inputgroup-addon">Czas1: </span>
+            <p-calendar [(ngModel)]="m.czasK1" #czasK1="ngModel" id="czasK1" name="czasK1" [timeOnly]="true"></p-calendar>
+          </div>
+          <div class="ui-inputgroup">
+            <span class="ui-inputgroup-addon">Czas2: </span>
+            <p-calendar [(ngModel)]="m.czasK2" #czasK2="ngModel" id="czasK2" name="czasK2" [timeOnly]="true"></p-calendar>
+          </div>
+        </div>
       </div>
       <div class="p-grid p-justify-left p-align-end vertical-container">
         <div class="p-col-4">
-          <div class="ui-inputgroup">
+         <!-- <div class="ui-inputgroup">
             <span class="ui-inputgroup-addon">Opt: </span>
             <input [(ngModel)]="m.humidityOpt" #humidityOpt="ngModel" type="number" id="humidityOpt" name="humidityOpt" required pInputText placeholder="Wilgotność optymalna">
             <div *ngIf="!humidityOpt.valid && humidityOpt.dirty">Pole nazwa jest wymagane</div>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="p-grid">

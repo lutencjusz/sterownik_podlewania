@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AccordionModule, MultiSelectModule, MessageService, FieldsetModule, PasswordModule, DialogModule } from 'primeng/primeng';
+import { AccordionModule, MultiSelectModule, MessageService, FieldsetModule, PasswordModule, CalendarModule } from 'primeng/primeng';
 import { PanelModule } from 'primeng/primeng';
 import { ButtonModule } from 'primeng/primeng';
 import { RadioButtonModule } from 'primeng/primeng';
@@ -67,7 +67,7 @@ import { UstawieniaComponent } from './ustawienia/ustawienia.component';
     FieldsetModule,
     TabViewModule,
     PasswordModule,
-    DialogModule
+    CalendarModule
   ],
   providers: [EsprestfullService, MessageService, AlertyService,
     PomiaryZewnService, PrognozaService, CamundaRestService],

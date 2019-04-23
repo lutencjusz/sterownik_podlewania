@@ -47,7 +47,8 @@ export class CamundaRestService {
 
   getVariablesExternalTasks(processInstanceId): Observable<any> {
   // http://localhost:8080/engine-rest/engine/default/variable-instance?deserializeValues=false&processInstanceIdIn=
-      const endpoint = `${this.engineRestUrl}engine/default/variable-instance?deserializeValues=false&processInstanceIdIn=${processInstanceId}`;
+      const endpoint = `${this.engineRestUrl}
+      engine/default/variable-instance?deserializeValues=false&processInstanceIdIn=${processInstanceId}`;
       return this.http.get<any>(endpoint);
     }
 

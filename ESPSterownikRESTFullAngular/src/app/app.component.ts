@@ -51,6 +51,7 @@ export interface ESPParametry {
   humidityOpt?: number;
   temp_max?: number;
   temp_min?: number;
+  mozliwyCzasNaPodlewanie?: number;
 }
 
 export interface ESPSatusSprawdzenia {

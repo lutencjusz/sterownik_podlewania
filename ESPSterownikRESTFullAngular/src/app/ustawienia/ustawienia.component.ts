@@ -48,9 +48,35 @@ export class UstawieniaComponent implements OnInit {
   ngOnInit() {
   }
 
+  zamienLiczbeNaStr2(n: number): string {
+    if (n < 10) {
+      return '0' + n;
+    } else {
+      return n + '';
+    }
+  }
+
   onSubmit(controlForm) {
     console.log(controlForm);
-    console.log(this.m);
+    // console.log(this.m);
+    const wP: ESPParametry = {};
+    wP.VcMax = this.m.zakresVc[1];
+    wP.VcMin = this.m.zakresVc[0];
+    wP.VpMax = 11;
+    wP.VpMin = 9;
+    wP.humidityMax = this.m.zakresW[1];
+    wP.humidityMin = this.m.zakresW[0];
+    wP.humidityOpt = this.m.humidityOpt;
+    wP.temp_min = this.m.zakresTemp[0];
+    wP.temp_max = this.m.zakresTemp[1];
+    wP.mozliwyCzasNaPodlewanie = this.m.mozliwyCzasNaPodlewanie;
+    // console.log(wP);
+    this.PService.setParametry(wP);
+    const k: string[] = [];
+    k[0] = this.zamienLiczbeNaStr2(this.m.czasK1.getHours()) + ':' + this.zamienLiczbeNaStr2(this.m.czasK1.getMinutes());
+    k[1] = this.zamienLiczbeNaStr2(this.m.czasK2.getHours()) + ':' + this.zamienLiczbeNaStr2(this.m.czasK2.getMinutes());
+    // console.log(k);
+    this.PService.setKalendarz(k);
   }
 
   onResetetowanie() {

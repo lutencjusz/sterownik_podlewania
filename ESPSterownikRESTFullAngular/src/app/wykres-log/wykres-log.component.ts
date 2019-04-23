@@ -45,16 +45,11 @@ export class WykresLogComponent implements OnInit {
       labels: this.WykresEData.map((s) => s.dataPomiaru),
       datasets: [
           {
-            label: 'Vc',
-            data: this.WykresEData.map((d) => d.Vc),
-            fill: false,
-            borderColor: '#4bc0c0'
-          },
-          {
-            label: 'Vp',
-            data: this.WykresEData.map((d) => d.Vp),
-            fill: false,
-            borderColor: '#4ef35cf6'
+            label: 'Ciśnienie',
+            data: this.WykresEData.map((d) => d.pressure),
+            // fill: false,
+            borderColor: '#4bc0c0', // '#4ef35cf6'
+            backgroundColor: '#4bc0c0'
           }
       ]
     };

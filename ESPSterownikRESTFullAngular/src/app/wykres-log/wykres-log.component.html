@@ -6,7 +6,7 @@
           <p-tabPanel header="Sterownik">
               <div class="p-grid p-justify-center">
                   <div class="p-col-6">
-                    <p-chart type="line" [data]="data" (onDataSelect)="selectData($event)"></p-chart>
+                    <p-chart type="bar" [data]="data" (onDataSelect)="selectData($event)"></p-chart>
                   </div>
                   <div class="p-col-6">
                     <p-chart type="bar" [data]="dataPM" (onDataSelect)="selectData($event)"></p-chart>

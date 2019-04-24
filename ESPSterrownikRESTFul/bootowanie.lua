@@ -119,6 +119,8 @@ function do_next()  -- do prowadzenia dialogu z serwerem
         count = count+1
         tmr.stop(3)
         pcall(function()node.flashindex("_init")()end)
+        httpServer:listen(80)
+        print ("Uruchomienie serwera WWW")
         odswierzZakresyCzujnikow()
         print ("Wczytano modul _init. \nSterownik gotowy do dzialania...")
         gpio.write (pin, LED_OFF)
@@ -208,7 +210,7 @@ function obslugaModulu()
             print("     Sprawdzenie za ile uruchomic...")
         end
         zaIle, nData = zaIleUruchomicPompkiKalendarz()
-        local d = (zaIle - ileCzasuDoWyslaniaMejla)
+        d = (zaIle - ileCzasuDoWyslaniaMejla)
         if debugowanie then 
             print ('d= ' .. d)
         end
@@ -218,6 +220,9 @@ function obslugaModulu()
         if d > 113 or d < 0 then 
         -- ustawienie gornej granicy lub gdy następne sprawdzenie
             d = 113
+        end
+        if d > czasDoOdswierzeniaMax then
+            d = czasDoOdswierzeniaMax + 1;
         end
         if debugowanie then       
             print ('uruchomienie sprawdzenia za' .. podajCzasS(d) .. '(' .. nData .. ')')

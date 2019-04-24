@@ -79,28 +79,6 @@ function przepiszPliki (pz, ptmp, iloscLiniPlikuD, iloscLiniiPlikuZ)
     collectgarbage() -- czyszczenie pamięci  
 end
 
-function wyslijPlik(nazwaPliku, conn)
-    local plik = "[\n"
-    if file.open(nazwaPliku, "r") then
-        repeat
-            line = file.readline()
-            if line then
-                --print("linia: "..line)
-                plik = plik..line
-            end
-        until line == nil
-        plik = plik.."]\n"
-    else
-        print ("Nie wczytano pliku: "..nazwaPliku)
-        plik = plik.."]\n"
-    end
-    file.close()
-    conn:send(plik)
-    systemInfo("/wszystko max")
-    file=nil; line=nil; plik=nil
-    collectgarbage()
-end
-
 function odswierzZakresyCzujnikow()
     print(" Wczytuje parametry czujnikow...")
     plik = file.open ("parametryCz.json","r")
@@ -147,9 +125,14 @@ function zapiszAlarmyDoPliku(prior, naglowek, opis, nazwaPliku, klucz)
         if wielkosc > 3800 then
             przepiszPliki (nazwaPliku, "tmp.json", minIloscWierszyAlert, iloscWierszyAlert)
         end
-        if file.open(nazwaPliku, "a+") then 
-            local data = ','..sjson.encode(konwerujAlertNaObiekt(prior, naglowek, opis, klucz)) .. '\n'
-            file.write(data)
+        if file.open(nazwaPliku, "a+") then
+            al = sjson.encode(konwerujAlertNaObiekt(prior, naglowek, opis, klucz))
+            if al ~= '' and al ~= nil then
+                local data = ','..sjson.encode(konwerujAlertNaObiekt(prior, naglowek, opis, klucz)) .. '\n'
+                file.write(data)
+            else 
+                print ("zapiszAlarmyDoPliku: nie zapisany, alert jest pusty")
+            end
             file.close()
         else
             print ("Nie zapisano do pliku: "..nazwaPliku)

@@ -111,13 +111,13 @@ end
 
 httpServer:use('/wszystko', function(req, res)
     res:type('application/json')
-    wyslijPlik("log.json", res)
+    res:sendFile("log.json")
     systemInfo("/wszystko")
 end)
 
 httpServer:use('/wszystkieAlerty', function(req, res)
     res:type('application/json')
-    wyslijPlik("alert.json", res)
+    res:sendFile("alert.json")
     systemInfo("/wszystkieAlerty")
 end)
 
@@ -174,15 +174,27 @@ end)
 
 httpServer:use('/parametry', function(req, res)
     res:type('application/json')
-    local data = sjson.encode(pCz)
-    res:send(data)
+    res:sendFile('parametryCz.json')
     systemInfo("/parametry")
+end)
+
+httpServer:use('/ustawienia', function(req, res)
+    res:type('application/json')
+    res:sendFile('ustawieniaZ.json')
+    systemInfo("/ustawienia")
 end)
 
 httpServer:use('/pobierzAktualneDane', function(req, res)
     pobierzDanePowietrza()
     local data = "[\n"..sjson.encode(pobierzAktualneDaneZCzujnikow()).."]\n"
     res:send(data)
+    systemInfo("/pobierzAktualneDane")    
+end)
+
+httpServer:use('/zapiszUstawienia', function(req, res)
+    print(req)
+    res:type('application/json')
+    res:send('{"status":"OK"}')
     systemInfo("/pobierzAktualneDane")    
 end)
 
@@ -287,6 +299,8 @@ httpServer:use('/', function(req, res)
     .."<LI>/parametry - przesyła parametry graniczne układu"
     .."<LI>/kiedyNastepneSprawdzenie - podaje date następnego sprawdzenia, czy uruchomic pompke"
     .."<LI>/pobierzAktualneDane - pobiera aktualne dane z zewnetrznych systemow"
+    .."<LI>/ustawienia - pobiera ustawienia urzadzenia"
+    .."<LI>/zapiszUstawienia - zapisuje wartosci do pliku ustawieniaZ.json"
     .."<LI>/restart - restartuje sterownik"
     .."<LI>/LED0=ON - uruchamia pompke 1"
     .."<LI>/LED0=OFF - wylacza pompke 1"
@@ -295,6 +309,4 @@ httpServer:use('/', function(req, res)
     res:send(data)
 end)
 
-httpServer:listen(80)
-print ("Uruchomienie serwera WWW")
 

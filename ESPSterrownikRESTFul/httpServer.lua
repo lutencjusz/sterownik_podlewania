@@ -3,7 +3,7 @@
 -- A lightweight HTTP server for NodeMCU.
 -- yulincoder and wangzexi
 --------------------
-gpio.write (pin, LED_ON)
+-- gpio.write (pin, LED_ON)
 function urlDecode(url)
 	return url:gsub('%%(%x%x)', function(x)
 		return string.char(tonumber(x, 16))
@@ -215,4 +215,4 @@ function httpServer:listen(port)
 		end)
 	end)
 end
-gpio.write (pin, LED_OFF)
+-- gpio.write (pin, LED_OFF)

@@ -67,9 +67,10 @@ function podajCzasZnormalizowany(czasMin)
     if czasMin >= 60 then
         local g = czasMin / 60
         local m = czasMin - (g * 60)
-        return string.format("%2d:%2d", g, m)
+        return string.format("%02d:%02d", g, m)
+    else
+        return string.format("%02d:%02d", 0, czasMin)
     end
-    return string.format("0:%2d", czasMin)
 end
 
 function kiedyNastepneSprawdzenie (n)

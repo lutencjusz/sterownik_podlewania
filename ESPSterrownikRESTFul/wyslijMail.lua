@@ -1,10 +1,10 @@
 gpio.write (pin, LED_ON)
-local MY_EMAIL = "lutencjusz@gmail.com"  
+local MY_EMAIL = u.email 
 local EMAIL_PASSWORD = crypto.decrypt("AES-ECB", key, encoder.fromHex(u.emailPass))  
 -- u.emailPass ustawiana w module WiFi
  local SMTP_SERVER = "smtp.gmail.com"  
  local SMTP_PORT = "465"  
- local mail_to = "lutencjusz@gmail.com"  
+ local mail_to = u.email 
  local email_subject = ""  -- ustawienie zmiennej początkowej
  local email_body = ""  -- ustawienie zmiennej początkowej
  local count = 0  -- licznik komunikatów

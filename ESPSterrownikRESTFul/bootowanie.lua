@@ -1,7 +1,7 @@
 print("Usuwanie zbednych plikow...")
 l = file.list();
 for k,v in pairs(l) do
-    if (string.find(k, ".lua")~=nil and string.find(k, "init.lua")==nil) or string.find(k, ".img")~=nil then 
+    if (string.find(k, ".lua")~=nil and string.find(k, "init.lua")==nil) or string.find(k, ".img")~=nil or string.find(k, ".lc")~=nil then 
         if file.exists(k) then -- czy trzeba kompilować moduł
             -- s = string.gsub(k, ".lua", ".lc")
             file.remove(k)

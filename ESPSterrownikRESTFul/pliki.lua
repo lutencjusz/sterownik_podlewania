@@ -168,4 +168,17 @@ function zapiszMejleDoPliku(subject, body)
     file=nil; data=nil;
     collectgarbage()
 end
+
+function znajdzOdpowiedz(s)
+    local f1 = string.find(s, "alive");
+    return string.sub(s, f1+9)
+end
+
+function zapiszStrDoPliku(plik, s)
+    if file.open(plik, "w") then 
+        file.write(s)
+        file.close()
+    end
+end
+
 -- gpio.write (pin, LED_OFF)

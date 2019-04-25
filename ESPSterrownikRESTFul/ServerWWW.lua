@@ -191,11 +191,25 @@ httpServer:use('/pobierzAktualneDane', function(req, res)
     systemInfo("/pobierzAktualneDane")    
 end)
 
-httpServer:use('/zapiszUstawienia', function(req, res)
-    print(req)
+httpServer:use('/zapiszUstawieniaZ', function(req, res)
+    zapiszStrDoPliku("ustawieniaZ.json", znajdzOdpowiedz(req.source))
     res:type('application/json')
     res:send('{"status":"OK"}')
-    systemInfo("/pobierzAktualneDane")    
+    print ("zapisano plik ustawieniaZ.json")
+end)
+
+httpServer:use('/zapiszParametryCz', function(req, res)
+    zapiszStrDoPliku("parametryCz.json", znajdzOdpowiedz(req.source))
+    res:type('application/json')
+    res:send('{"status":"OK"}')
+    print ("zapisano plik parametryCz.json")
+end)
+
+httpServer:use('/zapiszKalendarz', function(req, res)
+    zapiszStrDoPliku("kalendarz.json", znajdzOdpowiedz(req.source))
+    res:type('application/json')
+    res:send('{"status":"OK"}')
+    print ("zapisano plik kalendarz.json")
 end)
 
 httpServer:use('/restart', function(req, res)
@@ -300,7 +314,9 @@ httpServer:use('/', function(req, res)
     .."<LI>/kiedyNastepneSprawdzenie - podaje date następnego sprawdzenia, czy uruchomic pompke"
     .."<LI>/pobierzAktualneDane - pobiera aktualne dane z zewnetrznych systemow"
     .."<LI>/ustawienia - pobiera ustawienia urzadzenia"
-    .."<LI>/zapiszUstawienia - zapisuje wartosci do pliku ustawieniaZ.json"
+    .."<LI>/zapiszUstawieniaZ - zapisuje wartosci do pliku ustawieniaZ.json"
+    .."<LI>/zapiszParametryCz - zapisuje wartosci do pliku parametryCz.json"
+    .."<LI>/zapiszKalendarz - zapisuje wartosci do pliku kalendarz.json"
     .."<LI>/restart - restartuje sterownik"
     .."<LI>/LED0=ON - uruchamia pompke 1"
     .."<LI>/LED0=OFF - wylacza pompke 1"

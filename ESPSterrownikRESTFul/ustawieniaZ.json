@@ -1,7 +1,8 @@
 {
-    "ssid":"<sidd WiFi>",
-    "pass":"<haslo WiFi",
-    "emailPass":"<haslo mejla>",
+    "ssid":"efe9ea50a12701ddf722853c64a70735",
+    "pass":"2d85177bbf3b7a88e4192b6bb2006de4",
+    "email":"lutencjusz@gmail.com",
+    "emailPass":"65f0d0508c22a1ee4367195b3f82c837",
     "LED_ON":0,
     "LED_OFF":1,  
     "pin":0,
@@ -12,6 +13,6 @@
     "maxIloscWierszyAlert":12,
     "minIloscWierszyAlert":9,
     "ileCzasuDoWyslaniaMejla":60,
-    "mozliwyCzasNaPodlewanie":1,
+    "mozliwyCzasNaPodlewanie":2,
     "offsetCzasLetni":2
 }

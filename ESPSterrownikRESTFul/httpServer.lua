@@ -87,7 +87,7 @@ function Res:send(body)
 	doSend()
 end
 
-function Res:sendFile(filename)
+function Res:sendFile(filename, opakowac)
 	if file.exists(filename .. '.gz') then
 		filename = filename .. '.gz'
 	elseif not file.exists(filename) then
@@ -106,18 +106,29 @@ function Res:sendFile(filename)
 	self._type = self._type or guessType(filename)
 
 	header = header .. 'Content-Type: ' .. self._type .. '\r\n'
+    .. 'Access-Control-Allow-Origin: *\r\n'
 	if string.sub(filename, -3) == '.gz' then
 		header = header .. 'Content-Encoding: gzip\r\n'
 	end
 	header = header .. '\r\n'
 
-	print('* Sending ', filename)
+	print('* wysylanie ', filename)
 	local pos = 0
+    local czyPierwszyRaz = true
 	local function doSend()
 		file.open(filename, 'r')
+        if opakowac and czyPierwszyRaz then
+            czyPierwszyRaz = false
+            buf = "[\n"
+            self._skt:send(buf)
+        end
 		if file.seek('set', pos) == nil then
+            if opakowac then
+                buf = "]\n"
+                self._skt:send(buf)  
+            end
 			self:close()
-			print('* Finished ', filename)
+			print('* zakonczenie ', filename)
 		else
 			local buf = file.read(512)
 			pos = pos + 512

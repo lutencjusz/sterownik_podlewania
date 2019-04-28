@@ -54,6 +54,25 @@ export interface ESPParametry {
   mozliwyCzasNaPodlewanie?: number;
 }
 
+export interface ESPUstawienia {
+  ssid?: string;
+  pass?: string;
+  email?: string;
+  emailPass?: string;
+  LED_ON?: number;
+  LED_OFF?: number;
+  pin?: number;
+  maxIloscWierszyLog?: number;
+  minIloscWierszyLog?: number;
+  czasDoOdswierzeniaMax?: number;
+  czasDoOdswierzeniaMin?: number;
+  maxIloscWierszyAlert?: number;
+  minIloscWierszyAlert?: number;
+  ileCzasuDoWyslaniaMejla?: number;
+  mozliwyCzasNaPodlewanie?: number;
+  offsetCzasLetni?: number;
+}
+
 export interface ESPSatusSprawdzenia {
   status?: string;
   godz?: number;

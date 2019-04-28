@@ -1,83 +1,132 @@
-<ng-container *ngIf="parametry; else brakDanych">
+<ng-container *ngIf="parametry && ustawienia && kiedySpr; else brakDanych">
   <form (ngSubmit)="onSubmit(ce)" #ce="ngForm">
-      <div class="p-grid">
-        <div class="p-col-4">
-          <h3 for="zakresTemp">Temperatury: {{m.zakresTemp[0] + ' - ' + m.zakresTemp[1]}}</h3>
-          <p-slider [(ngModel)]="m.zakresTemp" #zakresTemp="ngModel" [range]="true" id="zakresTemp" name="zakresTemp" required></p-slider>
-        </div>
-        <div class="p-col-4">
-          <h3></h3>
-          <div class="ui-inputgroup">
-              <span class="ui-inputgroup-addon">email: </span>
-              <input [(ngModel)]="m.email" #email="ngModel" type="email" id="email" name="email" required pInputText placeholder="Mejl">
-          </div>
-          <div class="ui-inputgroup">
-            <span class="ui-inputgroup-addon">hasło: </span>
-            <input [(ngModel)]="m.emailHaslo" #emailHaslo="ngModel" type="password" id="emailHaslo" name="emailHaslo" required pPassword>
-          </div>
-        </div>
-        <div class="p-col-4">
-          <h3></h3>
-          <div class="ui-inputgroup">
-            <span class="ui-inputgroup-addon">WiFi:_</span>
-            <input [(ngModel)]="m.wifi" #wifi="ngModel" type="wifi" id="wifi" name="wifi" [disabled]=false required pInputText placeholder="WiFi">
-          </div>
-          <div class="ui-inputgroup">
-            <span class="ui-inputgroup-addon">hasło: </span>
-            <input [(ngModel)]="m.wifiHaslo" #wifiHaslo="ngModel" type="password" id="wifiHaslo" name="wifiHaslo" required pPassword>
-          </div>
-        </div>
-      </div>
-      <div class="p-grid p-justify-left p-align-center vertical-container">
-        <div class="p-col-4">
-          <h3 for="zakresW">Wilgotność: {{m.zakresW[0] + ' - ' + m.zakresW[1]}}</h3>
-          <p-slider [(ngModel)]="m.zakresW" #zakresW="ngModel" [range]="true" id="zakresW" name="zakresW" required></p-slider>
-          <p-slider [(ngModel)]="m.humidityOpt" #humidityOpt="ngModel" id="humidityOpt" name="humidityOpt" required></p-slider>
-          <h3 for="zakres">Wilgotność optymalna: {{m.humidityOpt}}</h3>
-        </div>
-        <div class="p-col-4">
-          <label for="mozliwyCzasNaPodlewanie">Możliwy czas trwania podl.: </label>
-          <input [(ngModel)]="m.mozliwyCzasNaPodlewanie" #mozliwyCzasNaPodlewanie="ngModel" type="number" id="mozliwyCzasNaPodlewanie" name="mozliwyCzasNaPodlewanie" required pInputText placeholder="Możliwe trwanie podlewania">
-          <div *ngIf="!mozliwyCzasNaPodlewanie.valid && mozliwyCzasNaPodlewanie.dirty">Pole nazwa jest wymagane</div>
-        </div>
-        <div class="p-col-4">
-          <div class="ui-inputgroup">
-            <span class="ui-inputgroup-addon">Czas1: </span>
-            <p-calendar [(ngModel)]="m.czasK1" #czasK1="ngModel" id="czasK1" name="czasK1" [timeOnly]="true"></p-calendar>
-          </div>
-          <div class="ui-inputgroup">
-            <span class="ui-inputgroup-addon">Czas2: </span>
-            <p-calendar [(ngModel)]="m.czasK2" #czasK2="ngModel" id="czasK2" name="czasK2" [timeOnly]="true"></p-calendar>
+    <p-tabView orientation="left">
+      <p-tabPanel header="Suwaki">
+        <div class="p-grid">
+          <div class="p-col-6">
+            <h3 for="zakresTemp">Temperatury: {{m.zakresTemp[0] + ' - ' + m.zakresTemp[1]}}</h3>
+            <p-slider [(ngModel)]="m.zakresTemp" #zakresTemp="ngModel" [range]="true" id="zakresTemp" name="zakresTemp" required></p-slider>
+            <h3></h3><hr>
+
+            <h3 for="zakresW">Wilgotność: {{m.zakresW[0] + ' - ' + m.zakresW[1]}}</h3>
+            <p-slider [(ngModel)]="m.zakresW" #zakresW="ngModel" [range]="true" id="zakresW" (onChange)="zakresWChange($event)" name="zakresW" required></p-slider>
+            <p-slider [(ngModel)]="m.humidityOpt" #humidityOpt="ngModel" id="humidityOpt" (onChange)="zakresWOptChange($event)"name="humidityOpt" required></p-slider>
+            <h3 for="zakres">Wilgotność optymalna: {{m.humidityOpt}}</h3>
+            <h3></h3><hr>
+
+            <h3 for="zakresWL">Ilość wpisów w logu: {{m.zakresWL[0] + ' - ' + m.zakresWL[1]}}</h3>
+            <p-slider [(ngModel)]="m.zakresWL" #zakresWL="ngModel" [range]="true" [max]=40 id="zakresWL" name="zakresWL" required></p-slider>
+            <h3></h3><hr>
+
+            <h3 for="zakresWA">Ilość wpisów w alarmach: {{m.zakresWA[0] + ' - ' + m.zakresWA[1]}}</h3>
+            <p-slider [(ngModel)]="m.zakresWA" #zakresWA="ngModel" [range]="true" [max]=20 id="zakresWA" name="zakresWA" required></p-slider>
+            <h3></h3><hr>
+
+            <h3 for="zakresO">Czas odświerzania (min.): {{m.zakresO[0] + ' - ' + m.zakresO[1]}}</h3>
+            <p-slider [(ngModel)]="m.zakresO" #zakresO="ngModel" [range]="true" id="zakresO" name="zakresO" required></p-slider>
           </div>
         </div>
-      </div>
-      <div class="p-grid p-justify-left p-align-end vertical-container">
-        <div class="p-col-4">
-         <!-- <div class="ui-inputgroup">
-            <span class="ui-inputgroup-addon">Opt: </span>
-            <input [(ngModel)]="m.humidityOpt" #humidityOpt="ngModel" type="number" id="humidityOpt" name="humidityOpt" required pInputText placeholder="Wilgotność optymalna">
-            <div *ngIf="!humidityOpt.valid && humidityOpt.dirty">Pole nazwa jest wymagane</div>
-          </div> -->
+      </p-tabPanel>
+      <p-tabPanel header="Hasła">
+        <div class="p-grid p-justify-left p-align-center vertical-container">
+          <div class="p-col-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">email: </span>
+                <input [(ngModel)]="m.email" #email="ngModel" type="email" id="email" name="email" required pInputText placeholder="Mejl">
+            </div>
+            <div class="ui-inputgroup">
+              <span class="ui-inputgroup-addon">hasło: </span>
+              <input [(ngModel)]="m.emailHaslo" #emailHaslo="ngModel" type="password" id="emailHaslo" name="emailHaslo" required pPassword>
+            </div>
+            <h3></h3>
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">WiFi:_</span>
+                <input [(ngModel)]="m.wifi" #wifi="ngModel" type="wifi" id="wifi" name="wifi" [disabled]=false required pInputText placeholder="WiFi">
+            </div>
+            <div class="ui-inputgroup">
+              <span class="ui-inputgroup-addon">hasło: </span>
+              <input [(ngModel)]="m.wifiHaslo" #wifiHaslo="ngModel" type="password" id="wifiHaslo" name="wifiHaslo" required pPassword>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="p-grid">
-      </div>
-      <div class="p-grid">
-        <div class="p-col-12">
-          <h3></h3>
+      </p-tabPanel>
+      <p-tabPanel header="Inne">
+        <div class="p-grid p-justify-left p-align-end vertical-container">
+          <div class="p-col-6">
+            <div class="ui-inputgroup">
+              <span class="ui-inputgroup-addon">Czas1: </span>
+              <p-calendar [(ngModel)]="m.czasK1" #czasK1="ngModel" id="czasK1" name="czasK1" [timeOnly]="true"></p-calendar>
+            </div>
+          </div>
+          <div class="p-col-6">
+            <p-message severity="error" *ngIf="!czasK1.valid && czasK1.dirty" text="Pole jest wymagane"></p-message>
+          </div>
         </div>
-      </div>
-      <div class="p-grid p-justify-center p-align-center vertical-container">
-        <div class="p-col-2">
-          <button pButton [disabled]="!ce.valid" class="ui-button-raised ui-button-success" type="submit" label="Wyslij"></button>
+        <div class="p-grid p-justify-left p-align-end vertical-container">
+          <div class="p-col-6">
+            <div class="ui-inputgroup">
+              <span class="ui-inputgroup-addon">Czas2: </span>
+              <p-calendar [(ngModel)]="m.czasK2" #czasK2="ngModel" id="czasK2" name="czasK2" [timeOnly]="true"></p-calendar>
+            </div>
+          </div>
+          <div class="p-col-6">
+            <p-message severity="error" *ngIf="czasK2.invalid && (czasK2.dirty || czasK2.touched)" text="Pole jest wymagane"></p-message>
+          </div>
         </div>
-        <div class="p-col-2">
-          <button pButton class="ui-button-raised ui-button-danger" type="reset" (onclick)="onResetetowanie()" label="Reset"></button>
+        <div class="p-grid p-justify-left p-align-center vertical-container">
+            <div class="p-col-6">
+              <h4 for="mozliwyCzasNaPodlewanie">Możliwy okres (godz.) podlewania: </h4>
+              <input [(ngModel)]="m.mozliwyCzasNaPodlewanie" #mozliwyCzasNaPodlewanie="ngModel" type="number" id="mozliwyCzasNaPodlewanie" name="mozliwyCzasNaPodlewanie" required pInputText placeholder="Możliwe trwanie podlewania">
+              <h3></h3><hr>
+            </div>
+            <div class="p-col-6">
+              <p-message severity="error" *ngIf="mozliwyCzasNaPodlewanie.invalid && (mozliwyCzasNaPodlewanie.dirty || mozliwyCzasNaPodlewanie.touched)" text="Pole jest wymagane"></p-message>
+            </div>
+          </div>
+        <div class="p-grid p-justify-left p-align-center vertical-container">
+          <div class="p-col-6">
+            <h4 for="ileCzasuDoWyslaniaMejla">
+              Ile (min.) do przypomnienia: </h4>
+            <input [(ngModel)]="m.ileCzasuDoWyslaniaMejla" #ileCzasuDoWyslaniaMejla="ngModel" type="number" id="ileCzasuDoWyslaniaMejla" name="ileCzasuDoWyslaniaMejla" required pInputText
+            placeholder="czas przed podlewaniem">
+            <h3></h3><hr>
+          </div>
+          <div class="p-col-6">
+              <p-message severity="error" *ngIf="!ileCzasuDoWyslaniaMejla.valid && ileCzasuDoWyslaniaMejla.dirty" text="Pole jest wymagane"></p-message>
+          </div>
         </div>
+        <div class="p-grid p-justify-left p-align-center vertical-container">
+          <div class="p-col-6">
+            <h4 for="offsetCzasLetni">
+              Offset dla czasu letniego: </h4>
+            <input [(ngModel)]="m.offsetCzasLetni" #offsetCzasLetni="ngModel" type="number" id="offsetCzasLetni" name="offsetCzasLetni" required pInputText
+            placeholder="offset czas letni">
+            <h3></h3><hr>
+          </div>
+          <div class="p-col-6">
+              <p-message severity="error" *ngIf="!offsetCzasLetni.valid && offsetCzasLetni.dirty" text="Pole jest wymagane"></p-message>
+          </div>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+    <div class="p-grid p-justify-center p-align-center vertical-container">
+      <div class="p-col-6">
+        <button pButton [disabled]="!ce.valid" class="ui-button-raised ui-button-success" type="submit" label="Wyslij"></button>
       </div>
+      <div class="p-col-6">
+        <button pButton class="ui-button-raised ui-button-danger" type="reset" (onclick)="onResetetowanie()" label="Reset"></button>
+      </div>
+    </div>
   </form>
 </ng-container>
 <ng-template #brakDanych>
     <!--<p class="input-text">brak danych w logu</p>-->
-    <h2>brak danych w logu</h2>
+    <div class="p-grid p-justify-left p-align-center vertical-container">
+      <div class="p-col-4">
+        <h2>brak danych w logu</h2>
+      </div>
+      <div class="p-col-2">
+        <button pButton type="button" class="ui-button-raised ui-button-success" label="Odświerz" (click)="odswierz()"></button>
+      </div>
+    </div>
 </ng-template>

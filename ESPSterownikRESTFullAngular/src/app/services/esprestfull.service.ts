@@ -77,23 +77,21 @@ export class EsprestfullService {
   }
 
   getAktualneESPData(): Observable <Array<ESPData>> {
-    this.http.get<Array<ESPData>>('http://192.168.0.15/aktualne').subscribe(list => {
+    this.http.get<ESPData>('http://192.168.0.15/aktualne').subscribe(d => {
       this.EDataN = [];
       const data = {} as ESPData;
-      list.forEach((d, i) => {
-        data.humidity = this.zlaczLiczbe(d.humidity, d.humidity_u);
-        data.temp = this.zlaczLiczbe(d.temp, d.temp_u);
-        data.pm10 = this.zaokrag((this.zlaczLiczbe(d.pm10, d.pm10_u) / 50) * 100, 2);
-        data.pm25 = this.zaokrag((this.zlaczLiczbe(d.pm25, d.pm25_u) / 25) * 100, 2);
-        data.pm1 = this.zlaczLiczbe(d.pm1 , d.pm1_u);
-        data.Vc = this.zlaczLiczbe(d.Vc, d.Vc_u);
-        data.pressure = this.zlaczLiczbe(d.pressure, d.pressure_u);
-        data.Vp = d.Vp;
-        data.dataPomiaru = d.dataPomiaru;
-        data.poziomWody = d.poziomWody;
-        data.dataOdczytu = d.dataOdczytu;
-        this.EDataN.push(data);
-      });
+      data.humidity = this.zlaczLiczbe(d.humidity, d.humidity_u);
+      data.temp = this.zlaczLiczbe(d.temp, d.temp_u);
+      data.pm10 = this.zaokrag((this.zlaczLiczbe(d.pm10, d.pm10_u) / 50) * 100, 2);
+      data.pm25 = this.zaokrag((this.zlaczLiczbe(d.pm25, d.pm25_u) / 25) * 100, 2);
+      data.pm1 = this.zlaczLiczbe(d.pm1 , d.pm1_u);
+      data.Vc = this.zlaczLiczbe(d.Vc, d.Vc_u);
+      data.pressure = this.zlaczLiczbe(d.pressure, d.pressure_u);
+      data.Vp = d.Vp;
+      data.dataPomiaru = d.dataPomiaru;
+      data.poziomWody = d.poziomWody;
+      data.dataOdczytu = d.dataOdczytu;
+      this.EDataN.push(data);
       console.log(this.EDataN);
       this.obserwatorListyESPData.next(this.EDataN); // aktualne dane przekazywane do parametrów
       this.PZService.getRestFul();

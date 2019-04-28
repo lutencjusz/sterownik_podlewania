@@ -170,7 +170,7 @@ function zapiszMejleDoPliku(subject, body)
 end
 
 function znajdzOdpowiedz(s)
-    local f1 = string.find(s, "alive");
+    local f1 = string.find(s, "close");
     return string.sub(s, f1+9)
 end
 

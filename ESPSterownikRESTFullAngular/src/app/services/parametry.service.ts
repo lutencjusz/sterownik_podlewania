@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ESPParametry } from '../app.component';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { ESPParametry, ESPUstawienia } from '../app.component';
+import { BehaviorSubject } from 'rxjs';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -18,15 +18,24 @@ const httpOptions = {
 export class ParametryService {
 
   private obserwatorESPParametry = new BehaviorSubject<ESPParametry> (null);
+  private obserwatorESPUstawienia = new BehaviorSubject<ESPUstawienia> (null);
   obserwatorESPParametry$ = this.obserwatorESPParametry.asObservable();
+  obserwatorESPUstawienia$ = this.obserwatorESPUstawienia.asObservable();
 
   constructor(private http: HttpClient) {
     this.getParametry();
+    this.getUstawienia();
   }
 
   getParametry() {
     return this.http.get<ESPParametry>('http://192.168.0.15/parametry').subscribe(list => {
       this.obserwatorESPParametry.next(list);
+    });
+  }
+
+  getUstawienia() {
+    return this.http.get<ESPUstawienia>('http://192.168.0.15/ustawienia').subscribe(u => {
+      this.obserwatorESPUstawienia.next(u);
     });
   }
 
@@ -37,10 +46,18 @@ export class ParametryService {
     });
   }
 
+  setUstawienia(u: ESPUstawienia) {
+    console.log('serwis setustawienia', u);
+    this.http.post<ESPUstawienia>('http://localhost:3000/zmianaUstawienia', u, httpOptions).subscribe(w => {
+      console.log(w);
+    });
+  }
+
   setKalendarz(k: Array<string>) {
-    console.log('serwis setKalendarz', k);
     this.http.post<Array<string>>('http://localhost:3000/zmianaKalendarza', k, httpOptions).subscribe(w => {
       console.log(w);
     });
   }
 }
+
+

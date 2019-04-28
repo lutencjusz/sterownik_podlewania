@@ -111,19 +111,19 @@ end
 
 httpServer:use('/wszystko', function(req, res)
     res:type('application/json')
-    res:sendFile("log.json")
+    res:sendFile("log.json", true)
     systemInfo("/wszystko")
 end)
 
 httpServer:use('/wszystkieAlerty', function(req, res)
     res:type('application/json')
-    res:sendFile("alert.json")
+    res:sendFile("alert.json", true)
     systemInfo("/wszystkieAlerty")
 end)
 
 httpServer:use('/aktualne', function(req, res)
     res:type('application/json')
-    local data = "[\n"..sjson.encode(pobierzAktualneDaneZCzujnikow()).."]\n"
+    local data = sjson.encode(pobierzAktualneDaneZCzujnikow())
     res:send(data)
     systemInfo("/aktualne")
 end)
@@ -174,13 +174,13 @@ end)
 
 httpServer:use('/parametry', function(req, res)
     res:type('application/json')
-    res:sendFile('parametryCz.json')
+    res:sendFile('parametryCz.json', false)
     systemInfo("/parametry")
 end)
 
 httpServer:use('/ustawienia', function(req, res)
     res:type('application/json')
-    res:sendFile('ustawieniaZ.json')
+    res:sendFile('ustawieniaZ.json', false)
     systemInfo("/ustawienia")
 end)
 

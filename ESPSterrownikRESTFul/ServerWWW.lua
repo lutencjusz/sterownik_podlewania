@@ -184,6 +184,12 @@ httpServer:use('/ustawienia', function(req, res)
     systemInfo("/ustawienia")
 end)
 
+httpServer:use('/komentarze', function(req, res)
+    res:type('application/json')
+    res:sendFile('komentarze.json', false)
+    systemInfo("/komentarze")
+end)
+
 httpServer:use('/pobierzAktualneDane', function(req, res)
     pobierzDanePowietrza()
     local data = "[\n"..sjson.encode(pobierzAktualneDaneZCzujnikow()).."]\n"
@@ -210,6 +216,13 @@ httpServer:use('/zapiszKalendarz', function(req, res)
     res:type('application/json')
     res:send('{"status":"OK"}')
     print ("zapisano plik kalendarz.json")
+end)
+
+httpServer:use('/zapiszKomentarze', function(req, res)
+    zapiszStrDoPliku("komentarze.json", znajdzOdpowiedz(req.source))
+    res:type('application/json')
+    res:send('{"status":"OK"}')
+    print ("zapisano plik komentarze.json")
 end)
 
 httpServer:use('/restart', function(req, res)
@@ -301,23 +314,25 @@ httpServer:use('/', function(req, res)
     .."<p>by Lutencjusz</p>"
     .."<h3>---------------------</h3>"
     .."nastepujace funkcjonalnosi mozna uruchomic po rozszerzeniu:"
-    .."<LI>/wszystko - wszystkie wpisy logow"
-    .."<LI>/wszystkieAlerty - wszystkie wpisy alertow"
     .."<LI>/aktualne - pobranie i przekazanie wskaźnikow"
     .."<LI>/aktualnyStatus - pokazuje status podlewania"
     .."<LI>/dodajAktualne - dodaje aktualne wskazniki do logow (w celach testowych)"
     .."<LI>/dodajAlert -dodaje przykladowy alert do alertow (w celach testowych)"
+    .."<LI>/kiedyNastepneSprawdzenie - podaje date następnego sprawdzenia, czy uruchomic pompke"
+    .."<LI>/komentarze - przekazuje komentarze dotyczące alertów"
+    .."<LI>/parametry - przesyła parametry graniczne układu"
+    .."<LI>/pobierzAktualneDane - pobiera aktualne dane z zewnetrznych systemow"
+    .."<LI>/restart - restartuje sterownik"
+    .."<LI>/uruchomPompki - sprawdza i uruchamia pompki. Uwagi zapisuje w plikach logow i alertow"
+    .."<LI>/ustawienia - pobiera ustawienia urzadzenia"
     .."<LI>/usunLog - usuwa plik logow"
     .."<LI>/usunAlerty - usuwa plik alertow"
-    .."<LI>/uruchomPompki - sprawdza i uruchamia pompki. Uwagi zapisuje w plikach logow i alertow"
-    .."<LI>/parametry - przesyła parametry graniczne układu"
-    .."<LI>/kiedyNastepneSprawdzenie - podaje date następnego sprawdzenia, czy uruchomic pompke"
-    .."<LI>/pobierzAktualneDane - pobiera aktualne dane z zewnetrznych systemow"
-    .."<LI>/ustawienia - pobiera ustawienia urzadzenia"
+    .."<LI>/wszystkieAlerty - wszystkie wpisy alertow"
+    .."<LI>/wszystko - wszystkie wpisy logow"
     .."<LI>/zapiszUstawieniaZ - zapisuje wartosci do pliku ustawieniaZ.json"
     .."<LI>/zapiszParametryCz - zapisuje wartosci do pliku parametryCz.json"
     .."<LI>/zapiszKalendarz - zapisuje wartosci do pliku kalendarz.json"
-    .."<LI>/restart - restartuje sterownik"
+    .."<LI>/zapiszKomentarze - zapisuje wartosci do pliku komentarze.json"    
     .."<LI>/LED0=ON - uruchamia pompke 1"
     .."<LI>/LED0=OFF - wylacza pompke 1"
     .."<LI>/LED4=ON - uruchamia pompke 2"

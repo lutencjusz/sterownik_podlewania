@@ -55,6 +55,7 @@ export interface ESPParametry {
 }
 
 export interface ESPUstawienia {
+  ip?: string;
   ssid?: string;
   pass?: string;
   email?: string;

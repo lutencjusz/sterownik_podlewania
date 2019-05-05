@@ -25,6 +25,7 @@ export class PrognozaComponent implements OnInit {
   komentarz2 = '';
   proces: any;
   taski: any;
+  pasek: string[] = [];
 
   constructor(private PService: PrognozaService, private CService: CamundaRestService,  private messageService: MessageService) {
     this.ObserwatorPrognozy$ = this.PService.obserwatorPrognozy$;
@@ -49,6 +50,7 @@ export class PrognozaComponent implements OnInit {
   }
 
   ladowaniePognozy() {
+    this.pasek = [];
     let licznik = 0;
     this.komentarz1 = 'Uruchamiam proces Camunda: Prognoza Pogody...';
     this.CService.postProcessInstance('PrognozaPodlewania').subscribe(t => {
@@ -57,20 +59,25 @@ export class PrognozaComponent implements OnInit {
     });
     const timerPobierP = timer(1000, 1000); // po 20 sekundach uruchamia timer co 1 minute wywyłuje update
     const subscribe = timerPobierP.subscribe(val => {
-      this.komentarz1 = 'Czekam na micro: ';
+      this.komentarz1 = 'Czekam na micro(' + this.pasek.length + '): ';
       licznik += 1;
       this.CService.getProcessExternalTasks('PrognozaPodlewania', this.proces.id).subscribe(t => {
         this.taski = t;
       });
       if (this.taski) {
         this.taski.forEach(t => {
-          this.komentarz1 += t.topicName + '; ';
+          const tN = t.topicName + '';
+          this.komentarz1 += tN + '; ';
+          if (this.pasek.indexOf(tN) < 0) {
+            this.pasek.push(tN);
+          }
         });
       }
       if (licznik > 0 && this.taski && this.taski.length === 0) {
         subscribe.unsubscribe(); // wyłacza timer
         this.komentarz1 = '';
         this.komentarz2 = 'Proces ukończony. id: ' + this.proces.id;
+        console.log('Taski: ' + this.pasek.length);
         const wynikPrognozy = this.ObserwatorPrognozy$.pipe(debounce (() => interval(100)));
         // reaguje na zmianę w obserwable
         wynikPrognozy.subscribe(x => {

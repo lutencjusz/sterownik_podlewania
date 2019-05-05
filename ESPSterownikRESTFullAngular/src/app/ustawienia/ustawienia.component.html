@@ -1,4 +1,4 @@
-<ng-container *ngIf="parametry && ustawienia && kiedySpr; else brakDanych">
+<ng-container *ngIf="parametry && ustawienia && kiedySpr && komentarze; else brakDanych">
   <form (ngSubmit)="onSubmit(ce)" #ce="ngForm">
     <p-tabView orientation="left">
       <p-tabPanel header="Suwaki">
@@ -107,6 +107,31 @@
               <p-message severity="error" *ngIf="!offsetCzasLetni.valid && offsetCzasLetni.dirty" text="Pole jest wymagane"></p-message>
           </div>
         </div>
+      </p-tabPanel>
+      <p-tabPanel header="Komentarze">
+        <div class="p-grid">
+            <button type="button" pButton class="ui-button-raised ui-button-success" (click)="widocznoscPrzykladow()" label="Pokaż przykłady"></button>
+        </div>
+        <div class="p-grid">
+          <h3></h3>
+        </div>
+        <div class="p-grid" *ngFor="let k of komentarze">
+          <div class="p-col-8">
+            <div class="ui-inputgroup">
+              <span class="ui-inputgroup-addon">{{k.klucz}} </span>
+              <input [(ngModel)]="k.wartosc" #{{k.klucz}}="ngModel" type="text" size="60" [ngModelOptions]="{standalone: true}" id="{{k.klucz}}" name="{{k.klucz}}" required pInputText
+              placeholder="{{k.klucz}}">
+            </div>
+            <ng-container *ngIf="czyPrzyklady">
+              <h3>
+                  {{t1P}}
+              </h3>
+            </ng-container>
+          </div>
+        </div>
+        <!--<div class="p-col-4">
+          <p-message severity="error" *ngIf="!k.klucz.valid && k.klucz.dirty" text="Pole jest wymagane"></p-message>
+        </div>-->
       </p-tabPanel>
     </p-tabView>
     <div class="p-grid p-justify-center p-align-center vertical-container">

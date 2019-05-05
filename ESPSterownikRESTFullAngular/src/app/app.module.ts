@@ -33,6 +33,8 @@ import { PrognozaService } from './services/prognoza.service';
 import { CamundaEngineComponent } from './camunda-engine/camunda-engine.component';
 import { CamundaRestService } from './services/camunda-rest.service';
 import { UstawieniaComponent } from './ustawienia/ustawienia.component';
+import { KomentarzeComponent } from './ustawienia/komentarze/komentarze.component';
+import { StringFormatModule } from 'ngx-stringformat';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,8 @@ import { UstawieniaComponent } from './ustawienia/ustawienia.component';
     OdliczanieComponent,
     PrognozaComponent,
     CamundaEngineComponent,
-    UstawieniaComponent
+    UstawieniaComponent,
+    KomentarzeComponent
   ],
   imports: [
     BrowserModule,
@@ -69,7 +72,8 @@ import { UstawieniaComponent } from './ustawienia/ustawienia.component';
     TabViewModule,
     PasswordModule,
     CalendarModule,
-    MessageModule
+    MessageModule,
+    StringFormatModule
   ],
   providers: [EsprestfullService, MessageService, AlertyService,
     PomiaryZewnService, PrognozaService, CamundaRestService],

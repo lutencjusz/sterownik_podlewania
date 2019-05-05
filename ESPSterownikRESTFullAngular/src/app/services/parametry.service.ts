@@ -19,23 +19,36 @@ export class ParametryService {
 
   private obserwatorESPParametry = new BehaviorSubject<ESPParametry> (null);
   private obserwatorESPUstawienia = new BehaviorSubject<ESPUstawienia> (null);
+  private obserwatorESPKomentarze = new BehaviorSubject<Array<any>> (null);
   obserwatorESPParametry$ = this.obserwatorESPParametry.asObservable();
   obserwatorESPUstawienia$ = this.obserwatorESPUstawienia.asObservable();
+  obserwatorESPKomentarze$ = this.obserwatorESPKomentarze.asObservable();
+  // IP = '192.168.43.176';
+  IP = '192.168.0.15';
 
   constructor(private http: HttpClient) {
     this.getParametry();
     this.getUstawienia();
+    this.getKomentarze();
   }
 
   getParametry() {
-    return this.http.get<ESPParametry>('http://192.168.0.15/parametry').subscribe(list => {
+    return this.http.get<ESPParametry>('http://' + this.IP + '/parametry').subscribe(list => {
       this.obserwatorESPParametry.next(list);
     });
   }
 
   getUstawienia() {
-    return this.http.get<ESPUstawienia>('http://192.168.0.15/ustawienia').subscribe(u => {
+    return this.http.get<ESPUstawienia>('http://' + this.IP + '/ustawienia').subscribe(u => {
       this.obserwatorESPUstawienia.next(u);
+    });
+  }
+
+  getKomentarze() {
+    return this.http.get<any>('http://' + this.IP + '/komentarze').subscribe(k => {
+      const t = Object.keys(k).map( kl => ({klucz: kl, wartosc: k[kl]})); // zmainia obiekt na tablice
+      this.obserwatorESPKomentarze.next(t);
+      console.log(t);
     });
   }
 
@@ -55,6 +68,17 @@ export class ParametryService {
 
   setKalendarz(k: Array<string>) {
     this.http.post<Array<string>>('http://localhost:3000/zmianaKalendarza', k, httpOptions).subscribe(w => {
+      console.log(w);
+    });
+  }
+
+  setKomentarze(k) {
+    const newObj = {};
+    k.forEach(element => {
+      newObj[element.klucz] = element.wartosc;
+    });
+    console.log('newObj', newObj);
+    this.http.post<any>('http://localhost:3000/zmianaKomentarze', newObj, httpOptions).subscribe(w => {
       console.log(w);
     });
   }

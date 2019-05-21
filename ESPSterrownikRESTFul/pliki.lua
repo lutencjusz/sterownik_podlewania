@@ -64,6 +64,9 @@ function przepiszPliki (pz, ptmp, iloscLiniPlikuD, iloscLiniiPlikuZ)
                 ali = ali - 1
                 if line and li >= ali then
                     if string.find (line, "taki sam") ~= nil and line ~= nil then
+                        if li == iloscLiniPlikuD and string.byte (line, 1) == 44 then
+                            line = string.sub (line, 1)
+                        end 
                         dest:write(line)
                         li = li - 1
                     end

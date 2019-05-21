@@ -1,5 +1,7 @@
 kom = sjson.decode(wczytajPlikDoZmiennej('komentarze.json'))
 print ("    wczytano komentarze...")
+-- komM = sjson.decode(wczytajPlikDoZmiennej('komentarzeM.json'))
+-- print ("    wczytano tresci mejli...")
 
 function czyAlertPozZasVc (ob)
     if pTestowe.Vc > pCz.VcMax then
@@ -18,22 +20,22 @@ function czyAlertPozZasVc (ob)
     return ob
 end
 
-function czyAlertPozZasVp (ob)
-    if pTestowe.Vp > pCz.VpMax then
-        ob.naglowek = kom.VpN1
-        ob.opis = kom.Vp1.format(kom.Vp1, pTestowe.Vp, pCz.VpMax)..ob.opis
-        ob.status = false
-        ob.prior = 1
-        ob.klucz = ob.klucz .. 'Vp1'
-    elseif pTestowe.Vp < pCz.VpMin then
-        ob.naglowek = kom.VpN2
-        ob.opis = kom.Vp2.format(kom.Vp2, pTestowe.Vp, pCz.VpMin)..ob.opis
-        ob.status = false
-        ob.prior = 1
-        ob.klucz = ob.klucz .. 'Vp2'
-    end           
-    return ob
-end
+-- function czyAlertPozZasVp (ob)
+--    if pTestowe.Vp > pCz.VpMax then
+--        ob.naglowek = kom.VpN1
+--        ob.opis = kom.Vp1.format(kom.Vp1, pTestowe.Vp, pCz.VpMax)..ob.opis
+--        ob.status = false
+--        ob.prior = 1
+--        ob.klucz = ob.klucz .. 'Vp1'
+--    elseif pTestowe.Vp < pCz.VpMin then
+--        ob.naglowek = kom.VpN2
+--        ob.opis = kom.Vp2.format(kom.Vp2, pTestowe.Vp, pCz.VpMin)..ob.opis
+--        ob.status = false
+--        ob.prior = 1
+--        ob.klucz = ob.klucz .. 'Vp2'
+--    end           
+--    return ob
+-- end
 
 function czyAlerthumidity (ob)
     czyUruchomicPompkiKalendarz1 = true
@@ -95,6 +97,8 @@ function czyAlertKalenadza (ob)
         elseif porDatyK1Tlog <= 0 and porDatyK2Tlog <= 0 then  wynikPorDatyKalTlog = 2
     end -- jeśli wynik 0 - pompki nie byly uruchomione; 1 - byly po K1; 2 - były po K1 i K2
     if debugowanie then
+        print ("        porDatyK1Tlog: " .. porDatyK1Tlog)
+        print ("        porDatyK2Tlog: " .. porDatyK2Tlog)
         print ("        wynikPorDatyKalTlog: " .. wynikPorDatyKalTlog)
     end
     if wynikPorDatyKalTlog ~= 2 then -- sprawdza, czy już dzisiaj były uruchamiane
@@ -128,25 +132,25 @@ function czyAlertKalenadza (ob)
     return ob
 end
 
-function czyAlertPoziomuWody (ob)
-    if not pTestowe.poziomWody then
-        ileCzasu, ostatniPomiar = zaIleUruchomicPompkiKalendarz()
-        if ileCzasu < ileCzasuDoWyslaniaMejla and ileCzasu > 0 and not czyWyslanoMejl then
-            local body = kom.bodyM.format(kom.bodyM, podajCzasS(ileCzasu), ostatniPomiar)
-            zapiszMejleDoPliku(kom.NM, body)
-            czyWyslanoMejl = true
-            ob.opis = ob.opis .. kom.pw1
-            ob.klucz = ob.klucz .. "pw1"
-        else
-            ob.opis = kom.pw2 .. ob.opis
-            ob.klucz = ob.klucz .. "pw2"
-        end
-        ob.status = false
-        ob.naglowek = kom.pwN
-        ob.prior = 1
-    end       
-    return ob
-end
+-- function czyAlertPoziomuWody (ob)
+--    if not pTestowe.poziomWody then
+--        ileCzasu, ostatniPomiar = zaIleUruchomicPompkiKalendarz()
+--        if ileCzasu < ileCzasuDoWyslaniaMejla and ileCzasu > 0 and not czyWyslanoMejl then
+--            local body = komM.bodyM.format(komM.bodyM, podajCzasS(ileCzasu), ostatniPomiar)
+--            zapiszMejleDoPliku(komM.NM, body)
+--            czyWyslanoMejl = true
+--            ob.opis = ob.opis .. kom.pw1
+--            ob.klucz = ob.klucz .. "pw1"
+--        else
+--            ob.opis = kom.pw2 .. ob.opis
+--            ob.klucz = ob.klucz .. "pw2"
+--        end
+--        ob.status = false
+--        ob.naglowek = kom.pwN
+--        ob.prior = 1
+--    end       
+--    return ob
+--end
 
 function czyAlertPrzedzialuCzasowego (ob)
     if debugowanie then
@@ -183,11 +187,11 @@ function ustawienieAlertowLogiki (ob)
         print ("Parametry logiki po czyAlertTempPow:")
         print (ob.naglowek, ob.opis, ob.status, ob.prior, ob.klucz)
     end
-    ob = czyAlertPozZasVp(ob)
-    if debugowanie then
-        print ("Parametry logiki po czyAlertPozZasVp:")
-        print (ob.naglowek, ob.opis, ob.status, ob.prior, ob.klucz)
-    end
+--    ob = czyAlertPozZasVp(ob)
+--    if debugowanie then
+--        print ("Parametry logiki po czyAlertPozZasVp:")
+--        print (ob.naglowek, ob.opis, ob.status, ob.prior, ob.klucz)
+--    end
     ob = czyAlertPozZasVc(ob)
     if debugowanie then
         print ("Parametry logiki po czyAlertPozZasVc:")
@@ -198,11 +202,11 @@ function ustawienieAlertowLogiki (ob)
         print ("Parametry logiki po czyAlertKalenadza")
         print (ob.naglowek, ob.opis, ob.status, ob.prior, ob.klucz)
     end
-    ob = czyAlertPoziomuWody(ob)
-    if debugowanie then
-        print ("Parametry logiki po czyAlertPoziomuWody")
-        print (ob.naglowek, ob.opis, ob.status, ob.prior, ob.klucz)
-    end
+--    ob = czyAlertPoziomuWody(ob)
+--    if debugowanie then
+--        print ("Parametry logiki po czyAlertPoziomuWody")
+--        print (ob.naglowek, ob.opis, ob.status, ob.prior, ob.klucz)
+--    end
     ob = czyAlertPrzedzialuCzasowego(ob)
     if debugowanie then
         print ("Parametry logiki po czyAlertPrzedzialuCzasowego")

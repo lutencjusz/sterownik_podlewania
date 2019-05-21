@@ -1,3 +1,6 @@
+komM = sjson.decode(wczytajPlikDoZmiennej('komentarzeM.json'))
+print ("    wczytano tresci mejli...")
+
 -- informacja o aktualnym systemie
 function systemInfo(text)
     majorVer, minorVer, devVer, chipid, flashid, flashsize, flashmode, flashspeed = node.info()
@@ -70,8 +73,8 @@ function uruchomPompki(res)
             czyWyslanoMejl = false -- zerowanie przypomnienia mejlowego z modułu logika
             if ob.naglowek ~= "" then
                 print ("        zapis do pliku logu i alarmu z uruchomieniem pompek i wyslaniem mejla...")
-                local subject = "Sterownik podlewania uruchomił pompki"
-                local body = "Wlasnie podlalem kwiatki. Uzupelnij wode..."
+                local subject = komM.NuM
+                local body = komM.bodyUM
                 zapiszMejleDoPliku(subject,body)
                 if  debugowanie then
                     print ("Zapisuje alert.json z uruchomPompki:")
@@ -190,6 +193,12 @@ httpServer:use('/komentarze', function(req, res)
     systemInfo("/komentarze")
 end)
 
+httpServer:use('/komentarzeM', function(req, res)
+    res:type('application/json')
+    res:sendFile('komentarzeM.json', false)
+    systemInfo("/komentarzeM")
+end)
+
 httpServer:use('/pobierzAktualneDane', function(req, res)
     pobierzDanePowietrza()
     local data = "[\n"..sjson.encode(pobierzAktualneDaneZCzujnikow()).."]\n"
@@ -223,6 +232,13 @@ httpServer:use('/zapiszKomentarze', function(req, res)
     res:type('application/json')
     res:send('{"status":"OK"}')
     print ("zapisano plik komentarze.json")
+end)
+
+httpServer:use('/zapiszKomentarzeM', function(req, res)
+    zapiszStrDoPliku("komentarzeM.json", znajdzOdpowiedz(req.source))
+    res:type('application/json')
+    res:send('{"status":"OK"}')
+    print ("zapisano plik komentarzeM.json")
 end)
 
 httpServer:use('/restart', function(req, res)
@@ -329,10 +345,11 @@ httpServer:use('/', function(req, res)
     .."<LI>/usunAlerty - usuwa plik alertow"
     .."<LI>/wszystkieAlerty - wszystkie wpisy alertow"
     .."<LI>/wszystko - wszystkie wpisy logow"
-    .."<LI>/zapiszUstawieniaZ - zapisuje wartosci do pliku ustawieniaZ.json"
-    .."<LI>/zapiszParametryCz - zapisuje wartosci do pliku parametryCz.json"
-    .."<LI>/zapiszKalendarz - zapisuje wartosci do pliku kalendarz.json"
-    .."<LI>/zapiszKomentarze - zapisuje wartosci do pliku komentarze.json"    
+    .."<LI>/zapiszUstawieniaZ - zapisuje ustawienia sterownika do pliku ustawieniaZ.json"
+    .."<LI>/zapiszParametryCz - zapisuje parametry graniczne czujnikow do pliku parametryCz.json"
+    .."<LI>/zapiszKalendarz - zapisuje kalendarz do pliku kalendarz.json"
+    .."<LI>/zapiszKomentarze - zapisuje tresci komentarzy do pliku komentarze.json"
+    .."<LI>/zapiszKomentarzeM - zapisuje tresci mejli do pliku komentarzeM.json"     
     .."<LI>/LED0=ON - uruchamia pompke 1"
     .."<LI>/LED0=OFF - wylacza pompke 1"
     .."<LI>/LED4=ON - uruchamia pompke 2"

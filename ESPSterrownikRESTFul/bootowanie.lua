@@ -196,7 +196,6 @@ function obslugaModulu()
         uruchomPompki()
         print ("    Uruchomiono initKalendarz...")
         initKalendarza()
-        -- print ("    tLog = " .. tLog)
         tmr.alarm(6, 1000, tmr.ALARM_AUTO, function()
             if tLog ~= nil then
                 tmr.stop(6)
@@ -234,6 +233,7 @@ function obslugaModulu()
         countObslugi = 0 -- wyzerowanie cyklu obsługi
         tmr.unregister(6)
         collectgarbage()
+        print ("    Zakonczenie obslugi cyklicznej.")
         -- if odlegloscDaty (dataNieudanejProby, podajCzas())> czasDoOdswierzeniaMax then
         --    node.restart()
         -- end

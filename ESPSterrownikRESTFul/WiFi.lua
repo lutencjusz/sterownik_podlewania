@@ -3,10 +3,10 @@ gpio.write (pin, LED_ON)
 key = "abcdef0987654321" -- klucz musi sie składać z 16 znakow
 
 station_cfg={}
--- station_cfg.ssid=u.ssid
--- station_cfg.pwd=crypto.decrypt("AES-ECB", key, encoder.fromHex(u.pass))
-station_cfg.ssid='HUAWEI P20 lite'
-station_cfg.pwd='Aleks07$'
+station_cfg.ssid=u.ssid
+station_cfg.pwd=crypto.decrypt("AES-ECB", key, encoder.fromHex(u.pass))
+-- station_cfg.ssid='HUAWEI P20 lite'
+-- station_cfg.pwd='Aleks07$'
 station_cfg.save=true
 wifi.sta.config(station_cfg)
 
